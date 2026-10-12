@@ -302,6 +302,7 @@ class persona {
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	ADD_foto_persona_validation(){
+
 		if (!(this.validations.min_size('foto_persona',5))){
 			this.dom.mostrar_error_campo('foto_persona','foto_persona_min_size_ko');
 			return "foto_persona_min_size_ko";
@@ -310,15 +311,16 @@ class persona {
 			this.dom.mostrar_error_campo('foto_persona','foto_persona_max_size_ko');
 			return "foto_persona_max_size_ko";
 		}
-		//Formato valido: direcciones de correo electrónico
-		if (!(this.validations.format('foto_persona', '^(?=.{5,15}$)\w+\.(?:jpg|jpeg)$'))) {
-			this.dom.mostrar_error_campo('foto_persona', 'foto_persona_format_ko');
+		// mismo formato que el nombre del archivo: letras y puntos
+		if (!(this.validations.format('foto_persona', '^[a-zA-Z.]*$'))){
+			this.dom.mostrar_error_campo('foto_persona','foto_persona_format_ko');
 			return "foto_persona_format_ko";
 		}
 		this.dom.mostrar_exito_campo('foto_persona');
 		return true;
+
 /*
-		
+
 		if (!(this.validations.exist_file('foto_persona'))){
 			this.dom.mostrar_error_campo('foto_persona','foto_persona_exist_file_ko');
 			return "foto_persona_exist_file_ko";
