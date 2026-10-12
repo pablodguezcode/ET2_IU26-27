@@ -7,7 +7,7 @@ class persona {
 		this.access_functions = new ExternalAccess();
 
 		this.columnasamostrar = ['dni','nombre_persona', 'apellidos_persona', 'fechanacimiento_persona',
-			'direccion_persona','telefono_persona', 'email_persona', ,'foto_persona', 'nuevo_foto_persona' ];
+			'direccion_persona','telefono_persona', 'email_persona','foto_persona', 'nuevo_foto_persona' ];
 		this.mostrarespecial = ['foto_persona', 'nuevo_foto_persona'];
 		this.nombreentidad = 'persona';
 
@@ -45,37 +45,37 @@ class persona {
 			<br>
 			
 			<label class="label_apellidos_persona">apellidos</label>
-			<input type='text' id='apellidos_persona' name='apellidos_persona'></input>
+			<input type='text' id='apellidos_persona' name='apellidos_persona' onblur=" return entidad.ADD_apellidos_persona_validation();"></input>
 			<span id="span_error_apellidos_persona" ><a id="error_apellidos_persona"></a></span>
 			<br>
 			
 			<label class="label_fechanacimiento_persona">Fecha de Nacimiento</label>
-			<input type='text' id='fechanacimiento_persona' name='fechanacimiento_persona'></input>
+			<input type='text' id='fechanacimiento_persona' name='fechanacimiento_persona' onblur=" return entidad.ADD_fechanacimiento_persona_validation();"></input>
 			<span id="span_error_fechanacimiento_persona" ><a id="error_fechanacimiento_persona"></a></span>
 			
 			<br>
 			<label class="label_direccion_persona">Dirección Postal</label>
-			<textarea rows="5" cols="33" type='text' id='direccion_persona' name='direccion_persona'></textarea>
+			<textarea rows="5" cols="33" type='text' id='direccion_persona' name='direccion_persona' onblur=" return entidad.ADD_direccion_persona_validation();"></textarea>
 			<span id="span_error_direccion_persona" ><a id="error_direccion_persona"></a></span>
 			<br>
 
 			<label class="label_telefono_persona">Teléfono Persona</label>
-			<input type='text' id='telefono_persona' name='telefono_persona'></input>
+			<input type='text' id='telefono_persona' name='telefono_persona' onblur=" return entidad.ADD_telefono_persona_validation();"></input>
 			<span id="span_error_telefono_persona" ><a id="error_telefono_persona"></a></span>
 			
 			<br>
 			<label class="label_email_persona">Correo Electronico</label>
-			<input type='text' id='email_persona' name='email_persona'></input>
+			<input type='text' id='email_persona' name='email_persona' onblur=" return entidad.ADD_email_persona_validation();"></input>
 			<span id="span_error_email_persona" ><a id="error_email_persona"></a></span>
 
 			<br>
 			<label id="label_foto_persona" class="label_foto_persona">Foto Persona</label>
-			<input type='text' id='foto_persona' name='foto_persona'></input>
+			<input type='text' id='foto_persona' name='foto_persona' onblur=" return entidad.ADD_foto_persona_validation();"></input>
 			<span id="span_error_foto_persona"><a id="error_foto_persona"></a></span>
 			<a id="link_foto_persona" href="http://193.147.87.202/ET2/filesuploaded/files_foto_persona/"><img src="./iconos/FILE.png" /></a>
 			
 			<label id="label_nuevo_foto_persona" class="label_nuevo_foto_persona">Nueva Foto Persona</label>
-			<input type='file' id='nuevo_foto_persona' name='nuevo_foto_persona'></input>
+			<input type='file' id='nuevo_foto_persona' name='nuevo_foto_persona' onblur=" return entidad.ADD_nuevo_foto_persona_validation();"></input>
 			<span id="span_error_nuevo_foto_persona"><a id="error_nuevo_foto_persona"></a></span>
 			<br>
 
@@ -141,7 +141,7 @@ class persona {
 			return "nombre_persona_max_size_ko";
 		}
 		// Se permiten letras mayúsculas y minúsculas, con acentos y ñ
-		if (!(this.validations.format('nombre_persona', '^[A-Za-zÁÉÍÓÚáéíóúñÑ]*$'))){
+		if (!(this.validations.format('nombre_persona', '^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ ]*$'))){
 			this.dom.mostrar_error_campo('nombre_persona','nombre_persona_format_ko');
 			return "nombre_persona_format_ko";
 		}
@@ -185,7 +185,7 @@ class persona {
 			return "fechanacimiento_persona_max_size_ko";
 		}
 		//Formatos válidos: dd/mm/yyyy, d/m/yyyy, dd/m/yyyy, d/mm/yyyy
-		if (!(this.validations.format('fechanacimiento_persona', '^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/(19|20)\d\d$'))){
+		if (!(this.validations.format('fechanacimiento_persona', '^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/(19|20)\\d\\d$'))){
 			this.dom.mostrar_error_campo('fechanacimiento_persona','fechanacimiento_persona_format_ko');
 			return "fechanacimiento_persona_format_ko";
 		}
@@ -255,7 +255,7 @@ class persona {
 			return "telefono_persona_max_size_ko";
 		}
 		//Formato valido: 9 dígitos, solo números
-		if (!(this.validations.format('telefono_persona', '[0-9]{9}$'))) {
+		if (!(this.validations.format('telefono_persona', '^[0-9]{9}$'))) {
 			this.dom.mostrar_error_campo('telefono_persona', 'telefono_persona_format_ko');
 			return "telefono_persona_format_ko";
 		}
@@ -302,7 +302,23 @@ class persona {
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	ADD_foto_persona_validation(){
-
+		if (!(this.validations.min_size('foto_persona',5))){
+			this.dom.mostrar_error_campo('foto_persona','foto_persona_min_size_ko');
+			return "foto_persona_min_size_ko";
+		}
+		if (!(this.validations.max_size('foto_persona',15))){
+			this.dom.mostrar_error_campo('foto_persona','foto_persona_max_size_ko');
+			return "foto_persona_max_size_ko";
+		}
+		//Formato valido: direcciones de correo electrónico
+		if (!(this.validations.format('foto_persona', '^(?=.{5,15}$)\w+\.(?:jpg|jpeg)$'))) {
+			this.dom.mostrar_error_campo('foto_persona', 'foto_persona_format_ko');
+			return "foto_persona_format_ko";
+		}
+		this.dom.mostrar_exito_campo('foto_persona');
+		return true;
+/*
+		
 		if (!(this.validations.exist_file('foto_persona'))){
 			this.dom.mostrar_error_campo('foto_persona','foto_persona_exist_file_ko');
 			return "foto_persona_exist_file_ko";
@@ -321,6 +337,7 @@ class persona {
 		}
 		this.dom.mostrar_exito_campo('foto_persona');
 		return true;
+*/
 	}
 
 //Atributo nuevo_foto_persona
@@ -414,6 +431,8 @@ class persona {
 
 	EDIT_foto_persona_validation(){
 
+		return this.ADD_foto_persona_validation();
+/*
 		if (!(this.validations.exist_file('foto_persona'))){
 			this.dom.mostrar_exito_campo('foto_persona');
 			return true;
@@ -426,12 +445,13 @@ class persona {
 			this.dom.mostrar_error_campo('foto_persona','foto_persona_type_file_ko');
 			return "foto_persona_type_file_ko";
 		}
-		if (!(this.validations.format_name_file('foto_persona','[a-zA-Z.]'))){
+		if (!(this.validations.format_name_file('foto_persona','^[a-zA-Z.]*$'))){
 			this.dom.mostrar_error_campo('foto_persona','foto_persona_format_name_file_ko');
 			return "foto_persona_format_name_file_ko";
 		}
 		this.dom.mostrar_exito_campo('foto_persona');
 		return true;
+*/
 	}
 
 	EDIT_nuevo_foto_persona_validation(){
@@ -448,7 +468,7 @@ class persona {
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_type_file_ko');
 			return "nuevo_foto_persona_type_file_ko";
 		}
-		if (!(this.validations.format_name_file('nuevo_foto_persona','[a-zA-Z.]'))){
+		if (!(this.validations.format_name_file('nuevo_foto_persona','^[a-zA-Z.]*$'))){
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_format_name_file_ko');
 			return "nuevo_foto_persona_format_name_file_ko";
 		}
@@ -526,7 +546,7 @@ class persona {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_nombre_persona_validation(){
 
-	if (!(this.validations.max_size('nombre_persona',30))){
+	if (!(this.validations.max_size('nombre_persona',45))){
 		this.dom.mostrar_error_campo('nombre_persona','nombre_persona_max_size_ko');
 		return "nombre_persona_max_size_ko";
 	}
@@ -543,7 +563,7 @@ class persona {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_apellidos_persona_validation(){
 
-	if (!(this.validations.max_size('apellidos_persona',30))){
+	if (!(this.validations.max_size('apellidos_persona',100))){
 		this.dom.mostrar_error_campo('apellidos_persona','apellidos_persona_max_size_ko');
 		return "apellidos_persona_max_size_ko";
 	}
@@ -606,7 +626,7 @@ class persona {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_direccion_persona_validation(){
 
-		if (!(this.validations.max_size('direccion_persona',100))){
+		if (!(this.validations.max_size('direccion_persona',200))){
 			this.dom.mostrar_error_campo('direccion_persona','direccion_persona_max_size_ko');
 			return "direccion_persona_max_size_ko";
 		}
