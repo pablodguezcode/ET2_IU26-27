@@ -2,39 +2,48 @@
 
 Gestión de entidades (formularios, validaciones en cliente y pruebas automáticas) para la asignatura **Interfaces de Usuario**, curso 2026-2027.
 
+
 ## Entidades
 
 `accion`, `funcionalidad`, `funcionalidad_accion`, `persona`, `rol`, `rolaccionfuncionalidad`, `usuario`.
+
 
 ## Estructura del proyecto
 
 ```
 /
-├── index.html              Aplicación principal (menú, tabla, formulario)
+├── index.html                      Aplicación principal (menú, tabla, formulario)
+│
 ├── app/
-│   ├── <entidad>_Class.js  Clase de cada entidad (formulario + validaciones)
-│   └── <entidad>_tests.js  Definición de tests y pruebas de cada entidad
-├── Base/css/IU.css         Estilos
+│   ├── <entidad>_Class.js          Clase de cada entidad (formulario + validaciones)
+│   └── <entidad>_tests.js          Definición de tests y pruebas de cada entidad
+│
+├── Base/css/IU.css                 Estilos
+│
 ├── Core/
-│   ├── Validations_Class.js  Validaciones atómicas (min_size, max_size, format, ficheros...)
-│   ├── Dom_Class.js          Utilidades de DOM (mostrar errores, crear elementos)
-│   ├── Dom_table_Class.js    Pintado de tablas de datos
-│   └── ExternalAccess_class.js  Peticiones al back (peticionBackGeneral)
+│   ├── Validations_Class.js        Validaciones atómicas (min_size, max_size, format, ficheros...)
+│   ├── Dom_Class.js                Utilidades de DOM (mostrar errores, crear elementos)
+│   ├── Dom_table_Class.js          Pintado de tablas de datos
+│   └── ExternalAccess_class.js     Peticiones al back (peticionBackGeneral)
+│
 ├── Test/
-│   ├── Unit/               Comprueba que cada clase tiene todos sus métodos de validación
-│   └── Data/               Ejecuta las pruebas definidas en <entidad>_tests.js
+│   ├── Unit/                       Comprueba que cada clase tiene todos sus métodos de validación
+│   └── Data/                       Ejecuta las pruebas definidas en <entidad>_tests.js
+│
 └── iconos/
 ```
 
+
 ## Cómo ejecutar
 
-| Qué | Cómo |
-|---|---|
-| Aplicación | Abrir `index.html` y elegir la entidad en el menú |
-| Test unitario (existen los métodos) | Abrir `Test/Unit/index.html` |
-| Test de datos (pruebas de cada campo) | Abrir `Test/Data/index.html` y elegir la entidad |
+| Qué                                   | Cómo                                              |
+|---------------------------------------|---------------------------------------------------|
+| Aplicación                            | Abrir `index.html` y elegir la entidad en el menú |
+| Test unitario (existen los métodos)   | Abrir `Test/Unit/index.html`                      |
+| Test de datos (pruebas de cada campo) | Abrir `Test/Data/index.html` y elegir la entidad  |
 
 En el test de datos cada fila indica `CORRECTO` o `INCORRECTO` (en rojo) según coincida el resultado de la validación con el esperado. En el test unitario `existe = false` indica un método de validación que falta.
+
 
 ## Cómo está construida cada entidad
 
@@ -116,15 +125,15 @@ Siempre ancladas con `^...$`. Se usa `*` y no `+` para que SEARCH admita el camp
 
 ## Estado
 
-| Entidad | Clase | Tests ET1 | Pruebas Test/Data | Unit Test |
-|---|---|---|---|---|
-| accion | Pendiente | Hecho | Pendiente | Pendiente |
-| funcionalidad | Pendiente | Hecho | Pendiente | Pendiente |
-| funcionalidad_accion | Pendiente | Hecho | Pendiente | Pendiente |
-| persona | Pendiente | Hecho | Pendiente | Pendiente |
-| rol | Pendiente | Hecho | Pendiente | Pendiente |
-| rolaccionfuncionalidad | Pendiente | Hecho | Pendiente | Pendiente |
-| usuario | Pendiente | Hecho | Pendiente | Pendiente |
+| Entidad                   | Clase     | Tests ET1 | Pruebas Test/Data | Unit Test |
+|---------------------------|-----------|-----------|-------------------|-----------|
+| accion                    | Pendiente | Hecho     | Pendiente         | Pendiente |
+| funcionalidad             | Pendiente | Hecho     | Pendiente         | Pendiente |
+| funcionalidad_accion      | Pendiente | Hecho     | Pendiente         | Pendiente |
+| persona                   | Pendiente | Hecho     | Pendiente         | Pendiente |
+| rol                       | Pendiente | Hecho     | Pendiente         | Pendiente |
+| rolaccionfuncionalidad    | Pendiente | Hecho     | Pendiente         | Pendiente |
+| usuario                   | Pendiente | Hecho     | Pendiente         | Pendiente |
 
 ## Añadir una entidad nueva
 
