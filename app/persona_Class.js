@@ -318,28 +318,6 @@ class persona {
 		}
 		this.dom.mostrar_exito_campo('foto_persona');
 		return true;
-
-/*
-
-		if (!(this.validations.exist_file('foto_persona'))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_exist_file_ko');
-			return "foto_persona_exist_file_ko";
-		}
-		if (!(this.validations.max_size_file('foto_persona',2000))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_max_size_file_ko');
-			return "foto_persona_max_size_file_ko";
-		}
-		if (!(this.validations.type_file('foto_persona',['image/jpeg']))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_type_file_ko');
-			return "foto_persona_type_file_ko";
-		}
-		if (!(this.validations.format_name_file('foto_persona','^[a-zA-Z.]*$'))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_format_name_file_ko');
-			return "foto_persona_format_name_file_ko";
-		}
-		this.dom.mostrar_exito_campo('foto_persona');
-		return true;
-*/
 	}
 
 //Atributo nuevo_foto_persona
@@ -434,26 +412,6 @@ class persona {
 	EDIT_foto_persona_validation(){
 
 		return this.ADD_foto_persona_validation();
-/*
-		if (!(this.validations.exist_file('foto_persona'))){
-			this.dom.mostrar_exito_campo('foto_persona');
-			return true;
-		}
-		if (!(this.validations.max_size_file('foto_persona',2000))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_max_size_file_ko');
-			return "foto_persona_max_size_file_ko";
-		}
-		if (!(this.validations.type_file('foto_persona',['image/jpeg']))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_type_file_ko');
-			return "foto_persona_type_file_ko";
-		}
-		if (!(this.validations.format_name_file('foto_persona','^[a-zA-Z.]*$'))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_format_name_file_ko');
-			return "foto_persona_format_name_file_ko";
-		}
-		this.dom.mostrar_exito_campo('foto_persona');
-		return true;
-*/
 	}
 
 	EDIT_nuevo_foto_persona_validation(){
