@@ -15,6 +15,21 @@ class Unit_Test {
                                 'foto_persona',
                                 'nuevo_foto_persona'
                             ],
+                
+            },
+            { 
+                stringclase : 'usuario', 
+                attributes : [  'dni',
+                                'usuario',
+                                'contrasena',
+                                'id_rol'
+                            ] 
+            },
+            {
+                 stringclase : 'funcionalidad_accion', 
+                 attributes : [ 'id_funcionalidad',
+                                'id_accion'
+                            ] 
             },
         ];
 

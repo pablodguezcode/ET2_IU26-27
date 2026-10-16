@@ -90,13 +90,21 @@ class usuario {
 			return "dni_format_ko";
 		}
 		//letra de control (modulo 23). La funcion recibe el valor, no lee del DOM
-		if (!(this.validations.dni_letter_ok(document.getElementById('dni').value))){
+		if (!(this.dni_personalize_validation(document.getElementById('dni').value))){
 			this.dom.mostrar_error_campo('dni','dni_personalized_ko');
 			return "dni_personalized_ko";
 		}
 		this.dom.mostrar_exito_campo('dni');
 		return true;
 
+	}
+
+	//Retorna true si la letra de control (numero mod 23) coincide con la del DNI, si no devuelve false.
+	//Recibe el valor por parametro (no lee del DOM). Se llama despues de comprobar el formato (8 digitos + letra).
+	dni_personalize_validation(dni){
+
+		var dni_letters = "TRWAGMYFPDXBNJZSQVHLCKE";
+		return dni_letters.charAt(parseInt(dni.substring(0, 8), 10) % 23) == dni.charAt(8);
 	}
 
 //Atributo usuario
