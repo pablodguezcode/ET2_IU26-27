@@ -111,6 +111,9 @@ class Data_Test {
             if (def[2] == 'select'){
                 var elementoform = this.dom.crearElementoHtml(def[2], '', def[1], pruebas[i][5]);
             }
+            if (def[2] == 'textarea'){
+                var elementoform = this.dom.crearElementoHtml(def[2], 'textarea', def[1], pruebas[i][5]);
+            }
             
             // se colocan los elementos de muestra de error por si falla la validacion y la entidad intenta mostrarlos
             this.dom.crearElementoHtml('span', '', 'span_error_'+def[1], {});

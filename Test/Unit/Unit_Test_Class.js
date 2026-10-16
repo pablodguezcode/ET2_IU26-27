@@ -31,6 +31,13 @@ class Unit_Test {
                                 'id_accion'
                             ] 
             },
+            {
+                stringclase : 'rol',
+                attributes : [  'id_rol',
+                                'rol_name',
+                                'rol_description'
+                            ],
+            },
         ];
 
         this.actions = ["ADD","EDIT","SEARCH"]

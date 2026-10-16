@@ -38,6 +38,8 @@ class Validations{
 				
 				}
 				break;
+			case 'TEXTAREA':
+				return elemento.value.length >= minsize;
 			case 'SELECT':
 				return elemento.value.length >= minsize;
 				break;
@@ -76,6 +78,8 @@ class Validations{
 				
 				}
 				break;
+			case 'TEXTAREA':
+				return elemento.value.length <= maxsize;
 			case 'SELECT':
 				return elemento.value.length <= maxsize;
 				break;

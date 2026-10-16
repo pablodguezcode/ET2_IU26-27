@@ -108,6 +108,16 @@ class dom extends dom_table {
 					this.colocarelemento(element, 'form');
 				}
 				break;
+			case 'textarea':
+				//un textarea por cada valor de prueba (el value de un textarea no es un atributo html, se asigna con .value)
+				for (var clave in valores){
+					element = document.createElement('textarea');
+					element.id = clave;
+					element.name = clave;
+					element.value = valores[clave];
+					this.colocarelemento(element, 'form');
+				}
+				break;
 			default: // este lo uso para crear los span y los a de los errores sin valor
 				element = document.createElement(tag);
 				element.type = tipo;
