@@ -38,6 +38,13 @@ class Unit_Test {
                                 'rol_description'
                             ],
             },
+            {
+                stringclase : 'accion',
+                attributes : [  'id_accion',
+                                'nombre_accion',
+                                'descrip_accion'
+                            ],
+            },
         ];
 
         this.actions = ["ADD","EDIT","SEARCH"]
