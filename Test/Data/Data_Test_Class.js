@@ -56,6 +56,10 @@ class Data_Test {
 
         var contadorpruebas = 0;
 
+        /* ESTO PARA SOLUCIONAR CASO DE CONTAMINACION DE OTRA CLASE
+        this.dom.vaciarDiv('form');
+        */
+
         // recorro todas las pruebas definidas
         
         for (let i=0;i<pruebas.length;i++){
@@ -103,6 +107,9 @@ class Data_Test {
             }
             if (def[2] == 'file'){
                 var elementoform = this.dom.crearElementoHtml(def[2], 'file', def[1], pruebas[i][5]);
+            }
+            if (def[2] == 'select'){
+                var elementoform = this.dom.crearElementoHtml(def[2], '', def[1], pruebas[i][5]);
             }
             
             // se colocan los elementos de muestra de error por si falla la validacion y la entidad intenta mostrarlos

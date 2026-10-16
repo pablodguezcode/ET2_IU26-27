@@ -18,17 +18,10 @@ class Validations{
 					case 'email':
 
 					case 'text':
-						let valorelemento = elemento.value;
-						if (valorelemento.length<minsize){
-							return false;
-						}
-						else{
-							return true;
-						}
-						break;
+						
 
 					case 'password':
-						valorelemento = elemento.value;
+						let valorelemento = elemento.value;
 						if (valorelemento.length<minsize){
 							return false;
 						}
@@ -66,6 +59,8 @@ class Validations{
 					case 'number':
 					case 'email':
 					case 'text':
+
+					case 'password' :
 						let valorelemento = elemento.value;
 						if (valorelemento.length>maxsize){
 							return false;

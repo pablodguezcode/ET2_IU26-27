@@ -95,6 +95,19 @@ class dom extends dom_table {
 				//return element;
 				this.colocarelemento(element, 'form');
 				break;
+			case 'select':
+				//un select por cada valor de prueba, con una unica opcion (el valor de prueba) que queda seleccionada
+				for (var clave in valores){
+					element = document.createElement('select');
+					element.id = clave;
+					element.name = clave;
+					var opcion = document.createElement('option');
+					opcion.value = valores[clave];
+					opcion.text = valores[clave];
+					element.append(opcion);
+					this.colocarelemento(element, 'form');
+				}
+				break;
 			default: // este lo uso para crear los span y los a de los errores sin valor
 				element = document.createElement(tag);
 				element.type = tipo;
