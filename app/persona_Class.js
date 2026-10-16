@@ -6,9 +6,9 @@ class persona {
 		this.validations = new Validations();
 		this.access_functions = new ExternalAccess();
 
-		this.columnasamostrar = ['dni','nombre_persona', 'apellidos_persona', 'fechanacimiento_persona',
+		this.columnasamostrar = ['dni','nombre_persona', 'apellidos_persona', 'fechaNacimiento_persona',
 			'direccion_persona','telefono_persona', 'email_persona','foto_persona', 'nuevo_foto_persona' ];
-		this.mostrarespecial = ['foto_persona', 'nuevo_foto_persona'];
+		this.mostrarespecial = ['nuevo_foto_persona'];
 		this.nombreentidad = 'persona';
 
 		//init
@@ -49,9 +49,9 @@ class persona {
 			<span id="span_error_apellidos_persona" ><a id="error_apellidos_persona"></a></span>
 			<br>
 			
-			<label class="label_fechanacimiento_persona">Fecha de Nacimiento</label>
-			<input type='text' id='fechanacimiento_persona' name='fechanacimiento_persona' onblur=" return entidad.ADD_fechanacimiento_persona_validation();"></input>
-			<span id="span_error_fechanacimiento_persona" ><a id="error_fechanacimiento_persona"></a></span>
+			<label class="label_fechaNacimiento_persona">Fecha de Nacimiento</label>
+			<input type='text' id='fechaNacimiento_persona' name='fechaNacimiento_persona' onblur=" return entidad.ADD_fechaNacimiento_persona_validation();"></input>
+			<span id="span_error_fechaNacimiento_persona" ><a id="error_fechaNacimiento_persona"></a></span>
 			
 			<br>
 			<label class="label_direccion_persona">Dirección Postal</label>
@@ -109,8 +109,8 @@ class persona {
 			return "dni_format_ko";
 		}
 		if (!(this.dni_personalize_validation('dni'))){
-			this.dom.mostrar_error_campo('dni','dni_personalize_validate_dni_ko');
-			return "dni_personalize_validate_dni_ko";
+			this.dom.mostrar_error_campo('dni','dni_personalized_ko');
+			return "dni_personalized_ko";
 		}
 		this.dom.mostrar_exito_campo('dni');
 		return true;
@@ -141,7 +141,7 @@ class persona {
 			return "nombre_persona_max_size_ko";
 		}
 		// Se permiten letras mayúsculas y minúsculas, con acentos y ñ
-		if (!(this.validations.format('nombre_persona', '^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ ]*$'))){
+		if (!(this.validations.format('nombre_persona', '^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ.\\- ]*$'))){
 			this.dom.mostrar_error_campo('nombre_persona','nombre_persona_format_ko');
 			return "nombre_persona_format_ko";
 		}
@@ -163,7 +163,7 @@ class persona {
 			return "apellidos_persona_max_size_ko";
 		}
 		// Se permiten letras mayúsculas y minúsculas, con acentos y ñ
-		if (!(this.validations.format('apellidos_persona', '^[A-Za-zÁÉÍÓÚáéíóúñÑ]*$'))){
+		if (!(this.validations.format('apellidos_persona', '^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ.\\- ]*$'))){
 			this.dom.mostrar_error_campo('apellidos_persona','apellidos_persona_format_ko');
 			return "apellidos_persona_format_ko";
 		}
@@ -171,37 +171,37 @@ class persona {
 		return true;
 	}
 
-//Atributo fechanacimiento_persona
+//Atributo fechaNacimiento_persona
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	ADD_fechanacimiento_persona_validation(){
+	ADD_fechaNacimiento_persona_validation(){
 		
-		if (!(this.validations.min_size('fechanacimiento_persona',8))){
-			this.dom.mostrar_error_campo('fechanacimiento_persona','fechanacimiento_persona_min_size_ko');
-			return "fechanacimiento_persona_min_size_ko";
+		if (!(this.validations.min_size('fechaNacimiento_persona',8))){
+			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_min_size_ko');
+			return "fechaNacimiento_persona_min_size_ko";
 		}
-		if (!(this.validations.max_size('fechanacimiento_persona',10))){
-			this.dom.mostrar_error_campo('fechanacimiento_persona','fechanacimiento_persona_max_size_ko');
-			return "fechanacimiento_persona_max_size_ko";
+		if (!(this.validations.max_size('fechaNacimiento_persona',10))){
+			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_max_size_ko');
+			return "fechaNacimiento_persona_max_size_ko";
 		}
 		//Formatos válidos: dd/mm/yyyy, d/m/yyyy, dd/m/yyyy, d/mm/yyyy
-		if (!(this.validations.format('fechanacimiento_persona', '^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/(19|20)\\d\\d$'))){
-			this.dom.mostrar_error_campo('fechanacimiento_persona','fechanacimiento_persona_format_ko');
-			return "fechanacimiento_persona_format_ko";
+		if (!(this.validations.format('fechaNacimiento_persona', '^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/[0-9]{4}$'))){
+			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_format_ko');
+			return "fechaNacimiento_persona_format_ko";
 		}
 		//verificar que la fecha sea válida y no esté en el futuro
-		if (!(this.fechanacimiento_personalize_validation('fechanacimiento_persona'))){
-			this.dom.mostrar_error_campo('fechanacimiento_persona','fechanacimiento_persona_personalize_validate_ko');
-			return "fechanacimiento_persona_personalize_validate_ko";
+		if (!(this.fechaNacimiento_personalize_validation('fechaNacimiento_persona'))){
+			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_personalized_ko');
+			return "fechaNacimiento_persona_personalized_ko";
 		}
-		this.dom.mostrar_exito_campo('fechanacimiento_persona');
+		this.dom.mostrar_exito_campo('fechaNacimiento_persona');
 		return true;
 	}
 
 	//Retorna true si el campo es valido, si no devuelve false
-	fechanacimiento_personalize_validation(fecha) {
+	fechaNacimiento_personalize_validation(fecha) {
 
-		fecha = document.getElementById('fechanacimiento_persona').value;
+		fecha = document.getElementById('fechaNacimiento_persona').value;
 
 		const [dia, mes, anio] = fecha.trim().split('/').map(Number);
 		const fechaIntroducida = new Date(anio, mes - 1, dia);
@@ -261,8 +261,8 @@ class persona {
 		}
 		//Verificar que el primer dígito sea 6, 7, 8 o 9 (teléfonos españoles)
 		if (!(this.telefono_personalize_validation('telefono_persona'))){
-			this.dom.mostrar_error_campo('telefono_persona','telefono_persona_personalize_validate_ko');
-			return "telefono_persona_personalize_validate_ko";
+			this.dom.mostrar_error_campo('telefono_persona','telefono_persona_personalized_ko');
+			return "telefono_persona_personalized_ko";
 		}
 		this.dom.mostrar_exito_campo('telefono_persona');
 		return true;
@@ -281,7 +281,7 @@ class persona {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	ADD_email_persona_validation(){
 		
-		if (!(this.validations.min_size('email_persona',1))){
+		if (!(this.validations.min_size('email_persona',6))){
 			this.dom.mostrar_error_campo('email_persona','email_persona_min_size_ko');
 			return "email_persona_min_size_ko";
 		}
@@ -316,8 +316,21 @@ class persona {
 			this.dom.mostrar_error_campo('foto_persona','foto_persona_format_ko');
 			return "foto_persona_format_ko";
 		}
+		// la extension debe ser jpg o jpeg
+		if (!(this.foto_personalize_validation('foto_persona'))){
+			this.dom.mostrar_error_campo('foto_persona','foto_persona_personalized_ko');
+			return "foto_persona_personalized_ko";
+		}
 		this.dom.mostrar_exito_campo('foto_persona');
 		return true;
+	}
+
+	//Retorna true si el nombre del fichero termina en .jpg o .jpeg, si no devuelve false
+	foto_personalize_validation(foto){
+
+		foto = document.getElementById('foto_persona').value;
+
+		return /\.(jpg|jpeg)$/i.test(foto);
 	}
 
 //Atributo nuevo_foto_persona
@@ -329,7 +342,7 @@ class persona {
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_exist_file_ko');
 			return "nuevo_foto_persona_exist_file_ko";
 		}
-		if (!(this.validations.max_size_file('nuevo_foto_persona',2000))){
+		if (!(this.validations.max_size_file('nuevo_foto_persona',2097152))){
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_max_size_file_ko');
 			return "nuevo_foto_persona_max_size_file_ko";
 		}
@@ -337,7 +350,7 @@ class persona {
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_type_file_ko');
 			return "nuevo_foto_persona_type_file_ko";
 		}
-		if (!(this.validations.format_name_file('nuevo_foto_persona','^[a-zA-Z.]*$'))){
+		if (!(this.validations.format_name_file('nuevo_foto_persona','^[a-zA-Z.]{5,15}$'))){
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_format_name_file_ko');
 			return "nuevo_foto_persona_format_name_file_ko";
 		}
@@ -357,7 +370,7 @@ class persona {
 		let result = ((this.ADD_dni_validation()) &
 					(this.ADD_nombre_persona_validation()) &
 					(this.ADD_apellidos_persona_validation()) &
-					(this.ADD_fechanacimiento_persona_validation()) &
+					(this.ADD_fechaNacimiento_persona_validation()) &
 					(this.ADD_direccion_persona_validation()) &
 					(this.ADD_telefono_persona_validation()) &
 					(this.ADD_email_persona_validation()) &
@@ -389,9 +402,9 @@ class persona {
 		return this.ADD_apellidos_persona_validation();
 	}
 
-	EDIT_fechanacimiento_persona_validation(){
+	EDIT_fechaNacimiento_persona_validation(){
 
-		return this.ADD_fechanacimiento_persona_validation();
+		return this.ADD_fechaNacimiento_persona_validation();
 	}
 
 	EDIT_direccion_persona_validation(){
@@ -411,6 +424,11 @@ class persona {
 
 	EDIT_foto_persona_validation(){
 
+		// en EDIT puede ir vacio (se conserva la foto actual); si trae algo, mismas restricciones que en ADD
+		if (document.getElementById('foto_persona').value.length == 0){
+			this.dom.mostrar_exito_campo('foto_persona');
+			return true;
+		}
 		return this.ADD_foto_persona_validation();
 	}
 
@@ -420,7 +438,7 @@ class persona {
 			this.dom.mostrar_exito_campo('nuevo_foto_persona');
 			return true;
 		}
-		if (!(this.validations.max_size_file('nuevo_foto_persona',2000))){
+		if (!(this.validations.max_size_file('nuevo_foto_persona',2097152))){
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_max_size_file_ko');
 			return "nuevo_foto_persona_max_size_file_ko";
 		}
@@ -428,7 +446,7 @@ class persona {
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_type_file_ko');
 			return "nuevo_foto_persona_type_file_ko";
 		}
-		if (!(this.validations.format_name_file('nuevo_foto_persona','^[a-zA-Z.]*$'))){
+		if (!(this.validations.format_name_file('nuevo_foto_persona','^[a-zA-Z.]{5,15}$'))){
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_format_name_file_ko');
 			return "nuevo_foto_persona_format_name_file_ko";
 		}
@@ -447,7 +465,7 @@ class persona {
 		let result = ((this.EDIT_dni_validation()) &
 					(this.EDIT_nombre_persona_validation()) &
 					(this.EDIT_apellidos_persona_validation()) &
-					(this.EDIT_fechanacimiento_persona_validation()) &
+					(this.EDIT_fechaNacimiento_persona_validation()) &
 					(this.EDIT_direccion_persona_validation()) &
 					(this.EDIT_telefono_persona_validation()) &
 					(this.EDIT_email_persona_validation()) &
@@ -470,35 +488,17 @@ class persona {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_dni_validation(){
 
-		if (!(this.validations.max_size('dni_persona',9))){
-			this.dom.mostrar_error_campo('dni_persona','dni_persona_max_size_ko');
-			return "dni_persona_max_size_ko";
+		if (!(this.validations.max_size('dni',9))){
+			this.dom.mostrar_error_campo('dni','dni_max_size_ko');
+			return "dni_max_size_ko";
 		}
-		// vacío, 1-8 dígitos, o 8 dígitos + letra
-		if (!(this.validations.format('dni_persona', '^([0-9]{1,8}|[0-9]{8}[A-Z])?$'))){
-			this.dom.mostrar_error_campo('dni_persona','dni_persona_format_ko');
-			return "dni_persona_format_ko";
+		// vacio (sin filtro) o dni parcial/completo: solo digitos y letras. No se recalcula la letra de control (ver persona_tests.js)
+		if (!(this.validations.format('dni', '^[0-9A-Za-z]*$'))){
+			this.dom.mostrar_error_campo('dni','dni_format_ko');
+			return "dni_format_ko";
 		}
-		if (!(this.dni_personalize_validation_search('dni_persona'))){
-			this.dom.mostrar_error_campo('dni_persona','dni_persona_personalize_validate_dni_ko');
-			return "dni_persona_personalize_validate_dni_ko";
-		}
-		this.dom.mostrar_exito_campo('dni_persona');
+		this.dom.mostrar_exito_campo('dni');
 		return true;
-	}
-
-	//Retorna true si el campo es valido, si no devuelve false
-	dni_personalize_validation_search(dni){
-
-		dni = document.getElementById('dni_persona').value;
-
-		// Si no está completo (9 caracteres) no se puede comprobar la letra
-		if (dni.length < 9) return true;
-
-		var dni_letters = "TRWAGMYFPDXBNJZSQVHLCKE";
-		var letter = dni_letters.charAt(parseInt(dni, 10) % 23);
-
-		return letter == dni.charAt(8);
 	}
 
 //Atributo nombre_persona
@@ -510,7 +510,7 @@ class persona {
 		this.dom.mostrar_error_campo('nombre_persona','nombre_persona_max_size_ko');
 		return "nombre_persona_max_size_ko";
 	}
-	if (!(this.validations.format('nombre_persona', '^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ ]*$'))){
+	if (!(this.validations.format('nombre_persona', '^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ.\\- ]*$'))){
 		this.dom.mostrar_error_campo('nombre_persona','nombre_persona_format_ko');
 		return "nombre_persona_format_ko";
 	}
@@ -528,7 +528,7 @@ class persona {
 		return "apellidos_persona_max_size_ko";
 	}
 	// vacío o letras (incl. ñ y acentos) y espacios
-	if (!(this.validations.format('apellidos_persona', '^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ ]*$'))){
+	if (!(this.validations.format('apellidos_persona', '^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ.\\- ]*$'))){
 		this.dom.mostrar_error_campo('apellidos_persona','apellidos_persona_format_ko');
 		return "apellidos_persona_format_ko";
 	}
@@ -536,32 +536,32 @@ class persona {
 	return true;
 	}
 
-//Atributo fechanacimiento_persona
+//Atributo fechaNacimiento_persona
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	SEARCH_fechanacimiento_persona_validation(){
+	SEARCH_fechaNacimiento_persona_validation(){
 
-		if (!(this.validations.max_size('fechanacimiento_persona',10))){
-			this.dom.mostrar_error_campo('fechanacimiento_persona','fechanacimiento_persona_max_size_ko');
-			return "fechanacimiento_persona_max_size_ko";
+		if (!(this.validations.max_size('fechaNacimiento_persona',10))){
+			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_max_size_ko');
+			return "fechaNacimiento_persona_max_size_ko";
 		}
 		// vacío, o d/m/yyyy escrito parcialmente
-		if (!(this.validations.format('fechanacimiento_persona', '^(\\d{1,2}(/(\\d{1,2}(/\\d{0,4})?)?)?)?$'))){
-			this.dom.mostrar_error_campo('fechanacimiento_persona','fechanacimiento_persona_format_ko');
-			return "fechanacimiento_persona_format_ko";
+		if (!(this.validations.format('fechaNacimiento_persona', '^[0-9/]*$'))){
+			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_format_ko');
+			return "fechaNacimiento_persona_format_ko";
 		}
-		if (!(this.fechanacimiento_personalize_validation_search('fechanacimiento_persona'))){
-			this.dom.mostrar_error_campo('fechanacimiento_persona','fechanacimiento_persona_personalize_validate_ko');
-			return "fechanacimiento_persona_personalize_validate_ko";
+		if (!(this.fechaNacimiento_personalize_validation_search('fechaNacimiento_persona'))){
+			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_personalized_ko');
+			return "fechaNacimiento_persona_personalized_ko";
 		}
-		this.dom.mostrar_exito_campo('fechanacimiento_persona');
+		this.dom.mostrar_exito_campo('fechaNacimiento_persona');
 		return true;
 	}
 
 	//Retorna true si el campo es valido, si no devuelve false
-	fechanacimiento_personalize_validation_search(fecha){
+	fechaNacimiento_personalize_validation_search(fecha){
 
-		fecha = document.getElementById('fechanacimiento_persona').value.trim();
+		fecha = document.getElementById('fechaNacimiento_persona').value.trim();
 
 		// Solo se comprueba existencia y no futura cuando la fecha está completa
 		if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(fecha)) return true;
@@ -614,8 +614,8 @@ class persona {
 			return "telefono_persona_format_ko";
 		}
 		if (!(this.telefono_personalize_validation_search('telefono_persona'))){
-			this.dom.mostrar_error_campo('telefono_persona','telefono_persona_personalize_validate_ko');
-			return "telefono_persona_personalize_validate_ko";
+			this.dom.mostrar_error_campo('telefono_persona','telefono_persona_personalized_ko');
+			return "telefono_persona_personalized_ko";
 		}
 		this.dom.mostrar_exito_campo('telefono_persona');
 		return true;
@@ -679,8 +679,8 @@ class persona {
 		}
 		// vacío o nombre parcial: letras y puntos
 		if (!(this.validations.format('nuevo_foto_persona', '^[a-zA-Z.]*$'))){
-			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_format_ko');
-			return "nuevo_foto_persona_format_ko";
+			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_format_name_file_ko');
+			return "nuevo_foto_persona_format_name_file_ko";
 		}
 		this.dom.mostrar_exito_campo('nuevo_foto_persona');
 		return true;
@@ -698,7 +698,7 @@ class persona {
 		let result = ((this.SEARCH_dni_validation()) &
 					(this.SEARCH_nombre_persona_validation()) &
 					(this.SEARCH_apellidos_persona_validation()) &
-					(this.SEARCH_fechanacimiento_persona_validation()) &
+					(this.SEARCH_fechaNacimiento_persona_validation()) &
 					(this.SEARCH_direccion_persona_validation()) &
 					(this.SEARCH_telefono_persona_validation()) &
 					(this.SEARCH_email_persona_validation()) &

@@ -1,3 +1,10 @@
+/* fecha de hoy (+ n dias) en formato d/m/aaaa, para las pruebas de "no posterior a hoy" */
+function fecha_hoy_mas(dias){
+    var d = new Date();
+    d.setDate(d.getDate() + dias);
+    return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+}
+
 /*ESTRUCTURA:
 
     ["entidad", "campo", "tipo", "nº test", "descripción_Test", "metodo", "acción",  
@@ -559,13 +566,13 @@ var persona_pruebas = [
             ["persona", "fechaNacimiento_persona", 39, 80, "ADD", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
             ["persona", "fechaNacimiento_persona", 39, 81, "ADD", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
 
-            ["persona", "fechaNacimiento_persona", 39, 82, "ADD", {"fechaNacimiento_persona": "getdate()+1"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 39, 82, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(1)}, "fechaNacimiento_persona_personalized_ko"],
 
             ["persona", "fechaNacimiento_persona", 40, 83, "ADD", {"fechaNacimiento_persona": "1/1/2000"}, true],
             ["persona", "fechaNacimiento_persona", 40, 84, "ADD", {"fechaNacimiento_persona": "15/01/2000"}, true],
             ["persona", "fechaNacimiento_persona", 40, 85, "ADD", {"fechaNacimiento_persona": "29/02/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 40, 86, "ADD", {"fechaNacimiento_persona": "getdate()"}, true],
-            ["persona", "fechaNacimiento_persona", 40, 87, "ADD", {"fechaNacimiento_persona": "getdate()-1"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 86, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(0)}, true],
+            ["persona", "fechaNacimiento_persona", 40, 87, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(-1)}, true],
             ["persona", "fechaNacimiento_persona", 40, 88, "ADD", {"fechaNacimiento_persona": "31/12/1999"}, true],
 
         //Acción: EDIT
@@ -580,13 +587,13 @@ var persona_pruebas = [
 
             ["persona", "fechaNacimiento_persona", 44, 93, "EDIT", {"fechaNacimiento_persona": "01/01/2100"}, "fechaNacimiento_persona_personalized_ko"],
             ["persona", "fechaNacimiento_persona", 44, 94, "EDIT", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 44, 95, "EDIT", {"fechaNacimiento_persona": "getdate()+1"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 44, 95, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(1)}, "fechaNacimiento_persona_personalized_ko"],
 
             ["persona", "fechaNacimiento_persona", 45, 96, "EDIT", {"fechaNacimiento_persona": "1/1/2000"}, true],
             ["persona", "fechaNacimiento_persona", 45, 97, "EDIT", {"fechaNacimiento_persona": "15/01/2000"}, true],
             ["persona", "fechaNacimiento_persona", 45, 98, "EDIT", {"fechaNacimiento_persona": "29/02/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 45, 99, "EDIT", {"fechaNacimiento_persona": "getdate()"}, true],
-            ["persona", "fechaNacimiento_persona", 45, 100, "EDIT", {"fechaNacimiento_persona": "getdate()-1"}, true],
+            ["persona", "fechaNacimiento_persona", 45, 99, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(0)}, true],
+            ["persona", "fechaNacimiento_persona", 45, 100, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(-1)}, true],
             ["persona", "fechaNacimiento_persona", 45, 101, "EDIT", {"fechaNacimiento_persona": "31/12/1999"}, true],
 
         //Acción: SEARCH
@@ -784,46 +791,46 @@ var persona_pruebas = [
 
         //Acción: ADD
 
-            ["persona", "nuevo_foto_persona", 97, 208, "ADD", {"nuevo_foto_persona": {"name": "", "type": "image/jpeg", "size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 97, 209, "ADD", {"nuevo_foto_persona": {"name": "abcd", "type": "image/jpeg", "size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 97, 208, "ADD", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 97, 209, "ADD", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 97, 210, "ADD", {"nuevo_foto_persona": {"name": "a".repeat(12) + ".jpg", "type": "image/jpeg", "size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 97, 210, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(12) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 97, 211, "ADD", {"nuevo_foto_persona": {"name": "mi foto.jpg", "type": "image/jpeg", "size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 97, 212, "ADD", {"nuevo_foto_persona": {"name": "foto1.jpg", "type": "image/jpeg", "size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 97, 211, "ADD", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 97, 212, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto1.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 98, 213, "ADD", {"nuevo_foto_persona": {"name": "foto.png", "type": "image/png", "size": 100000}}, "nuevo_foto_persona_type_file_ko"],
-            ["persona", "nuevo_foto_persona", 98, 214, "ADD", {"nuevo_foto_persona": {"name": "foto.pdf", "type": "application/pdf", "size": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 98, 213, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 98, 214, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.pdf", "type_file": "application/pdf", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 99, 215, "ADD", {"nuevo_foto_persona": {"name": "foto.jpg", "type": "image/jpeg", "size": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
-            ["persona", "nuevo_foto_persona", 99, 216, "ADD", {"nuevo_foto_persona": {"name": "foto.jpg", "type": "image/jpeg", "size": 3000000}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 99, 215, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 99, 216, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 3000000}}, "nuevo_foto_persona_max_size_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 100, 217, "ADD", {"nuevo_foto_persona": {"name": "a.jpg", "type": "image/jpeg", "size": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 100, 218, "ADD", {"nuevo_foto_persona": {"name": "a".repeat(11) + ".jpg", "type": "image/jpeg", "size": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 100, 219, "ADD", {"nuevo_foto_persona": {"name": "foto.jpg", "type": "image/jpeg", "size": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 100, 220, "ADD", {"nuevo_foto_persona": {"name": "foto.jpeg", "type": "image/jpeg", "size": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 100, 221, "ADD", {"nuevo_foto_persona": {"name": "foto.jpg", "type": "image/jpeg", "size": 2097152}}, true],
-            ["persona", "nuevo_foto_persona", 100, 222, "ADD", {"nuevo_foto_persona": {"name": "fotoperfil.jpeg", "type": "image/jpeg", "size": 500000}}, true],
+            ["persona", "nuevo_foto_persona", 100, 217, "ADD", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 100, 218, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 100, 219, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 100, 220, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 100, 221, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
+            ["persona", "nuevo_foto_persona", 100, 222, "ADD", {"nuevo_foto_persona": {"format_name_file": "fotoperfil.jpeg", "type_file": "image/jpeg", "max_size_file": 500000}}, true],
 
         //Acción: EDIT
 
-            ["persona", "nuevo_foto_persona", 101, 223, "EDIT", {"nuevo_foto_persona": {"name": "", "type": "image/jpeg", "size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 101, 224, "EDIT", {"nuevo_foto_persona": {"name": "abcd", "type": "image/jpeg", "size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 101, 223, "EDIT", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 101, 224, "EDIT", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 101, 225, "EDIT", {"nuevo_foto_persona": {"name":"a".repeat(12) + ".jpg", "type": "image/jpeg","size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 101, 225, "EDIT", {"nuevo_foto_persona": {"format_name_file":"a".repeat(12) + ".jpg", "type_file": "image/jpeg","max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 101, 226, "EDIT", {"nuevo_foto_persona": {"name": "mi foto.jpg", "type": "image/jpeg", "size": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 101, 226, "EDIT", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 102, 227, "EDIT", {"nuevo_foto_persona": {"name": "foto.png", "type": "image/png", "size": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 102, 227, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 103, 228, "EDIT", {"nuevo_foto_persona": {"name": "foto.jpg", "type": "image/jpeg", "size": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 103, 228, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 104, 229, "EDIT", {"nuevo_foto_persona": {"name": "a.jpg", "type": "image/jpeg", "size": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 104, 230, "EDIT", {"nuevo_foto_persona": {"name": "a".repeat(11) + ".jpg", "type": "image/jpeg", "size": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 104, 231, "EDIT", {"nuevo_foto_persona": {"name": "foto.jpg", "type": "image/jpeg", "size": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 104, 232, "EDIT", {"nuevo_foto_persona": {"name": "foto.jpeg", "type": "image/jpeg", "size": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 104, 233, "EDIT", {"nuevo_foto_persona": {"name": "foto.jpg", "type": "image/jpeg", "size": 2097152}}, true],
-            ["persona", "nuevo_foto_persona", 104, 234, "EDIT", {"nuevo_foto_persona": {} }, true],
+            ["persona", "nuevo_foto_persona", 104, 229, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 104, 230, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 104, 231, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 104, 232, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 104, 233, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
+            ["persona", "nuevo_foto_persona", 104, 234, "EDIT", {}, true],
         //Acción: SEARCH
 
             ["persona", "nuevo_foto_persona", 105, 235, "SEARCH", {"nuevo_foto_persona": "a".repeat(12) + ".jpg"}, "nuevo_foto_persona_max_size_ko"],
