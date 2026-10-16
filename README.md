@@ -125,15 +125,15 @@ Siempre ancladas con `^...$`. Se usa `*` y no `+` para que SEARCH admita el camp
 
 ## Estado
 
-| Entidad                   | Clase     | Tests ET1 | Pruebas Test/Data | Unit Test |
-|---------------------------|-----------|-----------|-------------------|-----------|
-| accion                    | Pendiente | Hecho     | Pendiente         | Pendiente |
-| funcionalidad             | Pendiente | Hecho     | Pendiente         | Pendiente |
-| funcionalidad_accion      | Pendiente | Hecho     | Pendiente         | Pendiente |
-| persona                   | Pendiente | Hecho     | Pendiente         | Pendiente |
-| rol                       | Pendiente | Hecho     | Pendiente         | Pendiente |
-| rolaccionfuncionalidad    | Pendiente | Hecho     | Pendiente         | Pendiente |
-| usuario                   | Pendiente | Hecho     | Pendiente         | Pendiente |
+| Entidad                   | Clase      | Tests ET1     | Pruebas Test/Data | Unit Test  |
+|---------------------------|------------|---------------|-------------------|------------|
+| accion                    | En proceso | Realizado     | Realizado         | Realizado  |
+| funcionalidad             | Pendiente  | Realizado     | Pendiente         | Pendiente  |
+| funcionalidad_accion      | En proceso | Realizado     | Pendiente         | Realizado  |
+| persona                   | En proceso | Realizado     | Realizado         | En proceso |
+| rol                       | En proceso | Realizado     | Realizado         | Realizado  |
+| rolaccionfuncionalidad    | Pendiente  | Realizado     | Realizado         | Pendiente  |
+| usuario                   | En proceso | Realizado     | Realizado         | Realizado  |
 
 ## Añadir una entidad nueva
 
