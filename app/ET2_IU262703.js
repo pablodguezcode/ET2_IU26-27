@@ -1,0 +1,19 @@
+datosgenerales =
+{
+    Lider:
+        ["Queso",
+        2,
+        10],
+    Participante1:
+        ["Parmesano",
+        2,
+        11],
+    Participante2:
+        ["Azul",
+        2,
+        10],
+    Participante3:
+        ["Manchego",
+        2,
+        9.20],
+}
