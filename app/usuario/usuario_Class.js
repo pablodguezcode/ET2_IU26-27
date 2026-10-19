@@ -179,8 +179,9 @@ class usuario {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos, si no devuelve false
-	//Se ejecutan TODAS las validaciones (el array se evalua entero) para que se muestren todos los errores a la vez
+	//Se invoca desde el onsubmit del formulario. Valida todos los campos (el array se evalua entero, para que se muestren
+	//todos los errores a la vez) y, si todos son correctos, pide la accion ADD al back. Siempre devuelve false: el envio lo
+	//hace ADD() por ajax y no el submit nativo del formulario (que navegaria a procesaform.php).
 	ADD_submit_usuario(){
 
 		let resultados = [
@@ -190,7 +191,10 @@ class usuario {
 			this.ADD_id_rol_validation()
 		];
 
-		return resultados.every(resultado => resultado === true);
+		if (resultados.every(resultado => resultado === true)){
+			this.ADD();
+		}
+		return false;
 	}
 
 
@@ -334,8 +338,8 @@ class usuario {
                                  				Otras Cosas, No tocar
 ****************************************************************************************************************************/
 
-	//Stubs (alert), igual que en persona: los formularios reales de EDIT, DELETE, SHOWCURRENT, ADD y SEARCH
-	//todavia no estan implementados.
+	//Stubs (alert): los formularios reales de EDIT, DELETE, SHOWCURRENT y SEARCH todavia no estan implementados.
+	//El de ADD esta en la seccion "Formulario ADD".
 
 	createForm_EDIT(fila){
 
@@ -350,12 +354,118 @@ class usuario {
 		alert('crear formulario DETALLE');
 	}
 
-	createForm_ADD(){
-		alert('crear formulario ADD');
-	}
-
 	createForm_SEARCH(){
 		alert('crear formulario SEARCH');
+	}
+
+
+
+/***************************************************************************************************************************
+                                 					Formulario ADD
+****************************************************************************************************************************/
+
+
+	/**
+	 * Muestra el formulario de ADD de usuario en un div modal con dos opciones: realizar la accion (Anadir) o cancelarla.
+	 * - Cada campo se valida al salir de el (onblur) y todos se comprueban antes de enviar al back.
+	 * - El select id_rol se rellena con los roles del back cada vez que se pinta el formulario (cargar_roles).
+	 */
+	createForm_ADD(){
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de un ADD anterior)
+		document.getElementById('IU_form').innerHTML = '<h3 id="titulo_form_ADD">A&ntilde;adir usuario</h3>' + this.manual_form_creation();
+
+		// el formulario recien pintado solo tiene la opcion vacia en id_rol: se piden los roles al back (sin await)
+		this.cargar_roles();
+
+		// opciones del modal: realizar la accion (boton submit con icono) o cancelarla (boton con icono)
+		document.getElementById('submit_button').outerHTML =
+			'<button type="submit" id="submit_button" title="A&ntilde;adir"><img src="./iconos/ADD.png" /></button>' +
+			' <button type="button" id="cancel_button" title="Cancelar" onclick="entidad.cerrar_form_ADD();"><img src="./iconos/BACK.png" /></button>';
+
+		// mostrar el formulario como modal
+		document.getElementById('IU_form').classList.add('modal_form');
+		document.getElementById('IU_form').style.display = 'block';
+	}
+
+
+	/**
+	 * Cierra el modal de ADD sin enviar nada (cancelar) o tras un ADD correcto.
+	 * Deja en IU_form un formulario vacio porque SEARCH() lo necesita para su peticion al back.
+	 */
+	cerrar_form_ADD(){
+
+		document.getElementById('IU_form').classList.remove('modal_form');
+		document.getElementById('IU_form').style.display = 'none';
+		document.getElementById('IU_form').innerHTML = this.manual_form_creation();
+	}
+
+
+	/**
+	 * Accion ADD: pide al back el alta con los datos del formulario. Se invoca desde ADD_submit_usuario()
+	 * cuando todos los campos son correctos.
+	 * - Correcto: desaparece el formulario con sus mensajes de error y se actualiza la tabla de tuplas.
+	 * - Error del back: modal que el usuario debe confirmar; despues el formulario sigue como antes del envio.
+	 *
+	 * Se considera error del back una respuesta con ok === false (el texto del error va en code).
+	 */
+	async ADD(){
+
+		// evitar doble envio mientras se espera la respuesta
+		var boton = document.getElementById('submit_button');
+		boton.disabled = true;
+
+		try{
+			var respuesta = await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'ADD');
+
+			if (respuesta['ok'] === false){
+				await this.mostrar_modal_error('Error al añadir usuario: ' + respuesta['code']);
+			}
+			else{
+				this.cerrar_form_ADD();
+				this.SEARCH();
+			}
+		}
+		finally{
+			// si el formulario sigue en pantalla (error del back) vuelve a poder enviarse
+			boton.disabled = false;
+		}
+	}
+
+
+	/**
+	 * Componente modal con un mensaje de error que el usuario debe confirmar con el boton de aceptar.
+	 * (Esta aqui y no en Dom_Class porque las clases del DOM se usan sin modificaciones, igual que en persona)
+	 * @param {string} mensaje texto del error
+	 * @returns {Promise} se resuelve cuando el usuario confirma que ha recibido el error
+	 */
+	mostrar_modal_error(mensaje){
+		return new Promise(function(resolve){
+			var overlay = document.createElement('div');
+			overlay.id = 'modal_error_overlay';
+			overlay.className = 'modal_overlay';
+
+			var caja = document.createElement('div');
+			caja.className = 'modal_box';
+
+			var texto = document.createElement('p');
+			texto.id = 'modal_error_text';
+			texto.textContent = mensaje;
+
+			var aceptar = document.createElement('button');
+			aceptar.type = 'button';
+			aceptar.id = 'modal_error_aceptar';
+			aceptar.textContent = 'Aceptar';
+			aceptar.onclick = function(){
+				overlay.remove();
+				resolve();
+			};
+
+			caja.append(texto, aceptar);
+			overlay.append(caja);
+			document.body.append(overlay);
+			aceptar.focus();
+		});
 	}
 
 
@@ -525,10 +635,13 @@ class usuario {
 		await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'SEARCH')
 		.then((respuesta) => {
 
-			//limpiar el formulario
-			document.getElementById('IU_form').innerHTML = this.manual_form_creation();
-			//el formulario se acaba de repintar: hay que volver a cargar las opciones del select id_rol (sin await)
-			this.cargar_roles();
+			//limpiar el formulario, salvo que el usuario ya haya abierto el modal de ADD mientras llegaba la respuesta
+			//(repintarlo borraria el titulo y los botones del modal y lo que haya escrito)
+			if (!document.getElementById('IU_form').classList.contains('modal_form')){
+				document.getElementById('IU_form').innerHTML = this.manual_form_creation();
+				//el formulario se acaba de repintar: hay que volver a cargar las opciones del select id_rol (sin await)
+				this.cargar_roles();
+			}
 
 			if (respuesta['code'] == 'RECORDSET_DATOS'){
 				this.datos = respuesta['resource'];

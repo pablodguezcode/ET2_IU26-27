@@ -24,6 +24,10 @@ divs
 		padding: 1em;
 		max-height: 90vh;
 		overflow: auto;
+		/* ancho estable: sin esto el modal crece al aparecer un mensaje de error y se encoge al desaparecer, y como esta
+		   centrado el boton de enviar se desplaza horizontalmente entre el mousedown y el mouseup y el primer click se pierde */
+		box-sizing: border-box;
+		min-width: min(36em, 95vw);
 		box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
 	}
 
