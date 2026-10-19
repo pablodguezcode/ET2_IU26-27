@@ -8,8 +8,9 @@ class usuario {
 
 		// la contraseña no se muestra en la tabla
 		this.columnasamostrar = ['dni','usuario','id_rol'];
-		// usuario no tiene columnas con tratamiento especial (persona usa foto_persona)
-		this.mostrarespecial = [];
+		// id_rol es una columna con tratamiento especial: el back la devuelve como el objeto del rol
+		// {id_rol, rol_name, rol_description} y en la tabla se muestra el nombre del rol (ver cambiarmostrarespecial)
+		this.mostrarespecial = ['id_rol'];
 		this.nombreentidad = 'usuario';
 
 		//init
@@ -484,28 +485,29 @@ class usuario {
 	 */
 	crearTablaDatos(datos, mostrarespecial){
 
-		var misdatos = datos;
-		/*
-		recorrer todas las filas de datos y cada atributo para si tiene una funcion de transformación de valor modificarlo en el momento
-		*/
-		if (mostrarespecial.length > 0){
-			for (var i=0;i<misdatos.length;i++){
-				for (var clave in misdatos[i]){
-						if (clave in mostrarespecial){
-							//misdatos[i][clave] = this.cambiarmostrarespecial(clave, misdatos[i][clave]);
-						}
+		var misdatos = [];
+
+		for (var i=0;i<datos.length;i++){
+
+			// copia de la fila para pintar: las columnas con tratamiento especial se transforman en la copia,
+			// y la fila original (this.datos) conserva el valor tal y como lo manda el back
+			var fila = Object.assign({}, datos[i]);
+			for (var clave in fila){
+				if (mostrarespecial.includes(clave)){
+					fila[clave] = this.cambiarmostrarespecial(clave, fila[clave]);
 				}
 			}
-		}
-		// proceso los datos de la tabla para incluir en cada fila los tres botones conectados a createForm_ACCION()
-		for (var i=0;i<misdatos.length;i++){
 
-			var linedit = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(`+JSON.stringify(misdatos[i])+`);'>`;
-			var lindelete = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(`+JSON.stringify(misdatos[i])+`);'>`;
-			var linshowcurrent = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(`+JSON.stringify(misdatos[i])+`);'>`;
-			misdatos[i]['EDIT'] = linedit;
-			misdatos[i]['DELETE'] = lindelete;
-			misdatos[i]['SHOWCURRENT'] = linshowcurrent;
+			// proceso los datos de la tabla para incluir en cada fila los tres botones conectados a createForm_ACCION()
+			// los botones reciben la fila original (EDIT necesitara el id_rol completo, no solo el nombre)
+			var linedit = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(`+JSON.stringify(datos[i])+`);'>`;
+			var lindelete = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(`+JSON.stringify(datos[i])+`);'>`;
+			var linshowcurrent = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(`+JSON.stringify(datos[i])+`);'>`;
+			fila['EDIT'] = linedit;
+			fila['DELETE'] = lindelete;
+			fila['SHOWCURRENT'] = linshowcurrent;
+
+			misdatos.push(fila);
 
 		}
 
@@ -515,6 +517,25 @@ class usuario {
 		this.crearSeleccionablecolumnas(this.columnasamostrar, this.atributos);
 
 
+	}
+
+
+
+	/**
+	 * Transforma el valor de una columna con tratamiento especial para mostrarlo en la tabla.
+	 * id_rol: el back devuelve el objeto del rol {id_rol, rol_name, rol_description} y se muestra rol_name
+	 * (si llegara como valor simple, se deja tal cual).
+	 *
+	 * @param {string} clave nombre de la columna
+	 * @param {*} valor valor que manda el back
+	 * @returns {*} valor a mostrar en la tabla
+	 */
+	cambiarmostrarespecial(clave, valor){
+
+		if (clave == 'id_rol' && valor !== null && typeof valor == 'object'){
+			return (valor['rol_name'] !== undefined) ? valor['rol_name'] : valor['id_rol'];
+		}
+		return valor;
 	}
 
 
