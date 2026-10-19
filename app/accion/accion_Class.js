@@ -155,8 +155,9 @@ class accion {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos, si no devuelve false
-	//Se ejecutan las tres validaciones siempre (el array las evalua todas), asi se muestran todos los errores a la vez
+	//Se invoca desde el onsubmit del formulario. Se ejecutan las tres validaciones siempre (el array las evalua todas),
+	//asi se muestran todos los errores a la vez, y si todas son correctas pide la accion ADD al back.
+	//Siempre devuelve false: el envio lo hace ADD() por ajax y no el submit nativo del formulario.
 	ADD_submit_accion(){
 
 		let resultados = [
@@ -165,7 +166,10 @@ class accion {
 			this.ADD_descrip_accion_validation()
 		];
 
-		return resultados.every(resultado => resultado === true);
+		if (resultados.every(resultado => resultado === true)){
+			this.ADD();
+		}
+		return false;
 	}
 
 
@@ -287,6 +291,113 @@ class accion {
 
 
 /***************************************************************************************************************************
+                                                     Formulario ADD
+****************************************************************************************************************************/
+
+
+	/**
+	 * Muestra el formulario de ADD de accion en un div modal con dos opciones: realizar la accion (Anadir) o cancelarla.
+	 * - Campos propios de accion: id_accion, nombre_accion y descrip_accion.
+	 * - Cada campo se valida al salir de el (onblur) y todos se comprueban antes de enviar al back.
+	 */
+	createForm_ADD(){
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de un ADD anterior)
+		document.getElementById('IU_form').innerHTML = '<h3 id="titulo_form_ADD">A&ntilde;adir acci&oacute;n</h3>' + this.manual_form_creation();
+
+		// opciones del modal: realizar la accion (boton submit con icono) o cancelarla (boton con icono)
+		document.getElementById('submit_button').outerHTML =
+			'<button type="submit" id="submit_button"><img src="./iconos/ADD.png" /></button>' +
+			' <button type="button" id="cancel_button" onclick="entidad.cerrar_form_ADD();"><img src="./iconos/BACK.png" /></button>';
+
+		// mostrar el formulario como modal
+		document.getElementById('IU_form').classList.add('modal_form');
+		document.getElementById('IU_form').style.display = 'block';
+	}
+
+
+	/**
+	 * Cierra el modal de ADD sin enviar nada (cancelar) o tras un ADD correcto.
+	 * Deja en IU_form un formulario vacio porque SEARCH() lo necesita para su peticion al back.
+	 */
+	cerrar_form_ADD(){
+
+		document.getElementById('IU_form').classList.remove('modal_form');
+		document.getElementById('IU_form').style.display = 'none';
+		document.getElementById('IU_form').innerHTML = this.manual_form_creation();
+	}
+
+
+	/**
+	 * Accion ADD: pide al back el alta con los datos del formulario. Se invoca desde ADD_submit_accion()
+	 * cuando todos los campos son correctos.
+	 * - Correcto: desaparece el formulario con sus mensajes de error y se actualiza la tabla de tuplas.
+	 * - Error del back: modal que el usuario debe confirmar; despues el formulario sigue como antes del envio.
+	 *
+	 * Se considera error del back una respuesta con ok === false (el texto del error va en code).
+	 */
+	async ADD(){
+
+		// evitar doble envio mientras se espera la respuesta
+		var boton = document.getElementById('submit_button');
+		boton.disabled = true;
+
+		try{
+			var respuesta = await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'ADD');
+
+			if (respuesta['ok'] === false){
+				await this.mostrar_modal_error('Error al a\u00f1adir acci\u00f3n: ' + respuesta['code']);
+			}
+			else{
+				this.cerrar_form_ADD();
+				this.SEARCH();
+			}
+		}
+		finally{
+			// si el formulario sigue en pantalla (error del back) vuelve a poder enviarse
+			boton.disabled = false;
+		}
+	}
+
+
+	/**
+	 * Componente modal con un mensaje de error que el usuario debe confirmar con el boton de aceptar.
+	 * (Esta aqui y no en Dom_Class porque el enunciado dice que las clases del DOM se usan sin modificaciones)
+	 * @param {string} mensaje texto del error
+	 * @returns {Promise} se resuelve cuando el usuario confirma que ha recibido el error
+	 */
+	mostrar_modal_error(mensaje){
+		return new Promise(function(resolve){
+			var overlay = document.createElement('div');
+			overlay.id = 'modal_error_overlay';
+			overlay.className = 'modal_overlay';
+
+			var caja = document.createElement('div');
+			caja.className = 'modal_box';
+
+			var texto = document.createElement('p');
+			texto.id = 'modal_error_text';
+			texto.textContent = mensaje;
+
+			var aceptar = document.createElement('button');
+			aceptar.type = 'button';
+			aceptar.id = 'modal_error_aceptar';
+			aceptar.textContent = 'Aceptar';
+			aceptar.onclick = function(){
+				overlay.remove();
+				resolve();
+			};
+
+			caja.append(texto, aceptar);
+			overlay.append(caja);
+			document.body.append(overlay);
+			aceptar.focus();
+		});
+	}
+
+
+
+/***************************************************************************************************************************
                                  				Otras Cosas, No tocar
 ****************************************************************************************************************************/
 //Igual que en persona: los createForm_* son de momento stubs con alert.
@@ -302,10 +413,6 @@ class accion {
 
 	createForm_SHOWCURRENT(){
 		alert('crear formulario DETALLE');
-	}
-
-	createForm_ADD(){
-		alert('crear formulario ADD');
 	}
 
 	createForm_SEARCH(){

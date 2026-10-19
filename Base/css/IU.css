@@ -27,6 +27,13 @@ divs
 		box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
 	}
 
+	/* con el formulario modal abierto no se puede interactuar con el menu ni con los botones de la entidad (evita abrir/cambiar de entidad con el modal a medias) */
+	body:has(#IU_form.modal_form) nav,
+	body:has(#IU_form.modal_form) aside,
+	body:has(#IU_form.modal_form) #IU_manage_entity{
+		pointer-events: none;
+	}
+
 	/* modal de confirmacion de error: por encima del formulario */
 	.modal_overlay{
 		position: fixed;
