@@ -93,15 +93,6 @@
 				document.getElementById('div-menu').style.display = 'none';
 			}
 		}
-
-		/*	El formulario de accion (ADD...) se muestra como modal dentro de IU_form, que es comun a todas las entidades.
-			El fondo oscuro del modal no intercepta los clicks, asi que se puede elegir otra entidad en el menu con el modal abierto:
-			sin esto la nueva entidad dejaria su formulario vacio dentro de un modal que no se ha abierto desde ella.
-			El listener va en fase de captura para ejecutarse antes del onclick de la opcion de menu (entidad = new ...). */
-		document.getElementById('div-menu').addEventListener('click', function(){
-			document.getElementById('IU_form').classList.remove('modal_form');
-			document.getElementById('IU_form').style.display = 'none';
-		}, true);
 	</script>
 
 </body>
