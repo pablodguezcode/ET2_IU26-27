@@ -313,6 +313,7 @@ class rol {
 	}
 
 
+
 // candidatas dom
 
 

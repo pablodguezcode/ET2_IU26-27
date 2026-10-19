@@ -13,8 +13,41 @@ divs
 		text-align: center;
 	}
 
+	/* formulario de accion (ADD...) como div modal: centrado y con el resto de la pagina oscurecido */
+	#IU_form.modal_form{
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1000;
+		background-color: white;
+		padding: 1em;
+		max-height: 90vh;
+		overflow: auto;
+		box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+	}
+
+	/* modal de confirmacion de error: por encima del formulario */
+	.modal_overlay{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		z-index: 2000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.modal_box{
+		background-color: white;
+		border: 1px solid black;
+		padding: 1em;
+		max-width: 30em;
+	}
+
 	#tablaresultadostest tbody tr th{
 		width: 10%;
 		word-wrap: break-word;
 	}
-

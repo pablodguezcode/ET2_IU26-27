@@ -1,4 +1,4 @@
-class usuario {
+class funcionalidad_accion {
 
 	constructor(esTest){
 
@@ -6,11 +6,10 @@ class usuario {
 		this.validations = new Validations();
 		this.access_functions = new ExternalAccess();
 
-		// la contraseña no se muestra en la tabla
-		this.columnasamostrar = ['dni','usuario','id_rol'];
-		// usuario no tiene columnas con tratamiento especial (persona usa foto_persona)
+		this.columnasamostrar = ['id_funcionalidad','id_accion'];
+		// funcionalidad_accion no tiene columnas con tratamiento especial (persona usa foto_persona)
 		this.mostrarespecial = [];
-		this.nombreentidad = 'usuario';
+		this.nombreentidad = 'funcionalidad_accion';
 
 		//init
 		if (esTest == 'test'){}
@@ -33,30 +32,23 @@ class usuario {
 	 */
 	manual_form_creation(){
 		var form_content = `
-			<form id = 'form_iu' action="http://193.147.87.202/procesaform.php" method="POST" onsubmit="return entidad.ADD_submit_usuario();">
+			<form id = 'form_iu' action="http://193.147.87.202/procesaform.php" method="POST" onsubmit="return entidad.ADD_submit_funcionalidad_accion();">
 
-			<label class="label_dni">DNI</label>
-			<input type='text' id='dni' name='dni' onblur=" return entidad.ADD_dni_validation();">
-			<span id="span_error_dni"><a id="error_dni"></a></span>
-			<br>
-
-			<label class="label_usuario">Usuario</label>
-			<input type='text' id='usuario' name='usuario' onblur=" return entidad.ADD_usuario_validation();">
-			<span id="span_error_usuario"><a id="error_usuario"></a></span>
-			<br>
-
-			<label class="label_contrasena">Contraseña</label>
-			<input type='password' id='contrasena' name='contrasena' onblur=" return entidad.ADD_contrasena_validation();">
-			<span id="span_error_contrasena"><a id="error_contrasena"></a></span>
-			<br>
-
-			<label class="label_id_rol">Rol</label>
-			<select id='id_rol' name='id_rol' onblur=" return entidad.ADD_id_rol_validation();">
-				<!-- la primera opcion vacia permite que min_size falle si no se elige rol (y es "sin filtro" en SEARCH).
-				     Las demas opciones (value = id_rol, texto = rol_name) las rellena cargar_roles() desde el back. -->
+			<label class="label_id_funcionalidad">Funcionalidad</label>
+			<select id='id_funcionalidad' name='id_funcionalidad' onblur=" return entidad.ADD_id_funcionalidad_validation();">
+				<!-- la primera opcion vacia permite que min_size falle si no se elige funcionalidad (y es "sin filtro" en SEARCH).
+				     Las demas opciones (value = id_funcionalidad, texto = nombre_funcionalidad) las rellena cargar_opciones() desde el back. -->
 				<option value=""></option>
 			</select>
-			<span id="span_error_id_rol"><a id="error_id_rol"></a></span>
+			<span id="span_error_id_funcionalidad"><a id="error_id_funcionalidad"></a></span>
+			<br>
+
+			<label class="label_id_accion">Acción</label>
+			<select id='id_accion' name='id_accion' onblur=" return entidad.ADD_id_accion_validation();">
+				<!-- igual que id_funcionalidad: opciones (value = id_accion, texto = nombre_accion) rellenadas por cargar_opciones() -->
+				<option value=""></option>
+			</select>
+			<span id="span_error_id_accion"><a id="error_id_accion"></a></span>
 			<br>
 
 			<input id="submit_button" type="submit" value="Submit">
@@ -70,107 +62,51 @@ class usuario {
 /***************************************************************************************************************************
                                  			Campos de validacion para ADD
 ****************************************************************************************************************************/
+//id_funcionalidad e id_accion son la clave primaria compuesta y claves foraneas: ambos son select
 
-//Atributo dni
-
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	ADD_dni_validation(){
-
-		if (!(this.validations.min_size('dni',9))){
-			this.dom.mostrar_error_campo('dni','dni_min_size_ko');
-			return "dni_min_size_ko";
-		}
-		if (!(this.validations.max_size('dni',9))){
-			this.dom.mostrar_error_campo('dni','dni_max_size_ko');
-			return "dni_max_size_ko";
-		}
-		//8 digitos + letra mayuscula
-		if (!(this.validations.format('dni', '^[0-9]{8}[A-Z]$'))){
-			this.dom.mostrar_error_campo('dni','dni_format_ko');
-			return "dni_format_ko";
-		}
-		//letra de control (modulo 23). La funcion recibe el valor, no lee del DOM
-		if (!(this.dni_personalize_validation(document.getElementById('dni').value))){
-			this.dom.mostrar_error_campo('dni','dni_personalized_ko');
-			return "dni_personalized_ko";
-		}
-		this.dom.mostrar_exito_campo('dni');
-		return true;
-
-	}
-
-	//Retorna true si la letra de control (numero mod 23) coincide con la del DNI, si no devuelve false.
-	//Recibe el valor por parametro (no lee del DOM). Se llama despues de comprobar el formato (8 digitos + letra).
-	dni_personalize_validation(dni){
-
-		var dni_letters = "TRWAGMYFPDXBNJZSQVHLCKE";
-		return dni_letters.charAt(parseInt(dni.substring(0, 8), 10) % 23) == dni.charAt(8);
-	}
-
-//Atributo usuario
+//Atributo id_funcionalidad
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	ADD_usuario_validation(){
+	//min_size falla si se deja la opcion vacia
+	ADD_id_funcionalidad_validation(){
 
-		if (!(this.validations.min_size('usuario',5))){
-			this.dom.mostrar_error_campo('usuario','usuario_min_size_ko');
-			return "usuario_min_size_ko";
+		if (!(this.validations.min_size('id_funcionalidad',1))){
+			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_min_size_ko');
+			return "id_funcionalidad_min_size_ko";
 		}
-		if (!(this.validations.max_size('usuario',45))){
-			this.dom.mostrar_error_campo('usuario','usuario_max_size_ko');
-			return "usuario_max_size_ko";
-		}
-		//solo letras A-Z a-z (sin ñ ni acentos)
-		if (!(this.validations.format('usuario', '^[A-Za-z]*$'))){
-			this.dom.mostrar_error_campo('usuario','usuario_format_ko');
-			return "usuario_format_ko";
-		}
-		this.dom.mostrar_exito_campo('usuario');
-		return true;
-	}
-
-//Atributo contrasena
-
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	ADD_contrasena_validation(){
-
-		if (!(this.validations.min_size('contrasena',8))){
-			this.dom.mostrar_error_campo('contrasena','contrasena_min_size_ko');
-			return "contrasena_min_size_ko";
-		}
-		if (!(this.validations.max_size('contrasena',45))){
-			this.dom.mostrar_error_campo('contrasena','contrasena_max_size_ko');
-			return "contrasena_max_size_ko";
-		}
-		//solo letras A-Z a-z (sin ñ ni acentos)
-		if (!(this.validations.format('contrasena', '^[A-Za-z]*$'))){
-			this.dom.mostrar_error_campo('contrasena','contrasena_format_ko');
-			return "contrasena_format_ko";
-		}
-		this.dom.mostrar_exito_campo('contrasena');
-		return true;
-	}
-
-//Atributo id_rol
-
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//id_rol es un select: min_size falla si se deja la opcion vacia
-	ADD_id_rol_validation(){
-
-		if (!(this.validations.min_size('id_rol',1))){
-			this.dom.mostrar_error_campo('id_rol','id_rol_min_size_ko');
-			return "id_rol_min_size_ko";
-		}
-		if (!(this.validations.max_size('id_rol',11))){
-			this.dom.mostrar_error_campo('id_rol','id_rol_max_size_ko');
-			return "id_rol_max_size_ko";
+		if (!(this.validations.max_size('id_funcionalidad',11))){
+			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_max_size_ko');
+			return "id_funcionalidad_max_size_ko";
 		}
 		//solo digitos
-		if (!(this.validations.format('id_rol', '^[0-9]*$'))){
-			this.dom.mostrar_error_campo('id_rol','id_rol_format_ko');
-			return "id_rol_format_ko";
+		if (!(this.validations.format('id_funcionalidad', '^[0-9]*$'))){
+			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_format_ko');
+			return "id_funcionalidad_format_ko";
 		}
-		this.dom.mostrar_exito_campo('id_rol');
+		this.dom.mostrar_exito_campo('id_funcionalidad');
+		return true;
+	}
+
+//Atributo id_accion
+
+	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	//min_size falla si se deja la opcion vacia
+	ADD_id_accion_validation(){
+
+		if (!(this.validations.min_size('id_accion',1))){
+			this.dom.mostrar_error_campo('id_accion','id_accion_min_size_ko');
+			return "id_accion_min_size_ko";
+		}
+		if (!(this.validations.max_size('id_accion',11))){
+			this.dom.mostrar_error_campo('id_accion','id_accion_max_size_ko');
+			return "id_accion_max_size_ko";
+		}
+		//solo digitos
+		if (!(this.validations.format('id_accion', '^[0-9]*$'))){
+			this.dom.mostrar_error_campo('id_accion','id_accion_format_ko');
+			return "id_accion_format_ko";
+		}
+		this.dom.mostrar_exito_campo('id_accion');
 		return true;
 	}
 
@@ -181,13 +117,11 @@ class usuario {
 
 	//Retorna true si todos los campos son validos, si no devuelve false
 	//Se ejecutan TODAS las validaciones (el array se evalua entero) para que se muestren todos los errores a la vez
-	ADD_submit_usuario(){
+	ADD_submit_funcionalidad_accion(){
 
 		let resultados = [
-			this.ADD_dni_validation(),
-			this.ADD_usuario_validation(),
-			this.ADD_contrasena_validation(),
-			this.ADD_id_rol_validation()
+			this.ADD_id_funcionalidad_validation(),
+			this.ADD_id_accion_validation()
 		];
 
 		return resultados.every(resultado => resultado === true);
@@ -198,27 +132,16 @@ class usuario {
 /***************************************************************************************************************************
                                  			Campos de validacion para EDIT
 ****************************************************************************************************************************/
-//En usuario los codigos de error y las restricciones de EDIT son los mismos que los de ADD (ver usuario_tests.js).
-//dni se puede modificar en EDIT, por eso lleva las mismas restricciones que en ADD.
+//Los codigos de error y las restricciones de EDIT son los mismos que los de ADD (ver funcionalidad_accion_tests.js).
 
-	EDIT_dni_validation(){
+	EDIT_id_funcionalidad_validation(){
 
-		return this.ADD_dni_validation();
+		return this.ADD_id_funcionalidad_validation();
 	}
 
-	EDIT_usuario_validation(){
+	EDIT_id_accion_validation(){
 
-		return this.ADD_usuario_validation();
-	}
-
-	EDIT_contrasena_validation(){
-
-		return this.ADD_contrasena_validation();
-	}
-
-	EDIT_id_rol_validation(){
-
-		return this.ADD_id_rol_validation();
+		return this.ADD_id_accion_validation();
 	}
 
 
@@ -227,13 +150,11 @@ class usuario {
 ****************************************************************************************************************************/
 
 	//Retorna true si todos los campos son validos, si no devuelve false
-	EDIT_submit_usuario(){
+	EDIT_submit_funcionalidad_accion(){
 
 		let resultados = [
-			this.EDIT_dni_validation(),
-			this.EDIT_usuario_validation(),
-			this.EDIT_contrasena_validation(),
-			this.EDIT_id_rol_validation()
+			this.EDIT_id_funcionalidad_validation(),
+			this.EDIT_id_accion_validation()
 		];
 
 		return resultados.every(resultado => resultado === true);
@@ -246,66 +167,37 @@ class usuario {
 ****************************************************************************************************************************/
 //En SEARCH no hay min_size: el filtro es opcional y vacio significa "sin filtro". Si hay maximo y formato.
 
-//Atributo dni
+//Atributo id_funcionalidad
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	SEARCH_dni_validation(){
+	SEARCH_id_funcionalidad_validation(){
 
-		if (!(this.validations.max_size('dni',9))){
-			this.dom.mostrar_error_campo('dni','dni_max_size_ko');
-			return "dni_max_size_ko";
+		if (!(this.validations.max_size('id_funcionalidad',11))){
+			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_max_size_ko');
+			return "id_funcionalidad_max_size_ko";
 		}
-		//vacio (sin filtro) o DNI completo: 8 digitos + letra mayuscula. No se recalcula la letra (ver usuario_tests.js)
-		if (!(this.validations.format('dni', '^([0-9]{8}[A-Z])?$'))){
-			this.dom.mostrar_error_campo('dni','dni_format_ko');
-			return "dni_format_ko";
+		if (!(this.validations.format('id_funcionalidad', '^[0-9]*$'))){
+			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_format_ko');
+			return "id_funcionalidad_format_ko";
 		}
-		this.dom.mostrar_exito_campo('dni');
+		this.dom.mostrar_exito_campo('id_funcionalidad');
 		return true;
 	}
 
-//Atributo usuario
+//Atributo id_accion
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	SEARCH_usuario_validation(){
+	SEARCH_id_accion_validation(){
 
-		if (!(this.validations.max_size('usuario',45))){
-			this.dom.mostrar_error_campo('usuario','usuario_max_size_ko');
-			return "usuario_max_size_ko";
+		if (!(this.validations.max_size('id_accion',11))){
+			this.dom.mostrar_error_campo('id_accion','id_accion_max_size_ko');
+			return "id_accion_max_size_ko";
 		}
-		if (!(this.validations.format('usuario', '^[A-Za-z]*$'))){
-			this.dom.mostrar_error_campo('usuario','usuario_format_ko');
-			return "usuario_format_ko";
+		if (!(this.validations.format('id_accion', '^[0-9]*$'))){
+			this.dom.mostrar_error_campo('id_accion','id_accion_format_ko');
+			return "id_accion_format_ko";
 		}
-		this.dom.mostrar_exito_campo('usuario');
-		return true;
-	}
-
-//Atributo contrasena
-
-	//La contraseña es un dato sensible y nunca se usa como criterio de busqueda: no hay tests de SEARCH
-	//ni campo contrasena en el formulario de busqueda. El metodo existe solo porque Unit_Test comprueba
-	//ADD_, EDIT_ y SEARCH_ para todos los atributos. No toca el DOM y siempre devuelve true.
-	SEARCH_contrasena_validation(){
-
-		return true;
-	}
-
-//Atributo id_rol
-
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//El select tiene la primera opcion vacia ("sin filtro")
-	SEARCH_id_rol_validation(){
-
-		if (!(this.validations.max_size('id_rol',11))){
-			this.dom.mostrar_error_campo('id_rol','id_rol_max_size_ko');
-			return "id_rol_max_size_ko";
-		}
-		if (!(this.validations.format('id_rol', '^[0-9]*$'))){
-			this.dom.mostrar_error_campo('id_rol','id_rol_format_ko');
-			return "id_rol_format_ko";
-		}
-		this.dom.mostrar_exito_campo('id_rol');
+		this.dom.mostrar_exito_campo('id_accion');
 		return true;
 	}
 
@@ -316,13 +208,11 @@ class usuario {
 ****************************************************************************************************************************/
 
 	//Retorna true si todos los campos son validos, si no devuelve false
-	//No incluye contrasena: no existe en el formulario de busqueda
-	SEARCH_submit_usuario(){
+	SEARCH_submit_funcionalidad_accion(){
 
 		let resultados = [
-			this.SEARCH_dni_validation(),
-			this.SEARCH_usuario_validation(),
-			this.SEARCH_id_rol_validation()
+			this.SEARCH_id_funcionalidad_validation(),
+			this.SEARCH_id_accion_validation()
 		];
 
 		return resultados.every(resultado => resultado === true);
@@ -339,7 +229,7 @@ class usuario {
 
 	createForm_EDIT(fila){
 
-		alert('crear formulario EDIT '+fila.dni);
+		alert('crear formulario EDIT '+fila.id_funcionalidad+' '+fila.id_accion);
 	}
 
 	createForm_DELETE(){
@@ -357,6 +247,7 @@ class usuario {
 	createForm_SEARCH(){
 		alert('crear formulario SEARCH');
 	}
+
 
 
 // candidatas dom
@@ -483,16 +374,21 @@ class usuario {
 	}
 
 	/**
-	 * pide al back el listado de la entidad rol y rellena el select id_rol del formulario actual
-	 * (value = id_rol, texto = rol_name). La primera opcion vacia viene de manual_form_creation().
-	 * Se envia un FormData vacio ('') para que los campos del formulario de usuario no lleguen a rol como filtro.
+	 * pide al back el listado de una entidad y rellena con el un select del formulario actual
+	 * (value = campovalor, texto = campotexto). La primera opcion vacia viene de manual_form_creation().
+	 * Se envia un FormData vacio ('') para que los campos del formulario no lleguen a la otra entidad como filtro.
+	 *
+	 * @param {string} idselect id del select a rellenar
+	 * @param {string} controlador entidad del back que se consulta
+	 * @param {string} campovalor columna del back que va en value
+	 * @param {string} campotexto columna del back que se muestra como texto
 	 */
-	async cargar_roles(){
+	async cargar_select(idselect, controlador, campovalor, campotexto){
 
-		await this.access_functions.peticionBackGeneral('', 'rol', 'SEARCH')
+		await this.access_functions.peticionBackGeneral('', controlador, 'SEARCH')
 		.then((respuesta) => {
 
-			var select = document.getElementById('id_rol');
+			var select = document.getElementById(idselect);
 			//el formulario puede haberse repintado o no existir mientras llegaba la respuesta
 			if (select == null){ return; }
 
@@ -504,13 +400,23 @@ class usuario {
 				}
 				for (let fila of respuesta['resource']){
 					var opcion = document.createElement('option');
-					opcion.value = fila['id_rol'];
-					opcion.text = fila['rol_name'];
+					opcion.value = fila[campovalor];
+					opcion.text = fila[campotexto];
 					select.append(opcion);
 				}
 				select.value = valoractual;
 			}
 		});
+
+	}
+
+	/**
+	 * rellena los dos select del formulario: funcionalidades y acciones (sin await, son peticiones independientes)
+	 */
+	cargar_opciones(){
+
+		this.cargar_select('id_funcionalidad', 'funcionalidad', 'id_funcionalidad', 'nombre_funcionalidad');
+		this.cargar_select('id_accion', 'accion', 'id_accion', 'nombre_accion');
 
 	}
 
@@ -526,8 +432,8 @@ class usuario {
 
 			//limpiar el formulario
 			document.getElementById('IU_form').innerHTML = this.manual_form_creation();
-			//el formulario se acaba de repintar: hay que volver a cargar las opciones del select id_rol (sin await)
-			this.cargar_roles();
+			//el formulario se acaba de repintar: hay que volver a cargar las opciones de los select id_funcionalidad e id_accion
+			this.cargar_opciones();
 
 			if (respuesta['code'] == 'RECORDSET_DATOS'){
 				this.datos = respuesta['resource'];

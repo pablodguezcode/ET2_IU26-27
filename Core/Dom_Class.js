@@ -39,6 +39,7 @@ class dom extends dom_table {
 		document.getElementById(id).style.borderBlockColor = 'green';
 	}
 
+
 	/**
 		coloca el contenido html en un contenedor visible inline 
 		@param {string} contenido html

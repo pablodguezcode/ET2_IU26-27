@@ -364,7 +364,9 @@ class persona {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 	
-	//Retorna true si todos los campos son validos, si no devuelve false
+	//Se invoca desde el onsubmit del formulario. Valida todos los campos (se muestran todos los errores a la vez)
+	//y, si todos son correctos, pide la accion ADD al back. Siempre devuelve false: el envio lo hace ADD() por ajax
+	//y no el submit nativo del formulario.
 	ADD_submit_persona(){
 
 		let result = ((this.ADD_dni_validation()) &
@@ -374,11 +376,15 @@ class persona {
 					(this.ADD_direccion_persona_validation()) &
 					(this.ADD_telefono_persona_validation()) &
 					(this.ADD_email_persona_validation()) &
-					(this.ADD_foto_persona_validation()) &
+					// foto_persona no se muestra en ADD (la pone el back al subir el fichero), no se valida en el submit
 					(this.ADD_nuevo_foto_persona_validation()));
-		
+
 		result = Boolean(result);
-		return result;	
+
+		if (result){
+			this.ADD();
+		}
+		return false;
 	}
 
 
@@ -712,32 +718,129 @@ class persona {
 
 
 /***************************************************************************************************************************
-                                 				Otras Cosas, No tocar
+                                 					FORMULARIO EDIT
 ****************************************************************************************************************************/
 	
+
 	createForm_EDIT(fila){
 
 		alert('crear formulario EDIT '+fila.dni);
 	}
 
+
+/***************************************************************************************************************************
+                                 				FORMULARIO DELETE
+****************************************************************************************************************************/
+
+
 	createForm_DELETE(){
 		alert('crear formulario DELETE');
 	}
+
+
+/***************************************************************************************************************************
+                                 				FORMULARIO SHOWCURRENT
+****************************************************************************************************************************/
+
 
 	createForm_SHOWCURRENT(){
 		alert('crear formulario DETALLE');
 	}
 
+
+/***************************************************************************************************************************
+                                 					Formularo ADD
+****************************************************************************************************************************/
+
+
+	/**
+	 * Muestra el formulario de ADD de persona en un div modal con dos opciones: realizar la accion (Anadir) o cancelarla.
+	 * - Cada campo se valida al salir de el (onblur) y todos se comprueban antes de enviar al back.
+	 * - foto_persona (nombre del fichero) y su label no se muestran en ADD; solo el input file nuevo_foto_persona.
+	 */
 	createForm_ADD(){
-		alert('crear formulario ADD');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de un ADD anterior)
+		document.getElementById('IU_form').innerHTML = '<h3 id="titulo_form_ADD">A&ntilde;adir persona</h3>' + this.manual_form_creation();
+
+		// en ADD el nombre del fichero y su enlace no se muestran: el nombre lo pone el back al subir el fichero
+		document.getElementById('label_foto_persona').style.display = 'none';
+		document.getElementById('foto_persona').style.display = 'none';
+		document.getElementById('span_error_foto_persona').style.display = 'none';
+		document.getElementById('link_foto_persona').style.display = 'none';
+
+		// en ADD si se muestra el input file con su label
+		document.getElementById('label_nuevo_foto_persona').style.display = 'block';
+		document.getElementById('nuevo_foto_persona').style.display = 'block';
+
+		// opciones del modal: realizar la accion (boton submit con icono) o cancelarla (boton con icono)
+		document.getElementById('submit_button').outerHTML =
+			'<button type="submit" id="submit_button"><img src="./iconos/ADD.png" /></button>' +
+			' <button type="button" id="cancel_button" onclick="entidad.cerrar_form_ADD();"><img src="./iconos/BACK.png" /></button>';
+
+		// mostrar el formulario como modal
+		document.getElementById('IU_form').classList.add('modal_form');
+		document.getElementById('IU_form').style.display = 'block';
 	}
+
+
+	/**
+	 * Cierra el modal de ADD sin enviar nada (cancelar) o tras un ADD correcto.
+	 * Deja en IU_form un formulario vacio porque SEARCH() lo necesita para su peticion al back.
+	 */
+	cerrar_form_ADD(){
+
+		document.getElementById('IU_form').classList.remove('modal_form');
+		document.getElementById('IU_form').style.display = 'none';
+		document.getElementById('IU_form').innerHTML = this.manual_form_creation();
+	}
+
+
+	/**
+	 * Accion ADD: pide al back el alta con los datos del formulario. Se invoca desde ADD_submit_persona()
+	 * cuando todos los campos son correctos.
+	 * - Correcto: desaparece el formulario con sus mensajes de error y se actualiza la tabla de tuplas.
+	 * - Error del back: modal que el usuario debe confirmar; despues el formulario sigue como antes del envio.
+	 *
+	 * Se considera error del back una respuesta con ok === false (el texto del error va en code).
+	 */
+	async ADD(){
+
+		// evitar doble envio mientras se espera la respuesta
+		var boton = document.getElementById('submit_button');
+		boton.disabled = true;
+
+		try{
+			var respuesta = await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'ADD');
+
+			if (respuesta['ok'] === false){
+				await this.mostrar_modal_error('Error al añadir persona: ' + respuesta['code']);
+			}
+			else{
+				this.cerrar_form_ADD();
+				this.SEARCH();
+			}
+		}
+		finally{
+			// si el formulario sigue en pantalla (error del back) vuelve a poder enviarse
+			boton.disabled = false;
+		}
+	}
+
+
+/***************************************************************************************************************************
+                                 				FORMULARIO SEARCH
+****************************************************************************************************************************/
+
 
 	createForm_SEARCH(){
 		alert('crear formulario SEARCH');
 	}
 
 
-// candidatas dom
+/***************************************************************************************************************************
+                                 				candidatas dom
+****************************************************************************************************************************/
 
 
 	/**
@@ -811,7 +914,11 @@ class persona {
 
 	}
 
-// candidatas abstract
+
+/***************************************************************************************************************************
+                                 				candidatas abstract
+****************************************************************************************************************************/
+
 
 	/**
 	 * muestra o no las columnas de la tabla segun indique columnasamostrar
@@ -860,6 +967,9 @@ class persona {
 
 	}
 
+
+
+
 	/**
 	 * el método realiza una petición de search al back pudiendo enviar un formulario con datos, enviando 
 	 * el nombre de la entidad del back y la acción a realizar sobre la misma.
@@ -893,6 +1003,45 @@ class persona {
         });
     
     }
+
+
+
+
+	
+	/**
+	 * Componente modal con un mensaje de error que el usuario debe confirmar con el boton de aceptar.
+	 * (Esta aqui y no en Dom_Class porque el enunciado dice que las clases del DOM se usan sin modificaciones)
+	 * @param {string} mensaje texto del error
+	 * @returns {Promise} se resuelve cuando el usuario confirma que ha recibido el error
+	 */
+	mostrar_modal_error(mensaje){
+		return new Promise(function(resolve){
+			var overlay = document.createElement('div');
+			overlay.id = 'modal_error_overlay';
+			overlay.className = 'modal_overlay';
+
+			var caja = document.createElement('div');
+			caja.className = 'modal_box';
+
+			var texto = document.createElement('p');
+			texto.id = 'modal_error_text';
+			texto.textContent = mensaje;
+
+			var aceptar = document.createElement('button');
+			aceptar.type = 'button';
+			aceptar.id = 'modal_error_aceptar';
+			aceptar.textContent = 'Aceptar';
+			aceptar.onclick = function(){
+				overlay.remove();
+				resolve();
+			};
+
+			caja.append(texto, aceptar);
+			overlay.append(caja);
+			document.body.append(overlay);
+			aceptar.focus();
+		});
+	}
 
 	
 }
