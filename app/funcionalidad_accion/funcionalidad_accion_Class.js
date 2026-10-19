@@ -7,8 +7,9 @@ class funcionalidad_accion {
 		this.access_functions = new ExternalAccess();
 
 		this.columnasamostrar = ['id_funcionalidad','id_accion'];
-		// funcionalidad_accion no tiene columnas con tratamiento especial (persona usa foto_persona)
-		this.mostrarespecial = [];
+		// id_funcionalidad e id_accion son columnas con tratamiento especial: el back las devuelve como el objeto de la
+		// funcionalidad y de la accion y en la tabla se muestra su nombre (ver cambiarmostrarespecial)
+		this.mostrarespecial = ['id_funcionalidad','id_accion'];
 		this.nombreentidad = 'funcionalidad_accion';
 
 		//init
@@ -374,28 +375,29 @@ class funcionalidad_accion {
 	 */
 	crearTablaDatos(datos, mostrarespecial){
 
-		var misdatos = datos;
-		/*
-		recorrer todas las filas de datos y cada atributo para si tiene una funcion de transformación de valor modificarlo en el momento
-		*/
-		if (mostrarespecial.length > 0){
-			for (var i=0;i<misdatos.length;i++){
-				for (var clave in misdatos[i]){
-						if (clave in mostrarespecial){
-							//misdatos[i][clave] = this.cambiarmostrarespecial(clave, misdatos[i][clave]);
-						}
+		var misdatos = [];
+
+		for (var i=0;i<datos.length;i++){
+
+			// copia de la fila para pintar: las columnas con tratamiento especial se transforman en la copia,
+			// y la fila original (this.datos) conserva el valor tal y como lo manda el back
+			var fila = Object.assign({}, datos[i]);
+			for (var clave in fila){
+				if (mostrarespecial.includes(clave)){
+					fila[clave] = this.cambiarmostrarespecial(clave, fila[clave]);
 				}
 			}
-		}
-		// proceso los datos de la tabla para incluir en cada fila los tres botones conectados a createForm_ACCION()
-		for (var i=0;i<misdatos.length;i++){
 
-			var linedit = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(`+JSON.stringify(misdatos[i])+`);'>`;
-			var lindelete = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(`+JSON.stringify(misdatos[i])+`);'>`;
-			var linshowcurrent = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(`+JSON.stringify(misdatos[i])+`);'>`;
-			misdatos[i]['EDIT'] = linedit;
-			misdatos[i]['DELETE'] = lindelete;
-			misdatos[i]['SHOWCURRENT'] = linshowcurrent;
+			// proceso los datos de la tabla para incluir en cada fila los tres botones conectados a createForm_ACCION()
+			// los botones reciben la fila original (EDIT necesitara los ids completos, no solo el nombre)
+			var linedit = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(`+JSON.stringify(datos[i])+`);'>`;
+			var lindelete = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(`+JSON.stringify(datos[i])+`);'>`;
+			var linshowcurrent = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(`+JSON.stringify(datos[i])+`);'>`;
+			fila['EDIT'] = linedit;
+			fila['DELETE'] = lindelete;
+			fila['SHOWCURRENT'] = linshowcurrent;
+
+			misdatos.push(fila);
 
 		}
 
@@ -405,6 +407,29 @@ class funcionalidad_accion {
 		this.crearSeleccionablecolumnas(this.columnasamostrar, this.atributos);
 
 
+	}
+
+
+
+	/**
+	 * Transforma el valor de una columna con tratamiento especial para mostrarlo en la tabla.
+	 * El back devuelve cada clave foranea como el objeto completo y se muestra su nombre:
+	 *  - id_funcionalidad: {id_funcionalidad, nombre_funcionalidad, descrip_funcionalidad} -> nombre_funcionalidad
+	 *  - id_accion: {id_accion, nombre_accion, descrip_accion} -> nombre_accion
+	 * (si llegara como valor simple, se deja tal cual).
+	 *
+	 * @param {string} clave nombre de la columna
+	 * @param {*} valor valor que manda el back
+	 * @returns {*} valor a mostrar en la tabla
+	 */
+	cambiarmostrarespecial(clave, valor){
+
+		var campotexto = {id_funcionalidad: 'nombre_funcionalidad', id_accion: 'nombre_accion'};
+
+		if (clave in campotexto && valor !== null && typeof valor == 'object'){
+			return (valor[campotexto[clave]] !== undefined) ? valor[campotexto[clave]] : valor[clave];
+		}
+		return valor;
 	}
 
 
