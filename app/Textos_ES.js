@@ -11,6 +11,8 @@ var textos_ES = {
 	'text_menu_usuario': 'Gestionar usuario',
 	'text_menu_rol': 'Gestionar rol',
 	'text_menu_accion': 'Gestionar acción',
+	'text_menu_funcionalidad': 'Gestionar funcionalidad',
+	'text_menu_rolaccionfuncionalidad': 'Gestionar rol_accion_funcionalidad',
 	'text_menu_funcionalidad_accion': 'Gestionar funcionalidad_accion',
 
 	// textos titulo de pagina de cada entidad
@@ -18,6 +20,8 @@ var textos_ES = {
 	'text_titulo_page_usuario': 'Gestión de Usuarios',
 	'text_titulo_page_rol': 'Gestión de Roles',
 	'text_titulo_page_accion': 'Gestión de Acciones',
+	'text_titulo_page_funcionalidad': 'Gestión de Funcionalidades',
+	'text_titulo_page_rolaccionfuncionalidad': 'Gestión de Roles, Acciones y Funcionalidades',
 	'text_titulo_page_funcionalidad_accion': 'Gestión de Funcionalidades y Acciones',
 
 	// textos titulo del formulario de cada entidad
@@ -53,6 +57,8 @@ var textos_ES = {
 	'nombre_accion': 'Nombre de la acción',
 	'descrip_accion': 'Descripción de la acción',
 	'id_funcionalidad': 'Id. de funcionalidad',
+	'nombre_funcionalidad': 'Nombre de la funcionalidad',
+	'descrip_funcionalidad': 'Descripción de la funcionalidad',
 
 	// labels del formulario
 	'label_dni': 'DNI',
@@ -73,6 +79,8 @@ var textos_ES = {
 	'label_nombre_accion': 'Nombre de la acción',
 	'label_descrip_accion': 'Descripción de la acción',
 	'label_id_funcionalidad': 'Identificador de funcionalidad',
+	'label_nombre_funcionalidad': 'Nombre de la funcionalidad',
+	'label_descrip_funcionalidad': 'Descripción de la funcionalidad',
 
 	// errores validaciones formulario (codigo devuelto por ACCION_campo_validation)
 	'dni_min_size_ko': 'El DNI es demasiado corto: debe tener 9 caracteres',
@@ -123,6 +131,12 @@ var textos_ES = {
 	'id_funcionalidad_min_size_ko': 'El identificador de la funcionalidad es obligatorio: debe tener al menos 1 dígito',
 	'id_funcionalidad_max_size_ko': 'El identificador de la funcionalidad supera los 11 dígitos numéricos permitidos',
 	'id_funcionalidad_format_ko': 'El identificador de la funcionalidad solo puede estar formado por dígitos numéricos',
+	'nombre_funcionalidad_min_size_ko': 'El nombre de la funcionalidad es corto, introduzca por lo menos 5 caracteres',
+	'nombre_funcionalidad_max_size_ko': 'El nombre de la funcionalidad es demasiado largo, introduzca hasta 48 caracteres',
+	'nombre_funcionalidad_format_ko': 'El formato del nombre de la funcionalidad es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), sin espacios, números ni signos',
+	'descrip_funcionalidad_min_size_ko': 'La descripción de la funcionalidad es corta, introduzca por lo menos 5 caracteres',
+	'descrip_funcionalidad_max_size_ko': 'La descripción de la funcionalidad es demasiado larga, introduzca hasta 200 caracteres',
+	'descrip_funcionalidad_format_ko': 'El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números',
 	'rol_name_min_size_ko': 'El nombre del rol es corto, introduzca por lo menos 5 caracteres',
 	'rol_name_max_size_ko': 'El nombre del rol es demasiado largo, introduzca hasta 48 caracteres',
 	'rol_name_format_ko': 'El formato del nombre del rol es incorrecto. Solo se admiten caracteres alfabéticos (con la ñ y acentos incluidos), sin espacios, números ni signos',

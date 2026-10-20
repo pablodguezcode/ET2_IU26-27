@@ -11,6 +11,8 @@ var textos_EN = {
 	'text_menu_usuario': 'User Management',
 	'text_menu_rol': 'Role Management',
 	'text_menu_accion': 'Action Management',
+	'text_menu_funcionalidad': 'Feature Management',
+	'text_menu_rolaccionfuncionalidad': 'Role-Action-Feature Management',
 	'text_menu_funcionalidad_accion': 'Feature-Action Management',
 
 	// textos titulo de pagina de cada entidad
@@ -18,6 +20,8 @@ var textos_EN = {
 	'text_titulo_page_usuario': 'User Management',
 	'text_titulo_page_rol': 'Role Management',
 	'text_titulo_page_accion': 'Action Management',
+	'text_titulo_page_funcionalidad': 'Feature Management',
+	'text_titulo_page_rolaccionfuncionalidad': 'Role, Action and Feature Management',
 	'text_titulo_page_funcionalidad_accion': 'Feature and Action Management',
 
 	// textos titulo del formulario de cada entidad
@@ -53,6 +57,8 @@ var textos_EN = {
 	'nombre_accion': 'Action name',
 	'descrip_accion': 'Action description',
 	'id_funcionalidad': 'Feature ID',
+	'nombre_funcionalidad': 'Feature name',
+	'descrip_funcionalidad': 'Feature description',
 
 	// labels del formulario
 	'label_dni': 'ID number (DNI)',
@@ -73,6 +79,8 @@ var textos_EN = {
 	'label_nombre_accion': 'Action name',
 	'label_descrip_accion': 'Action description',
 	'label_id_funcionalidad': 'Feature ID',
+	'label_nombre_funcionalidad': 'Feature name',
+	'label_descrip_funcionalidad': 'Feature description',
 
 	// errores validaciones formulario (codigo devuelto por ACCION_campo_validation)
 	'dni_min_size_ko': 'The ID number is too short: it must have 9 characters',
@@ -123,6 +131,12 @@ var textos_EN = {
 	'id_funcionalidad_min_size_ko': 'The feature identifier is required: it must have at least 1 digit',
 	'id_funcionalidad_max_size_ko': 'The feature identifier exceeds the 11 numeric digits allowed',
 	'id_funcionalidad_format_ko': 'The feature identifier can only consist of numeric digits',
+	'nombre_funcionalidad_min_size_ko': 'The feature name is too short, enter at least 5 characters',
+	'nombre_funcionalidad_max_size_ko': 'The feature name is too long, enter up to 48 characters',
+	'nombre_funcionalidad_format_ko': 'The feature name format is incorrect. Allowed characters are the alphabet (including ñ and accents), without spaces, numbers or symbols',
+	'descrip_funcionalidad_min_size_ko': 'The feature description is too short, enter at least 5 characters',
+	'descrip_funcionalidad_max_size_ko': 'The feature description is too long, enter up to 200 characters',
+	'descrip_funcionalidad_format_ko': 'The description format is incorrect. Allowed characters are the alphabet (including ñ and accents), spaces and punctuation marks, without numbers',
 	'rol_name_min_size_ko': 'The role name is too short, enter at least 5 characters',
 	'rol_name_max_size_ko': 'The role name is too long, enter up to 48 characters',
 	'rol_name_format_ko': 'The role name format is incorrect. Only alphabetic characters (including ñ and accents) are allowed, without spaces, numbers or symbols',
