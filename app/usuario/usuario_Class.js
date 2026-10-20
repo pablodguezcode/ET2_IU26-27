@@ -1,26 +1,29 @@
-class usuario {
+class usuario extends AbstractEntidad {
 
-	constructor(esTest){
+	constructor(esTest=null){
 
-		this.dom = new dom();
-		this.validations = new Validations();
-		this.access_functions = new ExternalAccess();
+		super();
 
 		// la contraseña no se muestra en la tabla
 		this.columnasamostrar = ['dni','usuario','id_rol'];
 		// id_rol es una columna con tratamiento especial: el back la devuelve como el objeto del rol
-		// {id_rol, rol_name, rol_description} y en la tabla se muestra el nombre del rol (ver cambiarmostrarespecial)
+		// {id_rol, rol_name, rol_description} y en la tabla se muestra el nombre del rol (ver mostrarcambioatributo)
 		this.mostrarespecial = ['id_rol'];
 		this.nombreentidad = 'usuario';
+
+		this.dom = new entity_dom_fields();
+		this.validations = new entity_validations();
+		this.access_functions = new ExternalAccess();
 
 		//init
 		if (esTest == 'test'){}
 		else{
 			//visualizar seccion tabla y botones
 			document.getElementById('IU_manage_entity').style.display = 'block';
+			document.getElementById('text_title_page').className = 'text_titulo_page_'+this.nombreentidad;
 
 			//crear el formulario vacio
-			document.getElementById('IU_form').innerHTML = this.manual_form_creation();
+			document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
 
 			//invocar busqueda en back con el formulario vacio
 			this.SEARCH();
@@ -29,40 +32,38 @@ class usuario {
 	}
 
 	/**
-	 * replace the content of section element with a particular entity menu
-	 * @returns
+	 * devuelve el html del formulario de la entidad
+	 * @returns {string}
 	 */
 	manual_form_creation(){
 		var form_content = `
-			<form id = 'form_iu' action="http://193.147.87.202/procesaform.php" method="POST" onsubmit="return entidad.ADD_submit_usuario();">
+			<form id = 'form_iu' action="" method="POST" enctype="multipart/form-data" onsubmit="" class='formulario'>
+
 
 			<label class="label_dni">DNI</label>
-			<input type='text' id='dni' name='dni' onblur=" return entidad.ADD_dni_validation();">
+			<input type='text' id='dni' name='dni'>
 			<span id="span_error_dni"><a id="error_dni"></a></span>
 			<br>
 
 			<label class="label_usuario">Usuario</label>
-			<input type='text' id='usuario' name='usuario' onblur=" return entidad.ADD_usuario_validation();">
+			<input type='text' id='usuario' name='usuario'>
 			<span id="span_error_usuario"><a id="error_usuario"></a></span>
 			<br>
 
 			<label class="label_contrasena">Contraseña</label>
-			<input type='password' id='contrasena' name='contrasena' onblur=" return entidad.ADD_contrasena_validation();">
+			<input type='password' id='contrasena' name='contrasena'>
 			<span id="span_error_contrasena"><a id="error_contrasena"></a></span>
 			<br>
 
 			<label class="label_id_rol">Rol</label>
-			<select id='id_rol' name='id_rol' onblur=" return entidad.ADD_id_rol_validation();">
+			<select id='id_rol' name='id_rol'>
 				<!-- la primera opcion vacia permite que min_size falle si no se elige rol (y es "sin filtro" en SEARCH).
 				     Las demas opciones (value = id_rol, texto = rol_name) las rellena cargar_roles() desde el back. -->
 				<option value=""></option>
 			</select>
 			<span id="span_error_id_rol"><a id="error_id_rol"></a></span>
 			<br>
-
-			<input id="submit_button" type="submit" value="Submit">
-
-		</form>
+			</form>
 		`;
 		return form_content;
 
@@ -71,6 +72,7 @@ class usuario {
 /***************************************************************************************************************************
                                  			Campos de validacion para ADD
 ****************************************************************************************************************************/
+
 
 //Atributo dni
 
@@ -91,7 +93,7 @@ class usuario {
 			return "dni_format_ko";
 		}
 		//letra de control (modulo 23). La funcion recibe el valor, no lee del DOM
-		if (!(this.dni_personalize_validation(document.getElementById('dni').value))){
+		if (!(this.personalize_dni(document.getElementById('dni').value))){
 			this.dom.mostrar_error_campo('dni','dni_personalized_ko');
 			return "dni_personalized_ko";
 		}
@@ -102,7 +104,7 @@ class usuario {
 
 	//Retorna true si la letra de control (numero mod 23) coincide con la del DNI, si no devuelve false.
 	//Recibe el valor por parametro (no lee del DOM). Se llama despues de comprobar el formato (8 digitos + letra).
-	dni_personalize_validation(dni){
+	personalize_dni(dni){
 
 		var dni_letters = "TRWAGMYFPDXBNJZSQVHLCKE";
 		return dni_letters.charAt(parseInt(dni.substring(0, 8), 10) % 23) == dni.charAt(8);
@@ -180,22 +182,24 @@ class usuario {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 
-	//Se invoca desde el onsubmit del formulario. Se ejecutan TODAS las validaciones (el array se evalua entero) para que se muestren
-	//todos los errores a la vez y, si todas son correctas, pide la accion ADD al back.
-	//Siempre devuelve false: el envio lo hace ADD() por ajax y no el submit nativo del formulario.
+	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
+	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
+	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
 	ADD_submit_usuario(){
 
-		let resultados = [
-			this.ADD_dni_validation(),
-			this.ADD_usuario_validation(),
-			this.ADD_contrasena_validation(),
-			this.ADD_id_rol_validation()
-		];
+		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
+		var set_result = {};
 
-		if (resultados.every(resultado => resultado === true)){
-			this.ADD();
+		set_result.dni = this.ADD_dni_validation();
+		set_result.usuario = this.ADD_usuario_validation();
+		set_result.contrasena = this.ADD_contrasena_validation();
+		set_result.id_rol = this.ADD_id_rol_validation();
+
+		// si todos los campos son correctos devuelve true; si no, el objeto con los resultados
+		if (Object.values(set_result).every(valor => valor === true)){
+			return true;
 		}
-		return false;
+		return set_result;
 	}
 
 
@@ -203,6 +207,7 @@ class usuario {
 /***************************************************************************************************************************
                                  			Campos de validacion para EDIT
 ****************************************************************************************************************************/
+
 //En usuario los codigos de error y las restricciones de EDIT son los mismos que los de ADD (ver usuario_tests.js).
 //dni se puede modificar en EDIT, por eso lleva las mismas restricciones que en ADD.
 
@@ -231,17 +236,24 @@ class usuario {
                                  			SUMMIT EDIT formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos, si no devuelve false
+	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
+	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
+	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
 	EDIT_submit_usuario(){
 
-		let resultados = [
-			this.EDIT_dni_validation(),
-			this.EDIT_usuario_validation(),
-			this.EDIT_contrasena_validation(),
-			this.EDIT_id_rol_validation()
-		];
+		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
+		var set_result = {};
 
-		return resultados.every(resultado => resultado === true);
+		set_result.dni = this.EDIT_dni_validation();
+		set_result.usuario = this.EDIT_usuario_validation();
+		set_result.contrasena = this.EDIT_contrasena_validation();
+		set_result.id_rol = this.EDIT_id_rol_validation();
+
+		// si todos los campos son correctos devuelve true; si no, el objeto con los resultados
+		if (Object.values(set_result).every(valor => valor === true)){
+			return true;
+		}
+		return set_result;
 	}
 
 
@@ -249,6 +261,7 @@ class usuario {
 /***************************************************************************************************************************
                                  			Campos de validacion para SEARCH
 ****************************************************************************************************************************/
+
 //En SEARCH no hay min_size: el filtro es opcional y vacio significa "sin filtro". Si hay maximo y formato.
 
 //Atributo dni
@@ -289,8 +302,8 @@ class usuario {
 //Atributo contrasena
 
 	//La contraseña es un dato sensible y nunca se usa como criterio de busqueda: no hay tests de SEARCH
-	//ni campo contrasena en el formulario de busqueda. El metodo existe solo porque Unit_Test comprueba
-	//ADD_, EDIT_ y SEARCH_ para todos los atributos. No toca el DOM y siempre devuelve true.
+	//ni campo contrasena en el formulario de busqueda. El metodo existe para que haya un SEARCH_<campo>_validation()
+	//por cada atributo. No toca el DOM y siempre devuelve true.
 	SEARCH_contrasena_validation(){
 
 		return true;
@@ -320,138 +333,65 @@ class usuario {
                                  			SUMMIT SEARCH formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos, si no devuelve false
-	//No incluye contrasena: no existe en el formulario de busqueda
+	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
+	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
+	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
 	SEARCH_submit_usuario(){
 
-		let resultados = [
-			this.SEARCH_dni_validation(),
-			this.SEARCH_usuario_validation(),
-			this.SEARCH_id_rol_validation()
-		];
+		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
+		var set_result = {};
 
-		return resultados.every(resultado => resultado === true);
+		set_result.dni = this.SEARCH_dni_validation();
+		set_result.usuario = this.SEARCH_usuario_validation();
+		set_result.id_rol = this.SEARCH_id_rol_validation();
+
+		// si todos los campos son correctos devuelve true; si no, el objeto con los resultados
+		if (Object.values(set_result).every(valor => valor === true)){
+			return true;
+		}
+		return set_result;
 	}
 
-
-
 /***************************************************************************************************************************
-                                                     Formulario ADD
+                                                     FORMULARIOS
 ****************************************************************************************************************************/
 
 
 	/**
-	 * Muestra el formulario de ADD de usuario en un div modal con dos opciones: realizar la accion (Anadir) o cancelarla.
-	 * - Campos propios de usuario: dni, usuario, contrasena e id_rol.
+	 * Construye el formulario de ADD de usuario y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la accion (boton submit con el icono ADD) o cancelarla (icono BACK de index.html).
+	 * - Cada campo se valida al salir de el (colocarvalidaciones) y todos se comprueban en el onsubmit antes de enviar al back.
+	 * - Si el back responde ok, AbstractEntidad.ADD() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
 	 * - id_rol es un select con los roles que devuelve el back (cargar_roles()); contrasena es de tipo password.
-	 * - Cada campo se valida al salir de el (onblur) y todos se comprueban antes de enviar al back.
 	 */
 	createForm_ADD(){
 
-		// formulario vacio (se regenera siempre para que no queden datos ni errores de un ADD anterior)
-		document.getElementById('IU_form').innerHTML = '<h3 id="titulo_form_ADD">A&ntilde;adir usuario</h3>' + this.manual_form_creation();
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_usuario_ADD');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de un ADD anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.ADD_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.ADD();');
 
 		// los select de la entidad se rellenan desde el back (el formulario se acaba de repintar y solo tiene la opcion vacia)
 		this.cargar_roles();
 
-		// opciones del modal: realizar la accion (boton submit con icono) o cancelarla (boton con icono)
-		document.getElementById('submit_button').outerHTML =
-			'<button type="submit" id="submit_button"><img src="./iconos/ADD.png" /></button>' +
-			' <button type="button" id="cancel_button" onclick="entidad.cerrar_form_ADD();"><img src="./iconos/BACK.png" /></button>';
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','ADD');
 
-		// mostrar el formulario como modal
-		document.getElementById('IU_form').classList.add('modal_form');
-		document.getElementById('IU_form').style.display = 'block';
+		// colocar boton de submit
+		this.dom.colocarboton('ADD');
+
+		setLang();
 	}
 
-
-	/**
-	 * Cierra el modal de ADD sin enviar nada (cancelar) o tras un ADD correcto.
-	 * Deja en IU_form un formulario vacio porque SEARCH() lo necesita para su peticion al back.
-	 */
-	cerrar_form_ADD(){
-
-		document.getElementById('IU_form').classList.remove('modal_form');
-		document.getElementById('IU_form').style.display = 'none';
-		document.getElementById('IU_form').innerHTML = this.manual_form_creation();
-	}
-
-
-	/**
-	 * Accion ADD: pide al back el alta con los datos del formulario. Se invoca desde ADD_submit_usuario()
-	 * cuando todos los campos son correctos.
-	 * - Correcto: desaparece el formulario con sus mensajes de error y se actualiza la tabla de tuplas.
-	 * - Error del back: modal que el usuario debe confirmar; despues el formulario sigue como antes del envio.
-	 *
-	 * Se considera error del back una respuesta con ok === false (el texto del error va en code).
-	 */
-	async ADD(){
-
-		// evitar doble envio mientras se espera la respuesta
-		var boton = document.getElementById('submit_button');
-		boton.disabled = true;
-
-		try{
-			var respuesta = await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'ADD');
-
-			if (respuesta['ok'] === false){
-				await this.mostrar_modal_error('Error al a\u00f1adir usuario: ' + respuesta['code']);
-			}
-			else{
-				this.cerrar_form_ADD();
-				this.SEARCH();
-			}
-		}
-		finally{
-			// si el formulario sigue en pantalla (error del back) vuelve a poder enviarse
-			boton.disabled = false;
-		}
-	}
-
-
-	/**
-	 * Componente modal con un mensaje de error que el usuario debe confirmar con el boton de aceptar.
-	 * (Esta aqui y no en Dom_Class porque el enunciado dice que las clases del DOM se usan sin modificaciones)
-	 * @param {string} mensaje texto del error
-	 * @returns {Promise} se resuelve cuando el usuario confirma que ha recibido el error
-	 */
-	mostrar_modal_error(mensaje){
-		return new Promise(function(resolve){
-			var overlay = document.createElement('div');
-			overlay.id = 'modal_error_overlay';
-			overlay.className = 'modal_overlay';
-
-			var caja = document.createElement('div');
-			caja.className = 'modal_box';
-
-			var texto = document.createElement('p');
-			texto.id = 'modal_error_text';
-			texto.textContent = mensaje;
-
-			var aceptar = document.createElement('button');
-			aceptar.type = 'button';
-			aceptar.id = 'modal_error_aceptar';
-			aceptar.textContent = 'Aceptar';
-			aceptar.onclick = function(){
-				overlay.remove();
-				resolve();
-			};
-
-			caja.append(texto, aceptar);
-			overlay.append(caja);
-			document.body.append(overlay);
-			aceptar.focus();
-		});
-	}
-
-
-
-/***************************************************************************************************************************
-                                 				Otras Cosas, No tocar
-****************************************************************************************************************************/
-
-	//Stubs (alert), igual que en persona: los formularios reales de EDIT, DELETE, SHOWCURRENT y SEARCH
-	//todavia no estan implementados.
+	//Stubs (alert): los formularios de EDIT, DELETE, SHOWCURRENT y SEARCH todavia no estan implementados
+	//(se mantienen tal y como estaban en la entrega anterior).
 
 	createForm_EDIT(fila){
 
@@ -471,149 +411,44 @@ class usuario {
 	}
 
 
-
-// candidatas dom
-//(codigo generico copiado de persona: no depende de la entidad salvo por this.columnasamostrar y this.atributos)
+/***************************************************************************************************************************
+                                 			Atributos con formato especial en la tabla
+****************************************************************************************************************************/
 
 	/**
-	 * Recibe la información a mostrar en columnas y el array de columnas a las cuales se modificara su contenido para mostrarsele al usuario
-	 * Se le incluyen tres columnas mas a cada fila para poder tener un icono con la accion a realizar para esa fila y se le coloca un evento onclick
-	 * para poder llamar a los metodos createForm_accion pasando como parametros de esos metodos la información de la fila de datos
+	 * Devuelve el formato especial con el que se muestra en la tabla el valor de un atributo incluido en mostrarespecial.
+	 * - id_rol: el back devuelve el objeto del rol {id_rol, rol_name, rol_description} y se muestra rol_name
+	 *   (si llegara como valor simple, se deja tal cual).
 	 *
-	 * @param {Objeto} datos
-	 * @param {Array} mostrarespecial
+	 * @param {string} atributo nombre del atributo
+	 * @param {*} valorentrada valor que manda el back
+	 * @returns {*} valor a mostrar en la tabla
 	 */
-	crearTablaDatos(datos, mostrarespecial){
+	mostrarcambioatributo(atributo, valorentrada){
 
-		var misdatos = [];
-
-		for (var i=0;i<datos.length;i++){
-
-			// copia de la fila para pintar: las columnas con tratamiento especial se transforman en la copia,
-			// y la fila original (this.datos) conserva el valor tal y como lo manda el back
-			var fila = Object.assign({}, datos[i]);
-			for (var clave in fila){
-				if (mostrarespecial.includes(clave)){
-					fila[clave] = this.cambiarmostrarespecial(clave, fila[clave]);
-				}
-			}
-
-			// proceso los datos de la tabla para incluir en cada fila los tres botones conectados a createForm_ACCION()
-			// los botones reciben la fila original (EDIT necesitara el id_rol completo, no solo el nombre)
-			var linedit = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(`+JSON.stringify(datos[i])+`);'>`;
-			var lindelete = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(`+JSON.stringify(datos[i])+`);'>`;
-			var linshowcurrent = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(`+JSON.stringify(datos[i])+`);'>`;
-			fila['EDIT'] = linedit;
-			fila['DELETE'] = lindelete;
-			fila['SHOWCURRENT'] = linshowcurrent;
-
-			misdatos.push(fila);
-
+		if (atributo == 'id_rol' && valorentrada !== null && typeof valorentrada == 'object'){
+			return (valorentrada['rol_name'] !== undefined) ? valorentrada['rol_name'] : valorentrada['id_rol'];
 		}
-
-		//muestro datos en tabla
-		this.dom.showData('IU_manage_table', misdatos);
-		this.mostrarocultarcolumnas();
-		this.crearSeleccionablecolumnas(this.columnasamostrar, this.atributos);
-
-
+		return valorentrada;
 	}
 
-
-
 	/**
-	 * Transforma el valor de una columna con tratamiento especial para mostrarlo en la tabla.
-	 * id_rol: el back devuelve el objeto del rol {id_rol, rol_name, rol_description} y se muestra rol_name
-	 * (si llegara como valor simple, se deja tal cual).
+	 * AbstractEntidad.crearTablaDatos() llama a cambiarmostrarespecial(columna, valor) para los atributos de mostrarespecial.
+	 * El formato especial esta definido en mostrarcambioatributo(), a donde se delega.
 	 *
-	 * @param {string} clave nombre de la columna
+	 * @param {string} columna nombre del atributo
 	 * @param {*} valor valor que manda el back
 	 * @returns {*} valor a mostrar en la tabla
 	 */
-	cambiarmostrarespecial(clave, valor){
+	cambiarmostrarespecial(columna, valor){
 
-		if (clave == 'id_rol' && valor !== null && typeof valor == 'object'){
-			return (valor['rol_name'] !== undefined) ? valor['rol_name'] : valor['id_rol'];
-		}
-		return valor;
+		return this.mostrarcambioatributo(columna, valor);
 	}
 
 
-
-	/**
-	 * Redibuja el select en funcion del contenido de columnasamostrar
-	 *
-	 * @param {*} columnasamostrar
-	 * @param {*} atributos
-	 */
-	crearSeleccionablecolumnas(columnasamostrar,atributos){
-
-		document.getElementById("seleccioncolumnas").innerHTML = '';
-
-		for (let atributo of atributos){
-
-			var optionselect = document.createElement('option');
-			optionselect.className = atributo;
-			optionselect.innerHTML = atributo;
-			var textofuncion = "entidad.modificarcolumnasamostrar('"+atributo+"');";
-			optionselect.setAttribute("onclick",textofuncion);
-			if (columnasamostrar.includes(atributo)){
-				optionselect.selected = true;
-			}
-			document.getElementById("seleccioncolumnas").append(optionselect);
-		}
-		//setLang();
-
-	}
-
-// candidatas abstract
-
-	/**
-	 * muestra o no las columnas de la tabla segun indique columnasamostrar
-	 */
-	mostrarocultarcolumnas(){
-
-		var estadodisplay = '';
-		// recorro todos los atributos de la tabla
-		for (let columna of this.atributos){
-			// si el atributo esta en columnas a mostrar
-			// lo dejo como esta
-			if (this.columnasamostrar.includes(columna)){
-				estadodisplay = '';
-			}
-			// si el atributo no esta en columnas a mostrar lo oculto
-			else{
-				estadodisplay = 'none';
-			}
-			document.querySelector("th[class='tabla-th-"+columna+"']").style.display = estadodisplay;
-			let arraytds = document.querySelectorAll("td[class='tabla-td-"+columna+"']");
-			for (let i=0;i<arraytds.length;i++){
-				arraytds[i].style.display = estadodisplay;
-			}
-		}
-
-
-	}
-
-	/**
-	 * Modifica el array de columnas a mostrar al hacer click sobre el atributo en el select poniendolo como oculto o como visible
-	 * @param {string} atributo
-	 */
-	modificarcolumnasamostrar(atributo){
-
-		if (this.columnasamostrar.includes(atributo)){
-			// borrar ese atributo
-			this.columnasamostrar = this.columnasamostrar.filter(columna => columna != atributo);
-		}
-		else{
-			// añadir
-			this.columnasamostrar.push(atributo);
-		}
-
-		this.mostrarocultarcolumnas();
-		this.crearSeleccionablecolumnas(this.columnasamostrar, this.atributos);
-
-	}
+/***************************************************************************************************************************
+                                 			Carga de opciones de los select desde el back
+****************************************************************************************************************************/
 
 	/**
 	 * pide al back el listado de la entidad rol y rellena el select id_rol del formulario actual
@@ -646,39 +481,5 @@ class usuario {
 		});
 
 	}
-
-	/**
-	 * el método realiza una petición de search al back pudiendo enviar un formulario con datos, enviando
-	 * el nombre de la entidad del back y la acción a realizar sobre la misma.
-	 * los datos respondidos se usan para indicar o bien que no hay datos o mostrandolos en una tabla.
-	 */
-	async SEARCH(){
-
-		await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'SEARCH')
-		.then((respuesta) => {
-
-			//limpiar el formulario
-			document.getElementById('IU_form').innerHTML = this.manual_form_creation();
-			//el formulario se acaba de repintar: hay que volver a cargar las opciones del select id_rol (sin await)
-			this.cargar_roles();
-
-			if (respuesta['code'] == 'RECORDSET_DATOS'){
-				this.datos = respuesta['resource'];
-				this.atributos = Object.keys(this.datos[0]);
-				//crear la tabla de datos de la entidad del back
-				this.crearTablaDatos(this.datos, this.mostrarespecial);
-			}
-			else{
-				document.getElementById("IU_manage_table").style.display = 'block';
-				document.getElementById('IU_manage_table').innerHTML = 'No se han encontrado elementos que coincidan con la búsqueda';
-				document.getElementById('IU_manage_table').className = 'RECORDSET_VACIO';
-			}
-
-			//setLang();
-
-		});
-
-	}
-
 
 }

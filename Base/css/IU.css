@@ -13,48 +13,86 @@ divs
 		text-align: center;
 	}
 
-	/* formulario de accion (ADD...) como div modal: centrado y con el resto de la pagina oscurecido */
-	#IU_form.modal_form{
-		position: fixed;
-		top: 50%;
+	#tablaresultadostest tbody tr th{
+		width: 10%;
+		word-wrap: break-word;
+	}
+
+	.div_IU_form {
+		width:100%; /*Toma el 100% del ancho de la página*/
+		height:100%; /*Toma el 100% del alto de la página*/
+		position:fixed; /*Con este código hacemos que el contenedor se mantenga en la pantalla y para que tome las dimensiones del body y no de la entrada*/
+		background-color: rgba(250, 249, 249, 0.95); /*Color de fondo, incluye opacidad del 90%*/
+		top:0; /*Position superior*/
+		left:0; /*Posición lateral*/
+		z-index:10; /*Evitamos que algún elemento del blog sobreponga la ventana modal*/
+
+	}
+
+	.contenidoForm { 
+        background: rgba(217, 213, 213, 0.95);
+        position: absolute;
+        z-index: 20;
+        border-radius: 5px;
+        width: 80%;
+        height: 78.5%;
+        margin-top: 6%;
+        margin-left: 7%;
+        border: 1px;
+        border-style: solid;
+        overflow-y: scroll;
+        overflow-x: scroll;
+        scroll-behavior: smooth;
+	}
+
+	.formulario{
+        top: 20px;
+        position: relative;
+        left: 20px;
+	}
+
+	.class_titulo_form{
+		position: relative;
+		height: 100px;
+		width: 100%;
+
+		background: #ffff99;
+		color: #333;
+	}
+
+	#class_contenido_titulo_form{
 		left: 50%;
+		position: absolute;
+		top: 50%;
 		transform: translate(-50%, -50%);
-		z-index: 1000;
-		background-color: white;
-		padding: 1em;
-		max-height: 90vh;
-		overflow: auto;
-		box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+
+		font-weight: bold;
 	}
 
-	/* con el formulario modal abierto no se puede interactuar con el menu ni con los botones de la entidad (evita abrir/cambiar de entidad con el modal a medias) */
-	body:has(#IU_form.modal_form) nav,
-	body:has(#IU_form.modal_form) aside,
-	body:has(#IU_form.modal_form) #IU_manage_entity{
-		pointer-events: none;
+/*
+modal error
+*/
+
+	#error_action_modal{
+		position: fixed;
+		z-index: 9999; 
+		display: none; 
+		border: 3px solid; 
+		border-radius: 10px; 
+		background-color: white; 
+		padding: 10px; 
+		top: 50%; 
+		left: 50%; 
+		transform: translate(-50%, -50%);
 	}
 
-	/* modal de confirmacion de error: por encima del formulario */
-	.modal_overlay{
+	#modal_action_overlay{
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.5);
-		z-index: 2000;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	.modal_box{
-		background-color: white;
-		border: 1px solid black;
-		padding: 1em;
-		max-width: 30em;
-	}
-
-	#tablaresultadostest tbody tr th{
-		width: 10%;
-		word-wrap: break-word;
+		display: none;
+		z-index: 9998;
 	}

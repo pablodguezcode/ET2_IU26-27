@@ -13,26 +13,29 @@
      \u00bf \u00a1 = signos de apertura de interrogacion y exclamacion
      \u2026 = puntos suspensivos
 ----------------------------------------------------------------------------- */
-class rol {
+class rol extends AbstractEntidad {
 
-	constructor(esTest){
+	constructor(esTest=null){
 
-		this.dom = new dom();
-		this.validations = new Validations();
-		this.access_functions = new ExternalAccess();
+		super();
 
 		this.columnasamostrar = ['id_rol', 'rol_name', 'rol_description'];
 		this.mostrarespecial = [];
 		this.nombreentidad = 'rol';
+
+		this.dom = new entity_dom_fields();
+		this.validations = new entity_validations();
+		this.access_functions = new ExternalAccess();
 
 		//init
 		if (esTest == 'test'){}
 		else{
 			//visualizar seccion tabla y botones
 			document.getElementById('IU_manage_entity').style.display = 'block';
+			document.getElementById('text_title_page').className = 'text_titulo_page_'+this.nombreentidad;
 
 			//crear el formulario vacio
-			document.getElementById('IU_form').innerHTML = this.manual_form_creation();
+			document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
 
 			//invocar busqueda en back con el formulario vacio
 			this.SEARCH();
@@ -48,26 +51,24 @@ class rol {
 	 */
 	manual_form_creation(){
 		var form_content = `
-			<form id = 'form_iu' action="http://193.147.87.202/procesaform.php" method="POST" onsubmit="return entidad.ADD_submit_rol();">
+			<form id = 'form_iu' action="" method="POST" enctype="multipart/form-data" onsubmit="" class='formulario'>
+
 
 			<label class="label_id_rol">Identificador del rol</label>
-			<input type='text' id='id_rol' name='id_rol' onblur=" return entidad.ADD_id_rol_validation();" />
+			<input type='text' id='id_rol' name='id_rol' />
 			<span id="span_error_id_rol"><a id="error_id_rol"></a></span>
 			<br>
 
 			<label class="label_rol_name">Nombre del rol</label>
-			<input type='text' id='rol_name' name='rol_name' onblur=" return entidad.ADD_rol_name_validation();" />
+			<input type='text' id='rol_name' name='rol_name' />
 			<span id="span_error_rol_name"><a id="error_rol_name"></a></span>
 			<br>
 
 			<label class="label_rol_description">Descripci&oacute;n del rol</label>
-			<textarea rows="5" cols="33" id='rol_description' name='rol_description' onblur=" return entidad.ADD_rol_description_validation();"></textarea>
+			<textarea rows="5" cols="33" id='rol_description' name='rol_description'></textarea>
 			<span id="span_error_rol_description"><a id="error_rol_description"></a></span>
 			<br>
-
-			<input id="submit_button" type="submit" value="Submit">
-
-		</form>
+			</form>
 		`;
 		return form_content;
 
@@ -76,6 +77,7 @@ class rol {
 /***************************************************************************************************************************
                                  			Campos de validacion para ADD
 ****************************************************************************************************************************/
+
 
 //Atributo id_rol
 
@@ -155,21 +157,23 @@ class rol {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 
-	//Se invoca desde el onsubmit del formulario. Se ejecutan las tres validaciones siempre (el array las evalua todas),
-	//asi se muestran todos los errores a la vez, y si todas son correctas pide la accion ADD al back.
-	//Siempre devuelve false: el envio lo hace ADD() por ajax y no el submit nativo del formulario.
+	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
+	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
+	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
 	ADD_submit_rol(){
 
-		let resultados = [
-			this.ADD_id_rol_validation(),
-			this.ADD_rol_name_validation(),
-			this.ADD_rol_description_validation()
-		];
+		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
+		var set_result = {};
 
-		if (resultados.every(resultado => resultado === true)){
-			this.ADD();
+		set_result.id_rol = this.ADD_id_rol_validation();
+		set_result.rol_name = this.ADD_rol_name_validation();
+		set_result.rol_description = this.ADD_rol_description_validation();
+
+		// si todos los campos son correctos devuelve true; si no, el objeto con los resultados
+		if (Object.values(set_result).every(valor => valor === true)){
+			return true;
 		}
-		return false;
+		return set_result;
 	}
 
 
@@ -177,6 +181,7 @@ class rol {
 /***************************************************************************************************************************
                                  			Campos de validacion para EDIT
 ****************************************************************************************************************************/
+
 
 	EDIT_id_rol_validation(){
 
@@ -198,16 +203,23 @@ class rol {
                                  			SUMMIT EDIT formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos, si no devuelve false
+	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
+	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
+	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
 	EDIT_submit_rol(){
 
-		let resultados = [
-			this.EDIT_id_rol_validation(),
-			this.EDIT_rol_name_validation(),
-			this.EDIT_rol_description_validation()
-		];
+		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
+		var set_result = {};
 
-		return resultados.every(resultado => resultado === true);
+		set_result.id_rol = this.EDIT_id_rol_validation();
+		set_result.rol_name = this.EDIT_rol_name_validation();
+		set_result.rol_description = this.EDIT_rol_description_validation();
+
+		// si todos los campos son correctos devuelve true; si no, el objeto con los resultados
+		if (Object.values(set_result).every(valor => valor === true)){
+			return true;
+		}
+		return set_result;
 	}
 
 
@@ -215,6 +227,7 @@ class rol {
 /***************************************************************************************************************************
                                  			Campos de validacion para SEARCH
 ****************************************************************************************************************************/
+
 //El SEARCH puede ser parcial (no hay minimo, vacio = sin filtro) pero si maximo y debe respetar el conjunto de caracteres de cada atributo.
 //Las expresiones regulares son las mismas que en ADD/EDIT: llevan * (no +) y el conjunto de caracteres no cambia, asi que
 //cualquier valor parcial ("adm", "Rol de ad") o vacio las cumple. El minimo lo controla min_size, que aqui no se llama.
@@ -276,131 +289,61 @@ class rol {
                                  			SUMMIT SEARCH formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos, si no devuelve false
+	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
+	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
+	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
 	SEARCH_submit_rol(){
 
-		let resultados = [
-			this.SEARCH_id_rol_validation(),
-			this.SEARCH_rol_name_validation(),
-			this.SEARCH_rol_description_validation()
-		];
+		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
+		var set_result = {};
 
-		return resultados.every(resultado => resultado === true);
+		set_result.id_rol = this.SEARCH_id_rol_validation();
+		set_result.rol_name = this.SEARCH_rol_name_validation();
+		set_result.rol_description = this.SEARCH_rol_description_validation();
+
+		// si todos los campos son correctos devuelve true; si no, el objeto con los resultados
+		if (Object.values(set_result).every(valor => valor === true)){
+			return true;
+		}
+		return set_result;
 	}
 
-
-
 /***************************************************************************************************************************
-                                                     Formulario ADD
+                                                     FORMULARIOS
 ****************************************************************************************************************************/
 
 
 	/**
-	 * Muestra el formulario de ADD de rol en un div modal con dos opciones: realizar la accion (Anadir) o cancelarla.
-	 * - Campos propios de rol: id_rol, rol_name y rol_description.
-	 * - Cada campo se valida al salir de el (onblur) y todos se comprueban antes de enviar al back.
+	 * Construye el formulario de ADD de rol y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la accion (boton submit con el icono ADD) o cancelarla (icono BACK de index.html).
+	 * - Cada campo se valida al salir de el (colocarvalidaciones) y todos se comprueban en el onsubmit antes de enviar al back.
+	 * - Si el back responde ok, AbstractEntidad.ADD() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
 	 */
 	createForm_ADD(){
 
-		// formulario vacio (se regenera siempre para que no queden datos ni errores de un ADD anterior)
-		document.getElementById('IU_form').innerHTML = '<h3 id="titulo_form_ADD">A&ntilde;adir rol</h3>' + this.manual_form_creation();
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_rol_ADD');
 
-		// opciones del modal: realizar la accion (boton submit con icono) o cancelarla (boton con icono)
-		document.getElementById('submit_button').outerHTML =
-			'<button type="submit" id="submit_button"><img src="./iconos/ADD.png" /></button>' +
-			' <button type="button" id="cancel_button" onclick="entidad.cerrar_form_ADD();"><img src="./iconos/BACK.png" /></button>';
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de un ADD anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
 
-		// mostrar el formulario como modal
-		document.getElementById('IU_form').classList.add('modal_form');
-		document.getElementById('IU_form').style.display = 'block';
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.ADD_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.ADD();');
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','ADD');
+
+		// colocar boton de submit
+		this.dom.colocarboton('ADD');
+
+		setLang();
 	}
 
-
-	/**
-	 * Cierra el modal de ADD sin enviar nada (cancelar) o tras un ADD correcto.
-	 * Deja en IU_form un formulario vacio porque SEARCH() lo necesita para su peticion al back.
-	 */
-	cerrar_form_ADD(){
-
-		document.getElementById('IU_form').classList.remove('modal_form');
-		document.getElementById('IU_form').style.display = 'none';
-		document.getElementById('IU_form').innerHTML = this.manual_form_creation();
-	}
-
-
-	/**
-	 * Accion ADD: pide al back el alta con los datos del formulario. Se invoca desde ADD_submit_rol()
-	 * cuando todos los campos son correctos.
-	 * - Correcto: desaparece el formulario con sus mensajes de error y se actualiza la tabla de tuplas.
-	 * - Error del back: modal que el usuario debe confirmar; despues el formulario sigue como antes del envio.
-	 *
-	 * Se considera error del back una respuesta con ok === false (el texto del error va en code).
-	 */
-	async ADD(){
-
-		// evitar doble envio mientras se espera la respuesta
-		var boton = document.getElementById('submit_button');
-		boton.disabled = true;
-
-		try{
-			var respuesta = await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'ADD');
-
-			if (respuesta['ok'] === false){
-				await this.mostrar_modal_error('Error al a\u00f1adir rol: ' + respuesta['code']);
-			}
-			else{
-				this.cerrar_form_ADD();
-				this.SEARCH();
-			}
-		}
-		finally{
-			// si el formulario sigue en pantalla (error del back) vuelve a poder enviarse
-			boton.disabled = false;
-		}
-	}
-
-
-	/**
-	 * Componente modal con un mensaje de error que el usuario debe confirmar con el boton de aceptar.
-	 * (Esta aqui y no en Dom_Class porque el enunciado dice que las clases del DOM se usan sin modificaciones)
-	 * @param {string} mensaje texto del error
-	 * @returns {Promise} se resuelve cuando el usuario confirma que ha recibido el error
-	 */
-	mostrar_modal_error(mensaje){
-		return new Promise(function(resolve){
-			var overlay = document.createElement('div');
-			overlay.id = 'modal_error_overlay';
-			overlay.className = 'modal_overlay';
-
-			var caja = document.createElement('div');
-			caja.className = 'modal_box';
-
-			var texto = document.createElement('p');
-			texto.id = 'modal_error_text';
-			texto.textContent = mensaje;
-
-			var aceptar = document.createElement('button');
-			aceptar.type = 'button';
-			aceptar.id = 'modal_error_aceptar';
-			aceptar.textContent = 'Aceptar';
-			aceptar.onclick = function(){
-				overlay.remove();
-				resolve();
-			};
-
-			caja.append(texto, aceptar);
-			overlay.append(caja);
-			document.body.append(overlay);
-			aceptar.focus();
-		});
-	}
-
-
-
-/***************************************************************************************************************************
-                                 				Otras Cosas, No tocar
-****************************************************************************************************************************/
-//Igual que en persona: los createForm_* son de momento stubs con alert.
+	//Stubs (alert): los formularios de EDIT, DELETE, SHOWCURRENT y SEARCH todavia no estan implementados
+	//(se mantienen tal y como estaban en la entrega anterior).
 
 	createForm_EDIT(fila){
 
@@ -418,165 +361,5 @@ class rol {
 	createForm_SEARCH(){
 		alert('crear formulario SEARCH');
 	}
-
-
-
-// candidatas dom
-
-
-	/**
-	 * Recibe la informacion a mostrar en columnas y el array de columnas a las cuales se modificara su contenido para mostrarsele al usuario
-	 * Se le incluyen tres columnas mas a cada fila para poder tener un icono con la accion a realizar para esa fila y se le coloca un evento onclick
-	 * para poder llamar a los metodos createForm_accion pasando como parametros de esos metodos la informacion de la fila de datos
-	 *
-	 * @param {Objeto} datos
-	 * @param {Array} mostrarespecial
-	 */
-	crearTablaDatos(datos, mostrarespecial){
-
-		var misdatos = datos;
-		/*
-		recorrer todas las filas de datos y cada atributo para si tiene una funcion de transformacion de valor modificarlo en el momento
-		*/
-		if (mostrarespecial.length > 0){
-			for (var i=0;i<misdatos.length;i++){
-				for (var clave in misdatos[i]){
-						if (mostrarespecial.includes(clave)){
-							//misdatos[i][clave] = this.cambiarmostrarespecial(clave, misdatos[i][clave]);
-						}
-				}
-			}
-		}
-		// proceso los datos de la tabla para incluir en cada fila los tres botones conectados a createForm_ACCION()
-		for (var i=0;i<misdatos.length;i++){
-
-			var linedit = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(`+JSON.stringify(misdatos[i])+`);'>`;
-			var lindelete = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(`+JSON.stringify(misdatos[i])+`);'>`;
-			var linshowcurrent = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(`+JSON.stringify(misdatos[i])+`);'>`;
-			misdatos[i]['EDIT'] = linedit;
-			misdatos[i]['DELETE'] = lindelete;
-			misdatos[i]['SHOWCURRENT'] = linshowcurrent;
-
-		}
-
-		//muestro datos en tabla
-		this.dom.showData('IU_manage_table', misdatos);
-		this.mostrarocultarcolumnas();
-		this.crearSeleccionablecolumnas(this.columnasamostrar, this.atributos);
-
-
-	}
-
-
-
-	/**
-	 * Redibuja el select en funcion del contenido de columnasamostrar
-	 *
-	 * @param {*} columnasamostrar
-	 * @param {*} atributos
-	 */
-	crearSeleccionablecolumnas(columnasamostrar,atributos){
-
-		document.getElementById("seleccioncolumnas").innerHTML = '';
-
-		for (let atributo of atributos){
-
-			var optionselect = document.createElement('option');
-			optionselect.className = atributo;
-			optionselect.innerHTML = atributo;
-			var textofuncion = "entidad.modificarcolumnasamostrar('"+atributo+"');";
-			optionselect.setAttribute("onclick",textofuncion);
-			if (columnasamostrar.includes(atributo)){
-				optionselect.selected = true;
-			}
-			document.getElementById("seleccioncolumnas").append(optionselect);
-		}
-		//setLang();
-
-	}
-
-// candidatas abstract
-
-	/**
-	 * muestra o no las columnas de la tabla segun indique columnasamostrar
-	 */
-	mostrarocultarcolumnas(){
-
-		var estadodisplay = '';
-		// recorro todos los atributos de la tabla
-		for (let columna of this.atributos){
-			// si el atributo esta en columnas a mostrar
-			// lo dejo como esta
-			if (this.columnasamostrar.includes(columna)){
-				estadodisplay = '';
-			}
-			// si el atributo no esta en columnas a mostrar lo oculto
-			else{
-				estadodisplay = 'none';
-			}
-			document.querySelector("th[class='tabla-th-"+columna+"']").style.display = estadodisplay;
-			let arraytds = document.querySelectorAll("td[class='tabla-td-"+columna+"']");
-			for (let i=0;i<arraytds.length;i++){
-				arraytds[i].style.display = estadodisplay;
-			}
-		}
-
-
-	}
-
-	/**
-	 * Modifica el array de columnas a mostrar al hacer click sobre el atributo en el select poniendolo como oculto o como visible
-	 * @param {string} atributo
-	 */
-	modificarcolumnasamostrar(atributo){
-
-		if (this.columnasamostrar.includes(atributo)){
-			// borrar ese atributo
-			this.columnasamostrar = this.columnasamostrar.filter(columna => columna != atributo);
-		}
-		else{
-			// anadir
-			this.columnasamostrar.push(atributo);
-		}
-
-		this.mostrarocultarcolumnas();
-		this.crearSeleccionablecolumnas(this.columnasamostrar, this.atributos);
-
-	}
-
-	/**
-	 * el metodo realiza una peticion de search al back pudiendo enviar un formulario con datos, enviando
-	 * el nombre de la entidad del back y la accion a realizar sobre la misma.
-	 * los datos respondidos se usan para indicar o bien que no hay datos o mostrandolos en una tabla.
-	 */
-	async SEARCH(){
-
-		await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'SEARCH')
-		.then((respuesta) => {
-
-			//limpiar el formulario
-			document.getElementById('IU_form').innerHTML = this.manual_form_creation();
-
-			if (respuesta['code'] == 'RECORDSET_DATOS'){
-				this.datos = respuesta['resource'];
-				this.atributos = Object.keys(this.datos[0]);
-				//crear la tabla de datos de la entidad del back
-				this.crearTablaDatos(this.datos, this.mostrarespecial);
-				//rellenar el select de columnas a mostrar
-				//this.crearSeleccionablecolumnas(this.columnasamostrar, this.atributos);
-				//this.mostrarocultarcolumnas();
-			}
-			else{
-				document.getElementById("IU_manage_table").style.display = 'block';
-				document.getElementById('IU_manage_table').innerHTML = 'No se han encontrado elementos que coincidan con la b\u00fasqueda';
-				document.getElementById('IU_manage_table').className = 'RECORDSET_VACIO';
-			}
-
-			//setLang();
-
-		});
-
-	}
-
 
 }

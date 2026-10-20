@@ -12,9 +12,9 @@ class Data_Test {
 
         // se crea la entidad indicada en modo test
         this.entidad = new entidad('test');
-        this.dom = new dom;
+        this.dom = new dom_fields();
 
-        this.dom.fillHtmlContent(this.entidad.nombreentidad, 'titulo_nombre_entidad_test');
+        //this.dom.fillHtmlContent(this.entidad.nombreentidad, 'titulo_nombre_entidad_test');
         // se crea el formulario oculto
         //document.getElementById('form').innerHTML = this.entidad.manual_form_creation();
 
@@ -55,10 +55,6 @@ class Data_Test {
         };
 
         var contadorpruebas = 0;
-
-        /* ESTO PARA SOLUCIONAR CASO DE CONTAMINACION DE OTRA CLASE
-        this.dom.vaciarDiv('form');
-        */
 
         // recorro todas las pruebas definidas
         
@@ -102,23 +98,12 @@ class Data_Test {
             resultadopruebas.descripcion = def[4];
 
             // creo objeto html sino tengo cargado el formulario (para crear cada elemento dinamicamente dentro del form)
-            if (def[2] == 'input'){
-                var elementoform = this.dom.crearElementoHtml(def[2], 'text', def[1], pruebas[i][5]);
-            }
-            if (def[2] == 'file'){
-                var elementoform = this.dom.crearElementoHtml(def[2], 'file', def[1], pruebas[i][5]);
-            }
-            if (def[2] == 'select'){
-                var elementoform = this.dom.crearElementoHtml(def[2], '', def[1], pruebas[i][5]);
-            }
-            if (def[2] == 'textarea'){
-                var elementoform = this.dom.crearElementoHtml(def[2], 'textarea', def[1], pruebas[i][5]);
-            }
+            var elementoform = this.dom.crearElementoHtml('contenedor_IU_form', def[2], def[1], pruebas[i][5]);
             
             // se colocan los elementos de muestra de error por si falla la validacion y la entidad intenta mostrarlos
-            this.dom.crearElementoHtml('span', '', 'span_error_'+def[1], {});
-            this.dom.crearElementoHtml('a', '', 'error_'+def[1], {});
-            this.dom.crearElementoHtml('input', 'submit', 'submit_button', {submit_button:0});
+            this.dom.crearElementoHtml('contenedor_IU_form', 'span', 'span_error_'+def[1], {});
+            this.dom.crearElementoHtml('contenedor_IU_form', 'a', 'error_'+def[1], {});
+            this.dom.crearElementoHtml('contenedor_IU_form', 'submit', 'submit_button', {submit_button:0});
 
             
             //llamo a la funcion de validacion del campo según su accion
@@ -151,7 +136,7 @@ class Data_Test {
                 };
 
             
-            this.dom.vaciarDiv('form');
+            this.dom.vaciarDiv('contenedor_IU_form');
 
         }
 
@@ -175,9 +160,8 @@ class Data_Test {
 					pruebastatus: {value:'INCORRECTO', style:'background-color: red'}
         };
         
-        this.dom.showData('IU_Test_result_nofile', salidapruebas, marcados);
-       
-        return true;
+       this.dom.showData('IU_Test_result_nofile', salidapruebas, marcados);
+       return true;
 
     }
 

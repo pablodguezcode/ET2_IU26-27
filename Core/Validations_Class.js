@@ -14,13 +14,8 @@ class Validations{
 			case 'INPUT':
 				switch (elemento.type){
 					case 'number':
-
 					case 'email':
-
 					case 'text':
-						
-
-					case 'password':
 						let valorelemento = elemento.value;
 						if (valorelemento.length<minsize){
 							return false;
@@ -29,19 +24,14 @@ class Validations{
 							return true;
 						}
 						break;
-
 					case 'file':
 						break;
-
 					default:
 						break;
 				
 				}
 				break;
-			case 'TEXTAREA':
-				return elemento.value.length >= minsize;
 			case 'SELECT':
-				return elemento.value.length >= minsize;
 				break;
 			default:
 				break;
@@ -61,8 +51,6 @@ class Validations{
 					case 'number':
 					case 'email':
 					case 'text':
-
-					case 'password' :
 						let valorelemento = elemento.value;
 						if (valorelemento.length>maxsize){
 							return false;
@@ -78,10 +66,7 @@ class Validations{
 				
 				}
 				break;
-			case 'TEXTAREA':
-				return elemento.value.length <= maxsize;
 			case 'SELECT':
-				return elemento.value.length <= maxsize;
 				break;
 			default:
 				break;
@@ -99,8 +84,6 @@ class Validations{
 		let valor = document.getElementById(id).value;
 		return expresionregular.test(valor);
 	}
-
-
 
 	/**
 	 * 

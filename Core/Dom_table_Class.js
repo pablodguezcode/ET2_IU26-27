@@ -1,7 +1,7 @@
 class dom_table {
 
 	constructor(){
-		
+
 	}
 
 	/**
@@ -70,6 +70,7 @@ class dom_table {
 				}
 				else{
 					colelement.innerHTML = clave;
+					colelement.classList.add(clave);
 				}
 				if (!(marked === null)){
 					var marcados = Object.keys(marked);
@@ -100,7 +101,7 @@ class dom_table {
 		}
 
 		misdatos(test_result);
-
+		setLang();
 
 	}
 
