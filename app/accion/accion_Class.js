@@ -1,17 +1,6 @@
 /* -----------------------------------------------------------------------------
    Entidad: accion
    Campos : id_accion (input, PK), nombre_accion (input), descrip_accion (textarea)
-
-   Fichero escrito solo con caracteres ASCII: n con tilde, acentos y puntos
-   suspensivos de las expresiones regulares van como escapes \uXXXX, para que
-   funcione igual aunque el servidor no declare UTF-8.
-
-     \u00f1 \u00d1 = n, N con tilde
-     \u00e1 \u00e9 \u00ed \u00f3 \u00fa = a e i o u con acento
-     \u00c1 \u00c9 \u00cd \u00d3 \u00da = A E I O U con acento
-     \u00fc \u00dc = u, U con dieresis
-     \u00bf \u00a1 = signos de apertura de interrogacion y exclamacion
-     \u2026 = puntos suspensivos
 ----------------------------------------------------------------------------- */
 class accion extends AbstractEntidad {
 
@@ -117,7 +106,7 @@ class accion extends AbstractEntidad {
 		}
 		// Solo letras A-Z a-z, n con tilde y vocales con acento o dieresis. Sin espacios, digitos ni signos
 		// equivale a: ^[A-Za-z + n/N con tilde + vocales con acento + u/U con dieresis]*$
-		if (!(this.validations.format('nombre_accion', '^[A-Za-z\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u00c1\u00c9\u00cd\u00d3\u00da\u00fc\u00dc]*$'))){
+		if (!(this.validations.format('nombre_accion', '^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ]*$'))){
 			this.dom.mostrar_error_campo('nombre_accion','nombre_accion_format_ko');
 			return "nombre_accion_format_ko";
 		}
@@ -142,7 +131,7 @@ class accion extends AbstractEntidad {
 		// Letras (con n con tilde y acentos), espacio y puntuacion espanola: . , ; : ? ! ( ) [ ] - " ' mas los signos de apertura de interrogacion y exclamacion y los puntos suspensivos
 		// Sin digitos ni % & # @ $ < >. Dentro de la clase se escapan [ ] y -
 		// equivale a: ^[letras .,;:?!()\[\]\-"' + signos de apertura + puntos suspensivos]*$
-		if (!(this.validations.format('descrip_accion', '^[A-Za-z\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u00c1\u00c9\u00cd\u00d3\u00da\u00fc\u00dc .,;:\u00bf?\u00a1!()\\[\\]\\-"\'\u2026]*$'))){
+		if (!(this.validations.format('descrip_accion', '^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ .,;:¿?¡!()\\[\\]\\-"\'…]*$'))){
 			this.dom.mostrar_error_campo('descrip_accion','descrip_accion_format_ko');
 			return "descrip_accion_format_ko";
 		}
@@ -258,7 +247,7 @@ class accion extends AbstractEntidad {
 			this.dom.mostrar_error_campo('nombre_accion','nombre_accion_max_size_ko');
 			return "nombre_accion_max_size_ko";
 		}
-		if (!(this.validations.format('nombre_accion', '^[A-Za-z\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u00c1\u00c9\u00cd\u00d3\u00da\u00fc\u00dc]*$'))){
+		if (!(this.validations.format('nombre_accion', '^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ]*$'))){
 			this.dom.mostrar_error_campo('nombre_accion','nombre_accion_format_ko');
 			return "nombre_accion_format_ko";
 		}
@@ -275,7 +264,7 @@ class accion extends AbstractEntidad {
 			this.dom.mostrar_error_campo('descrip_accion','descrip_accion_max_size_ko');
 			return "descrip_accion_max_size_ko";
 		}
-		if (!(this.validations.format('descrip_accion', '^[A-Za-z\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u00c1\u00c9\u00cd\u00d3\u00da\u00fc\u00dc .,;:\u00bf?\u00a1!()\\[\\]\\-"\'\u2026]*$'))){
+		if (!(this.validations.format('descrip_accion', '^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ .,;:¿?¡!()\\[\\]\\-"\'…]*$'))){
 			this.dom.mostrar_error_campo('descrip_accion','descrip_accion_format_ko');
 			return "descrip_accion_format_ko";
 		}

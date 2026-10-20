@@ -131,6 +131,7 @@ var textos_EN = {
 	// errores acciones (back)
 	'RECORDSET_VACIO': 'There are not results for your search',
 	'dni_es_nulo_ko': 'DNI can not be empty',
+	'dni_EXISTE_en_persona_KO': 'A person with that ID number already exists',
 	'admin_no_se_puede_modificar_ko': 'The admin cannot be modified',
 
 	// textos de la ventana de resultado de test

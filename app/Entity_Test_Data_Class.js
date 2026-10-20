@@ -1,5 +1,5 @@
 /**
- * clase para poder refactorizar los metodos que se considere adecuados manteniendo la definición de los mismos y para inclusión de nuevos métodos
+ * clase para poder refactorizar los metodos que se considere adecuados manteniendo la definicion de los mismos y para inclusion de nuevos metodos
  *
  * Se invoca desde el icono TEST: new entity_Test_Data(eval(entidad.nombreentidad))
  * El resultado de las pruebas se presenta en una ventana nueva (no en el div IU_Test_result_nofile de index.html).

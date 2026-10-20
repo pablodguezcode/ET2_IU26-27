@@ -1,5 +1,5 @@
 /**
- * clase para refactorizar los metodos de dom_fields que se consideren necesarios sin modificar su definición y para inclusión de nuevos métodos
+ * clase para refactorizar los metodos de dom_fields que se consideren necesarios sin modificar su definicion y para inclusion de nuevos metodos
  */
 class entity_dom_fields extends dom_fields{
     constructor(){
@@ -7,7 +7,7 @@ class entity_dom_fields extends dom_fields{
     }
 
     /**
-     * Refactorizacion de crearElementoHtml(): mantiene la definicion y el comportamiento de dom_fields y añade la creacion de los
+     * Refactorizacion de crearElementoHtml(): mantiene la definicion y el comportamiento de dom_fields y anade la creacion de los
      * elementos de prueba de tipo select y textarea, que usan los campos de las entidades que no son input (id_rol, descrip_accion...).
      *
      * @param {string} contenedor id del componente donde se coloca el elemento

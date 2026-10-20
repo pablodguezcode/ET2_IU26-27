@@ -131,6 +131,7 @@ var textos_ES = {
 	// errores acciones (back)
 	'RECORDSET_VACIO': 'No hay coincidencias para la búsqueda',
 	'dni_es_nulo_ko': 'El dni no puede ser vacio',
+	'dni_EXISTE_en_persona_KO': 'Ya existe una persona con ese DNI',
 	'admin_no_se_puede_modificar_ko': 'El admin no se puede modificar',
 
 	// textos de la ventana de resultado de test
