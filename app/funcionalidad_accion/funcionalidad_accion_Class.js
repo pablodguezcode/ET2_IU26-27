@@ -281,24 +281,200 @@ class funcionalidad_accion extends AbstractEntidad {
 		setLang();
 	}
 
-	//Stubs (alert): los formularios de EDIT, DELETE, SHOWCURRENT y SEARCH todavia no estan implementados
-	//(se mantienen tal y como estaban en la entrega anterior).
+	/**
+	 * Construye el formulario de EDIT de funcionalidad_accion, relleno con los datos de la fila, y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la accion (boton submit con el icono EDIT) o cancelarla (icono BACK de index.html).
+	 * - id_funcionalidad e id_accion son select: se cargan primero las opciones del back y despues se seleccionan las de la fila.
+	 * - Si el back responde ok, AbstractEntidad.EDIT() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono EDIT
+	 */
+	async createForm_EDIT(fila){
 
-	createForm_EDIT(fila){
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_funcionalidad_accion_EDIT');
 
-		alert('crear formulario EDIT '+fila.id_funcionalidad+' '+fila.id_accion);
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.EDIT_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.EDIT();');
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','EDIT');
+
+		// colocar boton de submit
+		this.dom.colocarboton('EDIT');
+
+		setLang();
+
+		// las opciones llegan del back: hasta que no estan cargadas no se pueden seleccionar las de la fila
+		await this.cargar_opciones();
+
+		// el formulario puede haberse cerrado o sustituido por otro (ADD, SEARCH...) mientras llegaba la respuesta del back
+		var form = document.getElementById('form_iu');
+		if (form == null || form.getAttribute('action') != 'javascript:entidad.EDIT();'){ return; }
+
+		// rellenar los campos con los valores de la fila (cada clave puede venir como objeto)
+		this.dom.rellenarvaloresform({
+			id_funcionalidad: this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad'),
+			id_accion: this.valorclave(fila['id_accion'], 'id_accion')
+		});
+
+		setLang();
 	}
 
-	createForm_DELETE(){
-		alert('crear formulario DELETE');
-	}
-
-	createForm_SHOWCURRENT(){
-		alert('crear formulario DETALLE');
-	}
-
+	/**
+	 * Construye el formulario de SEARCH de funcionalidad_accion y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
+	 * - Los dos campos son opcionales: la opcion vacia de cada select significa "sin filtro" (ver SEARCH_<campo>_validation).
+	 * - Si el back responde, AbstractEntidad.SEARCH() oculta el formulario y muestra en la tabla las tuplas que coinciden.
+	 */
 	createForm_SEARCH(){
-		alert('crear formulario SEARCH');
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_funcionalidad_accion_SEARCH');
+
+		// formulario vacio y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.SEARCH();');
+
+		// los select se rellenan desde el back
+		this.cargar_opciones();
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','SEARCH');
+
+		// colocar boton de submit
+		this.dom.colocarboton('SEARCH');
+
+		setLang();
+	}
+
+	/**
+	 * Construye el formulario de SHOWCURRENT de funcionalidad_accion: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - La unica opcion del modal es cerrarlo (icono BACK de index.html): no hay boton de submit ni se envia nada al back.
+	 * - id_funcionalidad e id_accion son select: se cargan primero las opciones del back y despues se seleccionan las de la fila.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono SHOWCURRENT
+	 */
+	async createForm_SHOWCURRENT(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_funcionalidad_accion_SHOWCURRENT');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// el formulario no se envia: solo se identifica para saber si sigue siendo este cuando llegue la respuesta del back
+		this.dom.assign_property_value('form_iu','onsubmit','return false');
+		this.dom.assign_property_value('form_iu','data-accion','SHOWCURRENT');
+
+		setLang();
+
+		// las opciones llegan del back: hasta que no estan cargadas no se pueden seleccionar las de la fila
+		await this.cargar_opciones();
+
+		// el formulario puede haberse cerrado o sustituido por otro (ADD, EDIT...) mientras llegaba la respuesta del back
+		var form = document.getElementById('form_iu');
+		if (form == null || form.getAttribute('data-accion') != 'SHOWCURRENT'){ return; }
+
+		// rellenar los campos con los valores de la fila (cada clave puede venir como objeto)
+		this.dom.rellenarvaloresform({
+			id_funcionalidad: this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad'),
+			id_accion: this.valorclave(fila['id_accion'], 'id_accion')
+		});
+
+		// todos los campos en solo lectura (los select se deshabilitan porque readonly no les afecta)
+		this.dom.colocartodosreadonly('form_iu');
+		document.getElementById('id_funcionalidad').disabled = true;
+		document.getElementById('id_accion').disabled = true;
+
+		setLang();
+	}
+
+	/**
+	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
+	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 */
+	DELETE_submit_funcionalidad_accion(){
+
+		return true;
+	}
+
+	/**
+	 * Construye el formulario de DELETE de funcionalidad_accion: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - Opciones del modal: confirmar el borrado (boton submit con el icono DELETE) o cancelarlo (icono BACK de index.html).
+	 * - El boton de submit solo se coloca cuando el formulario ya esta relleno, para no poder enviar un borrado sin datos.
+	 * - Si el back responde ok, AbstractEntidad.DELETE() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 * - id_funcionalidad e id_accion son select: se cargan primero las opciones del back, se selecciona la de la fila y se dejan
+	 *   solo esa opcion (readonly no afecta a un select y un select deshabilitado no se envia al back).
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono DELETE
+	 */
+	async createForm_DELETE(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_funcionalidad_accion_DELETE');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.DELETE_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.DELETE();');
+
+		setLang();
+
+		// las opciones llegan del back: hasta que no estan cargadas no se pueden seleccionar las de la fila
+		await this.cargar_opciones();
+
+		// el formulario puede haberse cerrado o sustituido por otro (ADD, EDIT...) mientras llegaba la respuesta del back
+		var form = document.getElementById('form_iu');
+		if (form == null || form.getAttribute('action') != 'javascript:entidad.DELETE();'){ return; }
+
+		// rellenar los campos con los valores de la fila (cada clave puede venir como objeto)
+		this.dom.rellenarvaloresform({
+			id_funcionalidad: this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad'),
+			id_accion: this.valorclave(fila['id_accion'], 'id_accion')
+		});
+
+		// todos los campos en solo lectura; cada select se queda solo con la opcion seleccionada para que no se pueda cambiar
+		this.dom.colocartodosreadonly('form_iu');
+		for (var idselect of ['id_funcionalidad', 'id_accion']){
+			Array.from(document.getElementById(idselect).options).filter(opcion => !opcion.selected).forEach(opcion => opcion.remove());
+		}
+
+		// colocar boton de submit
+		this.dom.colocarboton('DELETE');
+
+		setLang();
+	}
+
+	/**
+	 * El back devuelve las claves foraneas como el objeto completo (p.e. {id_accion, nombre_accion, descrip_accion}) o como valor simple.
+	 * Devuelve siempre el valor de la clave.
+	 *
+	 * @param {*} valor valor de la fila para el atributo
+	 * @param {string} atributo nombre del atributo
+	 * @returns {*} valor de la clave
+	 */
+	valorclave(valor, atributo){
+
+		if (valor !== null && typeof valor == 'object'){
+			return valor[atributo];
+		}
+		return valor;
 	}
 
 
@@ -383,12 +559,15 @@ class funcionalidad_accion extends AbstractEntidad {
 	}
 
 	/**
-	 * rellena los dos select del formulario: funcionalidades y acciones (sin await, son peticiones independientes)
+	 * rellena los dos select del formulario: funcionalidades y acciones. Las dos peticiones son independientes y se lanzan a la vez;
+	 * devuelve una promesa que se cumple cuando estan cargados los dos (el EDIT la espera para poder seleccionar los valores de la fila).
 	 */
-	cargar_opciones(){
+	async cargar_opciones(){
 
-		this.cargar_select('id_funcionalidad', 'funcionalidad', 'id_funcionalidad', 'nombre_funcionalidad');
-		this.cargar_select('id_accion', 'accion', 'id_accion', 'nombre_accion');
+		await Promise.all([
+			this.cargar_select('id_funcionalidad', 'funcionalidad', 'id_funcionalidad', 'nombre_funcionalidad'),
+			this.cargar_select('id_accion', 'accion', 'id_accion', 'nombre_accion')
+		]);
 
 	}
 

@@ -26,6 +26,14 @@ var textos_ES = {
 	'text_contenido_titulo_form_rol_ADD': 'Formulario Alta Rol',
 	'text_contenido_titulo_form_accion_ADD': 'Formulario Alta Acción',
 	'text_contenido_titulo_form_funcionalidad_accion_ADD': 'Formulario Alta Funcionalidad_Acción',
+	'text_contenido_titulo_form_usuario_EDIT': 'Formulario Modificación Usuario',
+	'text_contenido_titulo_form_usuario_SEARCH': 'Formulario Búsqueda Usuario',
+	'text_contenido_titulo_form_funcionalidad_accion_EDIT': 'Formulario Modificación Funcionalidad_Acción',
+	'text_contenido_titulo_form_funcionalidad_accion_SEARCH': 'Formulario Búsqueda Funcionalidad_Acción',
+	'text_contenido_titulo_form_usuario_SHOWCURRENT': 'Detalle de Usuario',
+	'text_contenido_titulo_form_funcionalidad_accion_SHOWCURRENT': 'Detalle de Funcionalidad_Acción',
+	'text_contenido_titulo_form_usuario_DELETE': 'Formulario Baja Usuario',
+	'text_contenido_titulo_form_funcionalidad_accion_DELETE': 'Formulario Baja Funcionalidad_Acción',
 
 	// atributos (cabeceras de columna y select de columnas)
 	'dni': 'DNI',

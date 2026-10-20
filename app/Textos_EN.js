@@ -26,6 +26,14 @@ var textos_EN = {
 	'text_contenido_titulo_form_rol_ADD': 'Role ADD Form',
 	'text_contenido_titulo_form_accion_ADD': 'Action ADD Form',
 	'text_contenido_titulo_form_funcionalidad_accion_ADD': 'Feature-Action ADD Form',
+	'text_contenido_titulo_form_usuario_EDIT': 'User EDIT Form',
+	'text_contenido_titulo_form_usuario_SEARCH': 'User SEARCH Form',
+	'text_contenido_titulo_form_funcionalidad_accion_EDIT': 'Feature-Action EDIT Form',
+	'text_contenido_titulo_form_funcionalidad_accion_SEARCH': 'Feature-Action SEARCH Form',
+	'text_contenido_titulo_form_usuario_SHOWCURRENT': 'User Detail',
+	'text_contenido_titulo_form_funcionalidad_accion_SHOWCURRENT': 'Feature-Action Detail',
+	'text_contenido_titulo_form_usuario_DELETE': 'User DELETE Form',
+	'text_contenido_titulo_form_funcionalidad_accion_DELETE': 'Feature-Action DELETE Form',
 
 	// atributos (cabeceras de columna y select de columnas)
 	'dni': 'ID number (DNI)',

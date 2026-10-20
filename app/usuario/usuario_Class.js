@@ -50,7 +50,7 @@ class usuario extends AbstractEntidad {
 			<span id="span_error_usuario"><a id="error_usuario"></a></span>
 			<br>
 
-			<label class="label_contrasena">Contraseña</label>
+			<label id="label_contrasena" class="label_contrasena">Contraseña</label>
 			<input type='password' id='contrasena' name='contrasena'>
 			<span id="span_error_contrasena"><a id="error_contrasena"></a></span>
 			<br>
@@ -390,24 +390,226 @@ class usuario extends AbstractEntidad {
 		setLang();
 	}
 
-	//Stubs (alert): los formularios de EDIT, DELETE, SHOWCURRENT y SEARCH todavia no estan implementados
-	//(se mantienen tal y como estaban en la entrega anterior).
+	/**
+	 * Construye el formulario de EDIT de usuario, relleno con los datos de la fila, y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la accion (boton submit con el icono EDIT) o cancelarla (icono BACK de index.html).
+	 * - dni es la clave primaria con la que el back identifica la tupla: se muestra pero en solo lectura.
+	 * - id_rol es un select: se cargan primero los roles del back y despues se selecciona el de la fila.
+	 * - contrasena no se muestra en la tabla; si el back no la envia en la fila el campo queda vacio y hay que escribirla.
+	 * - Si el back responde ok, AbstractEntidad.EDIT() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono EDIT
+	 */
+	async createForm_EDIT(fila){
 
-	createForm_EDIT(fila){
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_usuario_EDIT');
 
-		alert('crear formulario EDIT '+fila.dni);
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.EDIT_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.EDIT();');
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','EDIT');
+
+		// colocar boton de submit
+		this.dom.colocarboton('EDIT');
+
+		// la clave primaria no se puede modificar
+		this.dom.assign_property_value('dni','readonly',true);
+
+		setLang();
+
+		// los roles llegan del back: hasta que no estan cargados no se puede seleccionar el de la fila
+		await this.cargar_roles();
+
+		// el formulario puede haberse cerrado o sustituido por otro (ADD, SEARCH...) mientras llegaba la respuesta del back
+		var form = document.getElementById('form_iu');
+		if (form == null || form.getAttribute('action') != 'javascript:entidad.EDIT();'){ return; }
+
+		// rellenar los campos con los valores de la fila (id_rol puede venir como objeto del rol)
+		this.dom.rellenarvaloresform({
+			dni: fila['dni'],
+			usuario: fila['usuario'],
+			contrasena: (fila['contrasena'] === undefined || fila['contrasena'] === null) ? '' : fila['contrasena'],
+			id_rol: this.valorclave(fila['id_rol'], 'id_rol')
+		});
+
+		setLang();
 	}
 
-	createForm_DELETE(){
-		alert('crear formulario DELETE');
-	}
-
-	createForm_SHOWCURRENT(){
-		alert('crear formulario DETALLE');
-	}
-
+	/**
+	 * Construye el formulario de SEARCH de usuario y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
+	 * - Todos los campos son opcionales: vacio significa "sin filtro" (ver SEARCH_<campo>_validation).
+	 * - contrasena es un dato sensible y no se usa como criterio de busqueda: se oculta con su label y se deshabilita para que no se envie al back.
+	 * - Si el back responde, AbstractEntidad.SEARCH() oculta el formulario y muestra en la tabla las tuplas que coinciden.
+	 */
 	createForm_SEARCH(){
-		alert('crear formulario SEARCH');
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_usuario_SEARCH');
+
+		// formulario vacio y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.SEARCH();');
+
+		// la contrasena no es criterio de busqueda
+		this.dom.hide_element_form('contrasena');
+		this.dom.hide_element('span_error_contrasena');
+		document.getElementById('contrasena').disabled = true;
+
+		// los roles se rellenan desde el back
+		this.cargar_roles();
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','SEARCH');
+
+		// colocar boton de submit
+		this.dom.colocarboton('SEARCH');
+
+		setLang();
+	}
+
+	/**
+	 * Construye el formulario de SHOWCURRENT de usuario: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - La unica opcion del modal es cerrarlo (icono BACK de index.html): no hay boton de submit ni se envia nada al back.
+	 * - id_rol es un select: se cargan primero los roles del back y despues se selecciona el de la fila.
+	 * - contrasena es un dato sensible y no se muestra: se oculta con su label.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono SHOWCURRENT
+	 */
+	async createForm_SHOWCURRENT(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_usuario_SHOWCURRENT');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// el formulario no se envia: solo se identifica para saber si sigue siendo este cuando llegue la respuesta del back
+		this.dom.assign_property_value('form_iu','onsubmit','return false');
+		this.dom.assign_property_value('form_iu','data-accion','SHOWCURRENT');
+
+		// la contrasena no se muestra
+		this.dom.hide_element_form('contrasena');
+		this.dom.hide_element('span_error_contrasena');
+
+		setLang();
+
+		// los roles llegan del back: hasta que no estan cargados no se puede seleccionar el de la fila
+		await this.cargar_roles();
+
+		// el formulario puede haberse cerrado o sustituido por otro (ADD, EDIT...) mientras llegaba la respuesta del back
+		var form = document.getElementById('form_iu');
+		if (form == null || form.getAttribute('data-accion') != 'SHOWCURRENT'){ return; }
+
+		// rellenar los campos con los valores de la fila (id_rol puede venir como objeto del rol); la contrasena no se rellena
+		this.dom.rellenarvaloresform({
+			dni: fila['dni'],
+			usuario: fila['usuario'],
+			contrasena: '',
+			id_rol: this.valorclave(fila['id_rol'], 'id_rol')
+		});
+
+		// todos los campos en solo lectura (el select se deshabilita porque readonly no le afecta)
+		this.dom.colocartodosreadonly('form_iu');
+		document.getElementById('id_rol').disabled = true;
+
+		setLang();
+	}
+
+	/**
+	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
+	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 */
+	DELETE_submit_usuario(){
+
+		return true;
+	}
+
+	/**
+	 * Construye el formulario de DELETE de usuario: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - Opciones del modal: confirmar el borrado (boton submit con el icono DELETE) o cancelarlo (icono BACK de index.html).
+	 * - El boton de submit solo se coloca cuando el formulario ya esta relleno, para no poder enviar un borrado sin datos.
+	 * - Si el back responde ok, AbstractEntidad.DELETE() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 * - id_rol es un select: se cargan primero los roles del back, se selecciona el de la fila y se dejan solo esa opcion
+	 *   (readonly no afecta a un select y un select deshabilitado no se envia al back).
+	 * - contrasena no se muestra ni se envia: se oculta con su label y se deshabilita.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono DELETE
+	 */
+	async createForm_DELETE(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_usuario_DELETE');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.DELETE_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.DELETE();');
+
+		// la contrasena no se muestra ni se envia
+		this.dom.hide_element_form('contrasena');
+		this.dom.hide_element('span_error_contrasena');
+		document.getElementById('contrasena').disabled = true;
+
+		setLang();
+
+		// los roles llegan del back: hasta que no estan cargados no se puede seleccionar el de la fila
+		await this.cargar_roles();
+
+		// el formulario puede haberse cerrado o sustituido por otro (ADD, EDIT...) mientras llegaba la respuesta del back
+		var form = document.getElementById('form_iu');
+		if (form == null || form.getAttribute('action') != 'javascript:entidad.DELETE();'){ return; }
+
+		// rellenar los campos con los valores de la fila (id_rol puede venir como objeto del rol)
+		this.dom.rellenarvaloresform({
+			dni: fila['dni'],
+			usuario: fila['usuario'],
+			contrasena: '',
+			id_rol: this.valorclave(fila['id_rol'], 'id_rol')
+		});
+
+		// todos los campos en solo lectura; el select se queda solo con la opcion seleccionada para que no se pueda cambiar
+		this.dom.colocartodosreadonly('form_iu');
+		var select = document.getElementById('id_rol');
+		Array.from(select.options).filter(opcion => !opcion.selected).forEach(opcion => opcion.remove());
+
+		// colocar boton de submit
+		this.dom.colocarboton('DELETE');
+
+		setLang();
+	}
+
+	/**
+	 * El back devuelve las claves foraneas como el objeto completo (p.e. {id_rol, rol_name, rol_description}) o como valor simple.
+	 * Devuelve siempre el valor de la clave.
+	 *
+	 * @param {*} valor valor de la fila para el atributo
+	 * @param {string} atributo nombre del atributo
+	 * @returns {*} valor de la clave
+	 */
+	valorclave(valor, atributo){
+
+		if (valor !== null && typeof valor == 'object'){
+			return valor[atributo];
+		}
+		return valor;
 	}
 
 
