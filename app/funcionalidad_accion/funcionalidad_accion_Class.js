@@ -6,7 +6,7 @@ class funcionalidad_accion extends AbstractEntidad {
 
 		this.columnasamostrar = ['id_funcionalidad','id_accion'];
 		// id_funcionalidad e id_accion son columnas con tratamiento especial: el back las devuelve como el objeto de la
-		// funcionalidad y de la accion y en la tabla se muestra su nombre (ver mostrarcambioatributo)
+		// funcionalidad y de la accion y en la tabla se muestra solo su id (ver mostrarcambioatributo)
 		this.mostrarespecial = ['id_funcionalidad','id_accion'];
 		this.nombreentidad = 'funcionalidad_accion';
 
@@ -42,7 +42,7 @@ class funcionalidad_accion extends AbstractEntidad {
 			<label class="label_id_funcionalidad">Funcionalidad</label>
 			<select id='id_funcionalidad' name='id_funcionalidad'>
 				<!-- la primera opcion vacia permite que min_size falle si no se elige funcionalidad (y es "sin filtro" en SEARCH).
-				     Las demas opciones (value = id_funcionalidad, texto = nombre_funcionalidad) las rellena cargar_opciones() desde el back. -->
+				     Las demas opciones (value y texto = id_funcionalidad) las rellena cargar_opciones() desde el back. -->
 				<option value=""></option>
 			</select>
 			<span id="span_error_id_funcionalidad"><a id="error_id_funcionalidad"></a></span>
@@ -50,7 +50,7 @@ class funcionalidad_accion extends AbstractEntidad {
 
 			<label class="label_id_accion">Acción</label>
 			<select id='id_accion' name='id_accion'>
-				<!-- igual que id_funcionalidad: opciones (value = id_accion, texto = nombre_accion) rellenadas por cargar_opciones() -->
+				<!-- igual que id_funcionalidad: opciones (value y texto = id_accion) rellenadas por cargar_opciones() -->
 				<option value=""></option>
 			</select>
 			<span id="span_error_id_accion"><a id="error_id_accion"></a></span>
@@ -484,9 +484,9 @@ class funcionalidad_accion extends AbstractEntidad {
 
 	/**
 	 * Devuelve el formato especial con el que se muestra en la tabla el valor de un atributo incluido en mostrarespecial.
-	 * El back devuelve cada clave foranea como el objeto completo y se muestra su nombre:
-	 *  - id_funcionalidad: {id_funcionalidad, nombre_funcionalidad, descrip_funcionalidad} -> nombre_funcionalidad
-	 *  - id_accion: {id_accion, nombre_accion, descrip_accion} -> nombre_accion
+	 * El back devuelve cada clave foranea como el objeto completo y en la tabla solo se muestra su id (igual que el resto de entidades):
+	 *  - id_funcionalidad: {id_funcionalidad, nombre_funcionalidad, descrip_funcionalidad} -> id_funcionalidad
+	 *  - id_accion: {id_accion, nombre_accion, descrip_accion} -> id_accion
 	 * (si llegara como valor simple, se deja tal cual).
 	 *
 	 * @param {string} atributo nombre del atributo
@@ -495,12 +495,7 @@ class funcionalidad_accion extends AbstractEntidad {
 	 */
 	mostrarcambioatributo(atributo, valorentrada){
 
-		var campotexto = {id_funcionalidad: 'nombre_funcionalidad', id_accion: 'nombre_accion'};
-
-		if (atributo in campotexto && valorentrada !== null && typeof valorentrada == 'object'){
-			return (valorentrada[campotexto[atributo]] !== undefined) ? valorentrada[campotexto[atributo]] : valorentrada[atributo];
-		}
-		return valorentrada;
+		return this.valorclave(valorentrada, atributo);
 	}
 
 	/**
@@ -523,15 +518,14 @@ class funcionalidad_accion extends AbstractEntidad {
 
 	/**
 	 * pide al back el listado de una entidad y rellena con el un select del formulario actual
-	 * (value = campovalor, texto = campotexto). La primera opcion vacia viene de manual_form_creation().
+	 * (value y texto = el id, campovalor). La primera opcion vacia viene de manual_form_creation().
 	 * Se envia un FormData vacio ('') para que los campos del formulario no lleguen a la otra entidad como filtro.
 	 *
 	 * @param {string} idselect id del select a rellenar
 	 * @param {string} controlador entidad del back que se consulta
-	 * @param {string} campovalor columna del back que va en value
-	 * @param {string} campotexto columna del back que se muestra como texto
+	 * @param {string} campovalor columna del back que va en value y se muestra como texto (solo se muestran ids)
 	 */
-	async cargar_select(idselect, controlador, campovalor, campotexto){
+	async cargar_select(idselect, controlador, campovalor){
 
 		await this.access_functions.peticionBackGeneral('', controlador, 'SEARCH')
 		.then((respuesta) => {
@@ -549,7 +543,7 @@ class funcionalidad_accion extends AbstractEntidad {
 				for (let fila of respuesta['resource']){
 					var opcion = document.createElement('option');
 					opcion.value = fila[campovalor];
-					opcion.text = fila[campotexto];
+					opcion.text = fila[campovalor];
 					select.append(opcion);
 				}
 				select.value = valoractual;
@@ -565,8 +559,8 @@ class funcionalidad_accion extends AbstractEntidad {
 	async cargar_opciones(){
 
 		await Promise.all([
-			this.cargar_select('id_funcionalidad', 'funcionalidad', 'id_funcionalidad', 'nombre_funcionalidad'),
-			this.cargar_select('id_accion', 'accion', 'id_accion', 'nombre_accion')
+			this.cargar_select('id_funcionalidad', 'funcionalidad', 'id_funcionalidad'),
+			this.cargar_select('id_accion', 'accion', 'id_accion')
 		]);
 
 	}
