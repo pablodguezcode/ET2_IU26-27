@@ -693,6 +693,13 @@ class persona extends AbstractEntidad {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_nuevo_foto_persona_validation(){
 
+		// Si es un input file no hay nada que validar en SEARCH (se busca por el nombre en foto_persona): siempre es valido.
+		// Su .value es "C:\fakepath\nombre", asi que no se le pueden aplicar las validaciones de texto de abajo.
+		if (document.getElementById('nuevo_foto_persona').type == 'file'){
+			this.dom.mostrar_exito_campo('nuevo_foto_persona');
+			return true;
+		}
+		// Si se mostrara como input de texto: nombre parcial del fichero
 		if (!(this.validations.max_size('nuevo_foto_persona',15))){
 			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_max_size_ko');
 			return "nuevo_foto_persona_max_size_ko";
