@@ -161,6 +161,16 @@ var textos_EN = {
 	'text_test_total': 'Tests',
 	'text_test_correctas': 'Passed',
 	'text_test_incorrectas': 'Failed',
+	'text_test_col_entidad': 'Entity',
+	'text_test_col_campo': 'Field',
+	'text_test_col_NumDef': 'Test no.',
+	'text_test_col_NumPrueba': 'Trial no.',
+	'text_test_col_descripcion': 'Description',
+	'text_test_col_accion': 'Action',
+	'text_test_col_valorprueba': 'Test value',
+	'text_test_col_respuestaesperada': 'Expected result',
+	'text_test_col_resultadoprueba': 'Actual result',
+	'text_test_col_pruebastatus': 'Status',
 	'test_ventana_bloqueada_ko': 'The browser has blocked the test results window. Allow pop-ups for this page.',
 
 }

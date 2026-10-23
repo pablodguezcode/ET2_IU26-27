@@ -161,6 +161,16 @@ var textos_ES = {
 	'text_test_total': 'Pruebas',
 	'text_test_correctas': 'Correctas',
 	'text_test_incorrectas': 'Incorrectas',
+	'text_test_col_entidad': 'Entidad',
+	'text_test_col_campo': 'Campo',
+	'text_test_col_NumDef': 'Nº test',
+	'text_test_col_NumPrueba': 'Nº prueba',
+	'text_test_col_descripcion': 'Descripción',
+	'text_test_col_accion': 'Acción',
+	'text_test_col_valorprueba': 'Valor de prueba',
+	'text_test_col_respuestaesperada': 'Respuesta esperada',
+	'text_test_col_resultadoprueba': 'Resultado obtenido',
+	'text_test_col_pruebastatus': 'Estado',
 	'test_ventana_bloqueada_ko': 'El navegador ha bloqueado la ventana de resultados de las pruebas. Permita las ventanas emergentes para esta página.',
 
 }

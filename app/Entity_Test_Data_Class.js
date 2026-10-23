@@ -66,7 +66,8 @@ class entity_Test_Data extends Data_Test{
         html += '<table><thead><tr>';
 
         var columnas = (salidapruebas.length > 0) ? Object.keys(salidapruebas[0]) : [];
-        for (var c of columnas){ html += '<th>' + escapar(c) + '</th>'; }
+        //for (var c of columnas){ html += '<th>' + escapar(c) + '</th>'; }
+        for (var c of columnas){ html += '<th>' + escapar(textos['text_test_col_' + c] || c) + '</th>'; }
         html += '</tr></thead><tbody>';
 
         for (var prueba of salidapruebas){
