@@ -35,6 +35,8 @@ var textos_ES = {
 	// ============================================================================
 	// --- Títulos de formularios
 	'text_contenido_titulo_form_persona_ADD': 'Formulario Alta Datos Personales',
+	'text_contenido_titulo_form_persona_EDIT': 'Formulario Modificación Datos Personales',
+	'text_contenido_titulo_form_persona_SEARCH': 'Formulario Búsqueda Datos Personales',
 
 	// --- Atributos (cabeceras de tabla)
 	'dni': 'DNI',

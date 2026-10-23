@@ -35,6 +35,8 @@ var textos_EN = {
 	// ============================================================================
 	// --- Form titles
 	'text_contenido_titulo_form_persona_ADD': 'Personal Data ADD Form',
+	'text_contenido_titulo_form_persona_EDIT': 'Personal Data EDIT Form',
+	'text_contenido_titulo_form_persona_SEARCH': 'Personal Data SEARCH Form',
 
 	// --- Attributes (table headers)
 	'dni': 'ID number (DNI)',

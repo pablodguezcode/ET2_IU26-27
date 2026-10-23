@@ -39,7 +39,11 @@ class persona extends AbstractEntidad {
 
 
 			<label class="label_dni">dni</label>
-			<input type='text' id='dni' name='dni'></input>
+			<select id='dni' name='dni'>
+				<!-- la primera opcion vacia permite que min_size falle si no se elige DNI.
+				     Las demas opciones (value y texto = dni) son los DNI de usuario y las rellena cargar_dni_usuarios() desde el back. -->
+				<option value=""></option>
+			</select>
 			<span id="span_error_dni"><a id="error_dni"></a></span>
 			<br>
 
@@ -749,6 +753,11 @@ class persona extends AbstractEntidad {
 ****************************************************************************************************************************/
 
 
+
+/***************************************************************************************************************************
+                                 					Formulario ADD
+****************************************************************************************************************************/
+
 	/**
 	 * Construye el formulario de ADD de persona y lo muestra en el div modal (Div_IU_form).
 	 * - Opciones del modal: realizar la accion (boton submit con el icono ADD) o cancelarla (icono BACK de index.html).
@@ -779,6 +788,9 @@ class persona extends AbstractEntidad {
 		this.dom.show_element('label_nuevo_foto_persona');
 		this.dom.show_element('nuevo_foto_persona');
 
+		// el dni es un select: solo se pueden elegir los DNI que existen en usuario (se piden al back)
+		this.cargar_dni_usuarios();
+
 		// poner las validaciones
 		this.dom.colocarvalidaciones('form_iu','ADD');
 
@@ -788,24 +800,196 @@ class persona extends AbstractEntidad {
 		setLang();
 	}
 
-	//Stubs (alert): los formularios de EDIT, DELETE, SHOWCURRENT y SEARCH todavia no estan implementados
+	/**
+	 * pide al back el listado de usuarios y el de personas y rellena el select dni del formulario actual
+	 * (value y texto = dni) con los DNI de usuario que todavia no tienen persona.
+	 * La primera opcion vacia viene de manual_form_creation().
+	 * Se envia un FormData vacio ('') para que los campos del formulario de persona no lleguen al back como filtro.
+	 * dni es PK de usuario: solo se pueden dar de alta personas cuyo DNI ya exista en usuario y que no este ya en persona.
+	 */
+	async cargar_dni_usuarios(){
+
+		// las dos peticiones son independientes y se lanzan a la vez
+		var respuestas = await Promise.all([
+			this.access_functions.peticionBackGeneral('', 'usuario', 'SEARCH'),
+			this.access_functions.peticionBackGeneral('', 'persona', 'SEARCH')
+		]);
+		var respuestausuarios = respuestas[0];
+		var respuestapersonas = respuestas[1];
+
+		var select = document.getElementById('dni');
+		//el formulario puede haberse repintado o no existir mientras llegaba la respuesta
+		if (select == null || respuestausuarios['code'] != 'RECORDSET_DATOS'){ return; }
+
+		var valoractual = select.value;
+		//dejo solo la opcion vacia para no duplicar opciones si se llama mas de una vez
+		while (select.options.length > 1){
+			select.remove(1);
+		}
+		//el back puede devolver el dni como valor simple o como objeto
+		const dnide = (fila) => (fila['dni'] !== null && typeof fila['dni'] == 'object') ? fila['dni']['dni'] : fila['dni'];
+		//DNI que ya tienen persona (si no hay ninguna, el back responde sin datos)
+		var usados = new Set((respuestapersonas['code'] == 'RECORDSET_DATOS') ? respuestapersonas['resource'].map(dnide) : []);
+		//DNI de usuario sin usar, sin repetidos y ordenados
+		var dnis = respuestausuarios['resource'].map(dnide).filter(dni => !usados.has(dni));
+		for (let dni of [...new Set(dnis)].sort()){
+			var opcion = document.createElement('option');
+			opcion.value = dni;
+			opcion.text = dni;
+			select.append(opcion);
+		}
+		select.value = valoractual;
+	}
+
+	//Stubs (alert): los formularios de DELETE y SHOWCURRENT todavia no estan implementados
 	//(se mantienen tal y como estaban en la entrega anterior).
 
+
+
+/***************************************************************************************************************************
+                                 					Formulario EDIT
+****************************************************************************************************************************/
+
+	/**
+	 * Construye el formulario de EDIT de persona, relleno con los datos de la fila, y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la accion (boton submit con el icono EDIT) o cancelarla (icono BACK de index.html).
+	 * - dni es la clave primaria con la que el back identifica la tupla y no se puede modificar. Es un select, y readonly no afecta a un
+	 *   select (y uno deshabilitado no se envia al back), asi que se deja con una unica opcion: la del dni de la fila.
+	 * - foto_persona (nombre del fichero actual) va en solo lectura con su enlace al fichero; nuevo_foto_persona (input file) es opcional:
+	 *   si no se elige fichero se conserva la foto actual.
+	 * - Si el back responde ok, AbstractEntidad.EDIT() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono EDIT
+	 */
 	createForm_EDIT(fila){
 
-		alert('crear formulario EDIT '+fila.dni);
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_persona_EDIT');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.EDIT_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.EDIT();');
+
+		// la clave primaria no se puede modificar: el select dni queda solo con la opcion de la fila (seleccionada)
+		var selectdni = document.getElementById('dni');
+		var opciondni = document.createElement('option');
+		opciondni.value = fila['dni'];
+		opciondni.text = fila['dni'];
+		selectdni.append(opciondni);
+		Array.from(selectdni.options).filter(opcion => opcion.value != fila['dni']).forEach(opcion => opcion.remove());
+
+		// en EDIT se muestran el nombre del fichero actual (solo lectura), su enlace y el input file para subir otra foto
+		this.dom.show_element('label_foto_persona');
+		this.dom.show_element('foto_persona');
+		this.dom.show_element('span_error_foto_persona');
+		this.dom.assign_property_value('foto_persona','readonly',true);
+		this.dom.show_element('label_nuevo_foto_persona');
+		this.dom.show_element('nuevo_foto_persona');
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','EDIT');
+
+		// colocar boton de submit
+		this.dom.colocarboton('EDIT');
+
+		// rellenar los campos con los valores de la fila (el back puede devolver null en la foto)
+		var foto = (fila['foto_persona'] === undefined || fila['foto_persona'] === null) ? '' : fila['foto_persona'];
+		this.dom.rellenarvaloresform({
+			dni: fila['dni'],
+			nombre_persona: fila['nombre_persona'],
+			apellidos_persona: fila['apellidos_persona'],
+			fechaNacimiento_persona: fila['fechaNacimiento_persona'],
+			direccion_persona: fila['direccion_persona'],
+			telefono_persona: fila['telefono_persona'],
+			email_persona: fila['email_persona'],
+			foto_persona: foto
+		});
+
+		// enlace al fichero actual (si no hay foto no se muestra)
+		if (foto == ''){
+			this.dom.hide_element('link_foto_persona');
+		}
+		else{
+			this.dom.show_element('link_foto_persona');
+			this.dom.assign_property_value('link_foto_persona','href','http://193.147.87.202/ET2/filesuploaded/files_foto_persona/'+foto);
+		}
+
+		setLang();
 	}
+
+
+
+/***************************************************************************************************************************
+                                 					Formulario DELETE
+****************************************************************************************************************************/
 
 	createForm_DELETE(){
 		alert('crear formulario DELETE');
 	}
 
+
+
+/***************************************************************************************************************************
+                                 					Formulario SHOWCURRENT
+****************************************************************************************************************************/
+
 	createForm_SHOWCURRENT(){
 		alert('crear formulario DETALLE');
 	}
 
+
+
+/***************************************************************************************************************************
+                                 					Formulario SEARCH
+****************************************************************************************************************************/
+
+	/**
+	 * Construye el formulario de SEARCH de persona y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
+	 * - Se puede buscar por cualquier atributo y no hace falta rellenar ninguno: vacio significa "sin filtro" (ver SEARCH_<campo>_validation).
+	 * - dni se busca como texto (input, no el select de manual_form_creation()), por lo que puede ser un DNI parcial.
+	 * - foto_persona se busca por el nombre del fichero (input de texto editable); nuevo_foto_persona (input file) con su label y el enlace
+	 *   al fichero no se usan en la busqueda: se ocultan y el input file se deshabilita para que no se envie al back.
+	 * - Si el back responde, AbstractEntidad.SEARCH() oculta el formulario y muestra en la tabla las tuplas que coinciden.
+	 */
 	createForm_SEARCH(){
-		alert('crear formulario SEARCH');
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_persona_SEARCH');
+
+		// formulario vacio y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.SEARCH();');
+
+		// en SEARCH el fichero nuevo y el enlace al fichero no se usan: se busca por el nombre del fichero (foto_persona, editable)
+		this.dom.hide_element_form('nuevo_foto_persona');
+		this.dom.hide_element('span_error_nuevo_foto_persona');
+		this.dom.hide_element('link_foto_persona');
+		document.getElementById('nuevo_foto_persona').disabled = true;
+
+		// en SEARCH el dni se busca como texto (puede ser parcial): se sustituye el select de manual_form_creation() por un input de texto
+		var inputdni = document.createElement('input');
+		inputdni.type = 'text';
+		inputdni.id = 'dni';
+		inputdni.name = 'dni';
+		document.getElementById('dni').replaceWith(inputdni);
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','SEARCH');
+
+		// colocar boton de submit
+		this.dom.colocarboton('SEARCH');
+
+		setLang();
 	}
 
 
