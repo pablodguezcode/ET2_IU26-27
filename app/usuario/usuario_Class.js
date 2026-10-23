@@ -7,7 +7,7 @@ class usuario extends AbstractEntidad {
 		// la contraseña no se muestra en la tabla
 		this.columnasamostrar = ['dni','usuario','id_rol'];
 		// id_rol es una columna con tratamiento especial: el back la devuelve como el objeto del rol
-		// {id_rol, rol_name, rol_description} y en la tabla se muestra el nombre del rol (ver mostrarcambioatributo)
+		// {id_rol, rol_name, rol_description} y en la tabla se muestra el id del rol (ver mostrarcambioatributo)
 		this.mostrarespecial = ['id_rol'];
 		this.nombreentidad = 'usuario';
 
@@ -58,7 +58,7 @@ class usuario extends AbstractEntidad {
 			<label class="label_id_rol">Rol</label>
 			<select id='id_rol' name='id_rol'>
 				<!-- la primera opcion vacia permite que min_size falle si no se elige rol (y es "sin filtro" en SEARCH).
-				     Las demas opciones (value = id_rol, texto = rol_name) las rellena cargar_roles() desde el back. -->
+				     Las demas opciones (value = id_rol, texto = id_rol) las rellena cargar_roles() desde el back. -->
 				<option value=""></option>
 			</select>
 			<span id="span_error_id_rol"><a id="error_id_rol"></a></span>
@@ -76,9 +76,19 @@ class usuario extends AbstractEntidad {
 
 //Atributo dni
 
+	//El usuario puede escribir la letra del DNI en minuscula o mayuscula, pero al back siempre se le envia en mayuscula: se pasa el
+	//valor del campo a mayuscula antes de validarlo. Las validaciones se ejecutan al salir del campo y en el onsubmit (antes de
+	//enviar al back), asi que el valor que se envia ya esta en mayuscula.
+	dni_a_mayusculas(){
+
+		var campo = document.getElementById('dni');
+		campo.value = campo.value.toUpperCase();
+	}
+
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	ADD_dni_validation(){
 
+		this.dni_a_mayusculas();
 		if (!(this.validations.min_size('dni',9))){
 			this.dom.mostrar_error_campo('dni','dni_min_size_ko');
 			return "dni_min_size_ko";
@@ -269,12 +279,14 @@ class usuario extends AbstractEntidad {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_dni_validation(){
 
+		this.dni_a_mayusculas();
 		if (!(this.validations.max_size('dni',9))){
 			this.dom.mostrar_error_campo('dni','dni_max_size_ko');
 			return "dni_max_size_ko";
 		}
-		//vacio (sin filtro) o DNI completo: 8 digitos + letra mayuscula. No se recalcula la letra (ver usuario_tests.js)
-		if (!(this.validations.format('dni', '^([0-9]{8}[A-Z])?$'))){
+		//busqueda parcial: vacio (sin filtro), o hasta 8 digitos y opcionalmente la letra al final (cualquier trozo de un DNI).
+		//La letra ya esta en mayuscula (dni_a_mayusculas). No se recalcula la letra (ver usuario_tests.js)
+		if (!(this.validations.format('dni', '^[0-9]{0,8}[A-Z]?$'))){
 			this.dom.mostrar_error_campo('dni','dni_format_ko');
 			return "dni_format_ko";
 		}
@@ -383,6 +395,9 @@ class usuario extends AbstractEntidad {
 
 		// poner las validaciones
 		this.dom.colocarvalidaciones('form_iu','ADD');
+
+		// el dni, ademas de las validaciones de formato, se comprueba en el back al salir del campo (ver comprobar_dni_en_back)
+		document.getElementById('dni').setAttribute('onblur','entidad.comprobar_dni_en_back();');
 
 		// colocar boton de submit
 		this.dom.colocarboton('ADD');
@@ -614,12 +629,71 @@ class usuario extends AbstractEntidad {
 
 
 /***************************************************************************************************************************
+                                 			Comprobacion en el back del DNI en ADD
+****************************************************************************************************************************/
+
+	/**
+	 * Refactoriza AbstractEntidad.ADD() (misma definicion): antes de enviar el alta comprueba en el back que no exista ya un usuario con
+	 * ese DNI. Si existe, no se envia el alta: se marca el error en el campo dni y se muestra el modal de error; el formulario sigue
+	 * como estaba para poder corregir el DNI. Si no existe, el alta sigue como siempre (AbstractEntidad.ADD()).
+	 */
+	async ADD(){
+
+		if (await this.dni_existe_en_back()){
+			this.dom.mostrar_error_campo('dni','dni_existe_en_usuario_ko');
+			this.dom.abrirModalError('dni_existe_en_usuario_ko');
+			return;
+		}
+		await super.ADD();
+	}
+
+	/**
+	 * Validacion del campo dni en ADD al salir de el: primero las validaciones de formato (ADD_dni_validation, que muestra su error) y,
+	 * si son correctas, comprueba en el back que no exista ya un usuario con ese DNI y, si existe, marca el error en el campo.
+	 * La comprobacion se repite en ADD() al enviar, por si se envia sin haber salido del campo.
+	 */
+	async comprobar_dni_en_back(){
+
+		if (this.ADD_dni_validation() !== true){ return; }
+
+		var dni = document.getElementById('dni').value;
+		var existe = await this.dni_existe_en_back();
+
+		// mientras llegaba la respuesta el formulario pudo cerrarse o el dni cambiar
+		var campo = document.getElementById('dni');
+		if (campo == null || campo.value != dni){ return; }
+
+		if (existe){
+			this.dom.mostrar_error_campo('dni','dni_existe_en_usuario_ko');
+		}
+	}
+
+	/**
+	 * Pide al back los usuarios con el DNI del formulario (el campo ya esta validado y en mayuscula) y comprueba si alguno coincide
+	 * exactamente, por si el back filtra por coincidencia parcial. Solo se envia el dni como filtro (el resto de campos del
+	 * formulario de ADD no deben filtrar la busqueda).
+	 *
+	 * @returns {boolean} true si ya existe un usuario con ese DNI
+	 */
+	async dni_existe_en_back(){
+
+		var dni = document.getElementById('dni').value;
+		var respuesta = await this.access_functions.peticionBackGeneral('', 'usuario', 'SEARCH', {dni: dni});
+
+		if (respuesta['code'] != 'RECORDSET_DATOS'){
+			return false;
+		}
+		return respuesta['resource'].some(fila => this.valorclave(fila['dni'], 'dni') == dni);
+	}
+
+
+/***************************************************************************************************************************
                                  			Atributos con formato especial en la tabla
 ****************************************************************************************************************************/
 
 	/**
 	 * Devuelve el formato especial con el que se muestra en la tabla el valor de un atributo incluido en mostrarespecial.
-	 * - id_rol: el back devuelve el objeto del rol {id_rol, rol_name, rol_description} y se muestra rol_name
+	 * - id_rol: el back devuelve el objeto del rol {id_rol, rol_name, rol_description} y se muestra id_rol
 	 *   (si llegara como valor simple, se deja tal cual).
 	 *
 	 * @param {string} atributo nombre del atributo
@@ -629,7 +703,7 @@ class usuario extends AbstractEntidad {
 	mostrarcambioatributo(atributo, valorentrada){
 
 		if (atributo == 'id_rol' && valorentrada !== null && typeof valorentrada == 'object'){
-			return (valorentrada['rol_name'] !== undefined) ? valorentrada['rol_name'] : valorentrada['id_rol'];
+			return valorentrada['id_rol'];
 		}
 		return valorentrada;
 	}
@@ -654,7 +728,7 @@ class usuario extends AbstractEntidad {
 
 	/**
 	 * pide al back el listado de la entidad rol y rellena el select id_rol del formulario actual
-	 * (value = id_rol, texto = rol_name). La primera opcion vacia viene de manual_form_creation().
+	 * (value = id_rol, texto = id_rol). La primera opcion vacia viene de manual_form_creation().
 	 * Se envia un FormData vacio ('') para que los campos del formulario de usuario no lleguen a rol como filtro.
 	 */
 	async cargar_roles(){
@@ -675,7 +749,7 @@ class usuario extends AbstractEntidad {
 				for (let fila of respuesta['resource']){
 					var opcion = document.createElement('option');
 					opcion.value = fila['id_rol'];
-					opcion.text = fila['rol_name'];
+					opcion.text = fila['id_rol'];
 					select.append(opcion);
 				}
 				select.value = valoractual;
