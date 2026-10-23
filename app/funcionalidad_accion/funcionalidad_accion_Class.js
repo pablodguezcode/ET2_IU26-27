@@ -21,6 +21,10 @@ class funcionalidad_accion extends AbstractEntidad {
 			document.getElementById('IU_manage_entity').style.display = 'block';
 			document.getElementById('text_title_page').className = 'text_titulo_page_'+this.nombreentidad;
 
+			// el selector de columnas visibles no aplica a la matriz (lo vuelve a mostrar entity_dom_fields.crearSeleccionablecolumnas() en las demas entidades)
+			document.getElementById('label_seleccioncolumnas').style.display = 'none';
+			document.getElementById('seleccioncolumnas').style.display = 'none';
+
 			//crear el formulario vacio
 			document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
 
@@ -139,47 +143,6 @@ class funcionalidad_accion extends AbstractEntidad {
 
 
 /***************************************************************************************************************************
-                                 			Campos de validacion para EDIT
-****************************************************************************************************************************/
-
-//Los codigos de error y las restricciones de EDIT son los mismos que los de ADD (ver funcionalidad_accion_tests.js).
-
-	EDIT_id_funcionalidad_validation(){
-
-		return this.ADD_id_funcionalidad_validation();
-	}
-
-	EDIT_id_accion_validation(){
-
-		return this.ADD_id_accion_validation();
-	}
-
-
-/***************************************************************************************************************************
-                                 			SUMMIT EDIT formulario validaciones
-****************************************************************************************************************************/
-
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
-	EDIT_submit_funcionalidad_accion(){
-
-		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
-		var set_result = {};
-
-		set_result.id_funcionalidad = this.EDIT_id_funcionalidad_validation();
-		set_result.id_accion = this.EDIT_id_accion_validation();
-
-		// si todos los campos son correctos devuelve true; si no, el objeto con los resultados
-		if (Object.values(set_result).every(valor => valor === true)){
-			return true;
-		}
-		return set_result;
-	}
-
-
-
-/***************************************************************************************************************************
                                  			Campos de validacion para SEARCH
 ****************************************************************************************************************************/
 
@@ -282,52 +245,6 @@ class funcionalidad_accion extends AbstractEntidad {
 	}
 
 	/**
-	 * Construye el formulario de EDIT de funcionalidad_accion, relleno con los datos de la fila, y lo muestra en el div modal (Div_IU_form).
-	 * - Opciones del modal: realizar la accion (boton submit con el icono EDIT) o cancelarla (icono BACK de index.html).
-	 * - id_funcionalidad e id_accion son select: se cargan primero las opciones del back y despues se seleccionan las de la fila.
-	 * - Si el back responde ok, AbstractEntidad.EDIT() oculta el formulario y actualiza la tabla; si responde error, se muestra
-	 *   el modal de error y el formulario sigue como antes del envio.
-	 *
-	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono EDIT
-	 */
-	async createForm_EDIT(fila){
-
-		// poner titulo al formulario
-		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_funcionalidad_accion_EDIT');
-
-		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
-		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
-		this.dom.show_element('Div_IU_form');
-
-		// poner onsubmit y action
-		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.EDIT_submit_'+this.nombreentidad+'())');
-		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.EDIT();');
-
-		// poner las validaciones
-		this.dom.colocarvalidaciones('form_iu','EDIT');
-
-		// colocar boton de submit
-		this.dom.colocarboton('EDIT');
-
-		setLang();
-
-		// las opciones llegan del back: hasta que no estan cargadas no se pueden seleccionar las de la fila
-		await this.cargar_opciones();
-
-		// el formulario puede haberse cerrado o sustituido por otro (ADD, SEARCH...) mientras llegaba la respuesta del back
-		var form = document.getElementById('form_iu');
-		if (form == null || form.getAttribute('action') != 'javascript:entidad.EDIT();'){ return; }
-
-		// rellenar los campos con los valores de la fila (cada clave puede venir como objeto)
-		this.dom.rellenarvaloresform({
-			id_funcionalidad: this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad'),
-			id_accion: this.valorclave(fila['id_accion'], 'id_accion')
-		});
-
-		setLang();
-	}
-
-	/**
 	 * Construye el formulario de SEARCH de funcionalidad_accion y lo muestra en el div modal (Div_IU_form).
 	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
 	 * - Los dos campos son opcionales: la opcion vacia de cada select significa "sin filtro" (ver SEARCH_<campo>_validation).
@@ -383,7 +300,7 @@ class funcionalidad_accion extends AbstractEntidad {
 		// las opciones llegan del back: hasta que no estan cargadas no se pueden seleccionar las de la fila
 		await this.cargar_opciones();
 
-		// el formulario puede haberse cerrado o sustituido por otro (ADD, EDIT...) mientras llegaba la respuesta del back
+		// el formulario puede haberse cerrado o sustituido por otro (ADD, SEARCH...) mientras llegaba la respuesta del back
 		var form = document.getElementById('form_iu');
 		if (form == null || form.getAttribute('data-accion') != 'SHOWCURRENT'){ return; }
 
@@ -402,66 +319,6 @@ class funcionalidad_accion extends AbstractEntidad {
 	}
 
 	/**
-	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
-	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
-	 */
-	DELETE_submit_funcionalidad_accion(){
-
-		return true;
-	}
-
-	/**
-	 * Construye el formulario de DELETE de funcionalidad_accion: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
-	 * - Opciones del modal: confirmar el borrado (boton submit con el icono DELETE) o cancelarlo (icono BACK de index.html).
-	 * - El boton de submit solo se coloca cuando el formulario ya esta relleno, para no poder enviar un borrado sin datos.
-	 * - Si el back responde ok, AbstractEntidad.DELETE() oculta el formulario y actualiza la tabla; si responde error, se muestra
-	 *   el modal de error y el formulario sigue como antes del envio.
-	 * - id_funcionalidad e id_accion son select: se cargan primero las opciones del back, se selecciona la de la fila y se dejan
-	 *   solo esa opcion (readonly no afecta a un select y un select deshabilitado no se envia al back).
-	 *
-	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono DELETE
-	 */
-	async createForm_DELETE(fila){
-
-		// poner titulo al formulario
-		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_funcionalidad_accion_DELETE');
-
-		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
-		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
-		this.dom.show_element('Div_IU_form');
-
-		// poner onsubmit y action
-		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.DELETE_submit_'+this.nombreentidad+'())');
-		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.DELETE();');
-
-		setLang();
-
-		// las opciones llegan del back: hasta que no estan cargadas no se pueden seleccionar las de la fila
-		await this.cargar_opciones();
-
-		// el formulario puede haberse cerrado o sustituido por otro (ADD, EDIT...) mientras llegaba la respuesta del back
-		var form = document.getElementById('form_iu');
-		if (form == null || form.getAttribute('action') != 'javascript:entidad.DELETE();'){ return; }
-
-		// rellenar los campos con los valores de la fila (cada clave puede venir como objeto)
-		this.dom.rellenarvaloresform({
-			id_funcionalidad: this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad'),
-			id_accion: this.valorclave(fila['id_accion'], 'id_accion')
-		});
-
-		// todos los campos en solo lectura; cada select se queda solo con la opcion seleccionada para que no se pueda cambiar
-		this.dom.colocartodosreadonly('form_iu');
-		for (var idselect of ['id_funcionalidad', 'id_accion']){
-			Array.from(document.getElementById(idselect).options).filter(opcion => !opcion.selected).forEach(opcion => opcion.remove());
-		}
-
-		// colocar boton de submit
-		this.dom.colocarboton('DELETE');
-
-		setLang();
-	}
-
-	/**
 	 * El back devuelve las claves foraneas como el objeto completo (p.e. {id_accion, nombre_accion, descrip_accion}) o como valor simple.
 	 * Devuelve siempre el valor de la clave.
 	 *
@@ -475,6 +332,153 @@ class funcionalidad_accion extends AbstractEntidad {
 			return valor[atributo];
 		}
 		return valor;
+	}
+
+
+
+/***************************************************************************************************************************
+                                 			Visualizacion en matriz (entidad especial)
+****************************************************************************************************************************/
+
+	/**
+	 * funcionalidad_accion es una entidad especial: no permite EDIT ni DELETE y no se muestra como una tabla de tuplas, sino como una
+	 * matriz que se construye con los datos de las otras tablas:
+	 *  - filas: las funcionalidades, ordenadas por id_funcionalidad
+	 *  - columnas: las acciones, ordenadas por id_accion
+	 *  - casilla marcada: existe la pareja (id_funcionalidad, id_accion) en funcionalidad_accion
+	 *
+	 * Refactoriza AbstractEntidad.SEARCH() (misma definicion): los filtros del formulario de busqueda (vacio = sin filtro)
+	 * limitan las filas y columnas que se muestran. Se invoca tambien al terminar un ADD correcto, para repintar la matriz.
+	 */
+	async SEARCH(){
+
+		// filtros del formulario (en el constructor y tras un ADD el formulario esta vacio: sin filtro)
+		var form = document.getElementById('form_iu');
+		var filtrofuncionalidad = (form != null && form.elements['id_funcionalidad']) ? form.elements['id_funcionalidad'].value : '';
+		var filtroaccion = (form != null && form.elements['id_accion']) ? form.elements['id_accion'].value : '';
+
+		// las tres peticiones son independientes y se lanzan a la vez. Funcionalidades y acciones se piden sin filtro (formulario '')
+		// y la de funcionalidad_accion con el formulario, que lleva los filtros
+		var respuestas = await Promise.all([
+			this.access_functions.peticionBackGeneral('', 'funcionalidad', 'SEARCH'),
+			this.access_functions.peticionBackGeneral('', 'accion', 'SEARCH'),
+			this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'SEARCH')
+		]);
+
+		// ocultar y limpiar el formulario
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.hide_element('Div_IU_form');
+
+		var funcionalidades = this.filasdelback(respuestas[0]);
+		var acciones = this.filasdelback(respuestas[1]);
+		var parejas = this.filasdelback(respuestas[2]);
+
+		// aplicar los filtros y ordenar por id
+		funcionalidades = funcionalidades.filter(fila => filtrofuncionalidad == '' || fila['id_funcionalidad'] == filtrofuncionalidad)
+			.sort((a, b) => Number(a['id_funcionalidad']) - Number(b['id_funcionalidad']));
+		acciones = acciones.filter(fila => filtroaccion == '' || fila['id_accion'] == filtroaccion)
+			.sort((a, b) => Number(a['id_accion']) - Number(b['id_accion']));
+
+		// parejas existentes como "idfuncionalidad_idaccion" (el back puede devolver cada clave como objeto o como valor simple)
+		var existentes = new Set(parejas.map(fila =>
+			this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad') + '_' + this.valorclave(fila['id_accion'], 'id_accion')));
+
+		var contenedor = document.getElementById('IU_manage_table');
+		contenedor.style.display = 'block';
+
+		if (funcionalidades.length == 0 || acciones.length == 0){
+			// el mensaje va en un span con la clave de idioma (y no en el contenedor): AbstractEntidad.SEARCH() deja la clase
+			// RECORDSET_VACIO en el contenedor y setLang() vaciaria despues la tabla de cualquier entidad que la pinte ahi
+			contenedor.className = '';
+			contenedor.innerHTML = '<span class="RECORDSET_VACIO">No se han encontrado elementos que coincidan con la búsqueda</span>';
+		}
+		else{
+			// sin la clase del mensaje de vacio, para que setLang() no sustituya la matriz por el texto
+			contenedor.className = '';
+			contenedor.innerHTML = '';
+			contenedor.append(this.crearMatriz(funcionalidades, acciones, existentes));
+		}
+
+		setLang();
+	}
+
+	/**
+	 * devuelve las filas de una respuesta del back, o un array vacio si no hay datos
+	 *
+	 * @param {Object} respuesta respuesta del back a un SEARCH
+	 * @returns {Array} filas
+	 */
+	filasdelback(respuesta){
+
+		return (respuesta['code'] == 'RECORDSET_DATOS') ? respuesta['resource'] : [];
+	}
+
+	/**
+	 * Construye la tabla de la matriz: una fila por funcionalidad, una columna por accion y una casilla (no editable) marcada
+	 * si la pareja existe. Las cabeceras muestran el id (con el nombre como texto al pasar el raton).
+	 *
+	 * @param {Array} funcionalidades filas de funcionalidad, ya filtradas y ordenadas
+	 * @param {Array} acciones filas de accion, ya filtradas y ordenadas
+	 * @param {Set} existentes parejas existentes, como "idfuncionalidad_idaccion"
+	 * @returns {HTMLTableElement} tabla
+	 */
+	crearMatriz(funcionalidades, acciones, existentes){
+
+		var tabla = document.createElement('table');
+		tabla.id = 'tabla_matriz_funcionalidad_accion';
+		tabla.style.borderCollapse = 'collapse';
+
+		// celda con el estilo comun a toda la matriz
+		const celda = (tag) => {
+			var elemento = document.createElement(tag);
+			elemento.style.border = '1px solid black';
+			elemento.style.padding = '4px 10px';
+			elemento.style.textAlign = 'center';
+			return elemento;
+		};
+
+		// cabecera de una fila o de una columna: texto traducido (clave de idioma como class) + id; el nombre va en el title
+		const cabecera = (clavetexto, id, nombre) => {
+			var th = celda('th');
+			var texto = document.createElement('span');
+			texto.className = clavetexto;
+			th.append(texto);
+			th.append(' ' + id);
+			if (nombre !== undefined && nombre !== null){
+				th.title = nombre;
+			}
+			return th;
+		};
+
+		// fila de cabecera: celda vacia en la esquina y una cabecera por accion
+		var trcabecera = document.createElement('tr');
+		trcabecera.append(celda('th'));
+		for (var accion of acciones){
+			trcabecera.append(cabecera('text_matriz_id_accion', accion['id_accion'], accion['nombre_accion']));
+		}
+		var thead = document.createElement('thead');
+		thead.append(trcabecera);
+		tabla.append(thead);
+
+		// una fila por funcionalidad con una casilla por accion
+		var tbody = document.createElement('tbody');
+		for (var funcionalidad of funcionalidades){
+			var tr = document.createElement('tr');
+			tr.append(cabecera('text_matriz_id_funcionalidad', funcionalidad['id_funcionalidad'], funcionalidad['nombre_funcionalidad']));
+			for (var accion of acciones){
+				var td = celda('td');
+				var casilla = document.createElement('input');
+				casilla.type = 'checkbox';
+				casilla.disabled = true;
+				casilla.checked = existentes.has(funcionalidad['id_funcionalidad'] + '_' + accion['id_accion']);
+				td.append(casilla);
+				tr.append(td);
+			}
+			tbody.append(tr);
+		}
+		tabla.append(tbody);
+
+		return tabla;
 	}
 
 
@@ -554,7 +558,7 @@ class funcionalidad_accion extends AbstractEntidad {
 
 	/**
 	 * rellena los dos select del formulario: funcionalidades y acciones. Las dos peticiones son independientes y se lanzan a la vez;
-	 * devuelve una promesa que se cumple cuando estan cargados los dos (el EDIT la espera para poder seleccionar los valores de la fila).
+	 * devuelve una promesa que se cumple cuando estan cargados los dos (SHOWCURRENT la espera para poder seleccionar los valores de la fila).
 	 */
 	async cargar_opciones(){
 

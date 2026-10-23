@@ -64,4 +64,9 @@ class entity_dom_fields extends dom_fields{
         document.getElementById('error_action_msg').innerHTML = errorMsg;
         setLang();
     }
+    crearSeleccionablecolumnas(columnasamostrar, atributos){
+        document.getElementById('label_seleccioncolumnas').style.display = '';
+        document.getElementById('seleccioncolumnas').style.display = '';
+        super.crearSeleccionablecolumnas(columnasamostrar, atributos);
+    }
 }

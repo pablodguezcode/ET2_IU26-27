@@ -161,6 +161,8 @@ var textos_EN = {
 	'text_test_total': 'Tests',
 	'text_test_correctas': 'Passed',
 	'text_test_incorrectas': 'Failed',
+	'text_matriz_id_funcionalidad': 'id funcionalidad',
+	'text_matriz_id_accion': 'id acción',
 	'text_test_col_entidad': 'Entity',
 	'text_test_col_campo': 'Field',
 	'text_test_col_NumDef': 'Test no.',
