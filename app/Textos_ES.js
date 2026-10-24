@@ -63,8 +63,7 @@ var textos_ES = {
 	'dni_min_size_ko': 'El DNI es demasiado corto: debe tener 9 caracteres',
 	'dni_max_size_ko': 'El DNI es demasiado largo: debe tener 9 caracteres',
 	'dni_format_ko': 'El formato del DNI no es válido: deben ser 8 dígitos seguidos de una letra (mayúscula o minúscula). En la búsqueda se admite un DNI parcial',
-	'dni_personalized_ko': 'La letra del DNI no es correcta',
-	'dni_existe_en_usuario_ko': 'Ya existe un usuario con ese DNI',
+	'dni_personalized_ko': 'El DNI no es válido: la letra de control no es correcta o el DNI ya está en uso',
 	'dni_es_nulo_ko': 'El dni no puede ser vacio',
 	'dni_EXISTE_en_persona_KO': 'Ya existe una persona con ese DNI',
 
@@ -137,6 +136,7 @@ var textos_ES = {
 	'usuario_min_size_ko': 'El nombre de usuario es demasiado corto. Debe tener una longitud mínima de 5 caracteres alfabéticos.',
 	'usuario_max_size_ko': 'El nombre de usuario supera el límite máximo permitido. No puede exceder de 45 caracteres.',
 	'usuario_format_ko': 'El nombre de usuario debe contener únicamente caracteres alfabéticos, sin \'ñ\' ni acentos.',
+	'usuario_personalized_ko': 'Ya existe un usuario con ese nombre de usuario. Elija otro.',
 
 	// --- Errores de validación - Contraseña
 	'contrasena_min_size_ko': 'La contraseña es demasiado corta. Por seguridad, se exige un mínimo estricto de 8 caracteres.',

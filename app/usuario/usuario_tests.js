@@ -9,14 +9,19 @@ PARA LA ENTIDAD USUARIO:
 
 DECISIONES DE DISEÑO PARA LA ENTIDAD USUARIO: Se han definido, para cada atributo y acción, solo los tests atómicos que tienen sentido según su formato. 
  --------------
- DNI: ADD, EDIT y SEARCH. Es clave primaria (y FK de persona) y se permite modificarlo en EDIT, por lo que en EDIT se aplican las mismas restricciones que en ADD para que un DNI modificado siga siendo válido.
-      En ADD y EDIT se incluyen min_size, max_size, format (8 dígitos + letra mayúscula), personalized (letra de control, 
-      algoritmo módulo 23) y valid.  En SEARCH se omiten min_size y personalized: la búsqueda es exacta por DNI completo, por lo que el format ya exige los 9 caracteres, y no se recalcula la letra porque el
-      objetivo es localizar un registro, no darlo de alta ni modificarlo. Se considera DNI estándar válido el formado por 8 dígitos y una letra mayúscula de control; las letras minúsculas se rechazan en el test de formato.
-      Adicionalmente, se rechaza en NIE al ser de 7 digitos y 2 letras.
+ DNI: ADD, EDIT y SEARCH. Es clave primaria (y FK de persona). En EDIT el campo va en solo lectura en el formulario porque identifica la tupla en el back, pero se le aplican las mismas restricciones que en ADD
+      para que un DNI manipulado siga siendo detectado.
+      En ADD y EDIT se incluyen min_size, max_size, format (8 dígitos + letra mayúscula), personalized y valid. personalized comprende la letra de control (algoritmo módulo 23) y, solo en ADD, que no exista ya
+      un usuario con ese DNI (el back permite DNI repetidos, por lo que lo comprueba el front con la lista de usuarios del back; sin ella, como en estas pruebas, no hay repetidos). Los dos casos comparten el código
+      dni_personalized_ko y las pruebas de este test se centran en la letra de control.
+      En SEARCH se omiten min_size y personalized: el filtro es opcional (vacío = sin filtro) y puede ser parcial (hasta 8 dígitos y la letra al final), por lo que max_size limita a 9 caracteres y format
+      comprueba ese patrón; no se recalcula la letra porque el objetivo es localizar un registro, no darlo de alta ni modificarlo.
+      Se considera DNI estándar válido el formado por 8 dígitos y una letra mayúscula de control; las letras minúsculas se rechazan en el test de formato (el formulario pasa la letra a mayúscula antes de validar,
+      pero la validación en sí no la modifica). Adicionalmente, se rechaza el NIE al ser de 7 dígitos y 2 letras.
  --------------
  - USUARIO: se validan ADD, EDIT y SEARCH con min_size (5), max_size (45) y format (alfabético sin ñ ni acentos); en SEARCH se omite min_size porque el filtro puede
-            ser parcial u omitirse. 
+            ser parcial u omitirse. En ADD y EDIT hay además una validación personalized (usuario_personalized_ko): el usuario es UNIQUE y el back no lo impide, por lo que el front comprueba que
+            no lo tenga ya otra tupla con la lista de usuarios del back (en EDIT no cuenta la propia tupla). Al depender del back, no se puede probar en estas pruebas y no tiene test.
  --------------
  - CONTRASENA: solo ADD y EDIT con min_size (8), max_size (45) y format alfabético sin ñ ni acentos; no se define SEARCH porque la contraseña es
                un dato sensible que nunca se utiliza como criterio de búsqueda. 
@@ -32,19 +37,19 @@ var usuario_def_tests = [
     // 1.1. ATRIBUTO: "dni" con acción: "ADD"
     [ 
         "usuario", "dni", "input", 1, "Validar longitud mínima de los caracteres del dni en ADD", "min_size", "ADD", "dni_min_size_ko", 
-        "El DNI introducido es demasiado corto. Debe contener exactamente 9 caracteres (8 números y una letra)."
+        "El DNI es demasiado corto: debe tener 9 caracteres"
     ],
     [ 
         "usuario", "dni", "input", 2, "Validar longitud máxima de los caracteres del dni en ADD", "max_size", "ADD", "dni_max_size_ko", 
-        "El DNI introducido sobrepasa el límite permitido. Debe contener exactamente 9 caracteres (8 números y una letra)."
+        "El DNI es demasiado largo: debe tener 9 caracteres"
     ],
     [ 
         "usuario", "dni", "input", 3, "Validar formato estandar de DNI (8 digitos y 1 letra) en ADD", "format", "ADD", "dni_format_ko", 
-        "El formato del DNI es incorrecto. Debe contener 8 dígitos numéricos seguidos de una letra mayúscula."
+        "El formato del DNI no es válido: deben ser 8 dígitos seguidos de una letra (mayúscula o minúscula). En la búsqueda se admite un DNI parcial"
     ],
     [ 
         "usuario", "dni", "input", 4, "Validar calculo de la letra del DNI en ADD", "personalized", "ADD", "dni_personalized_ko", 
-        "La letra indicada no coincide con el cálculo del algoritmo oficial del Ministerio del Interior para el DNI introducido."
+        "El DNI no es válido: la letra de control no es correcta o el DNI ya está en uso"
     ],
     [ 
         "usuario", "dni", "input", 5, "Validar DNI correcto y verificado en ADD", "valid", "ADD", true,
@@ -54,19 +59,19 @@ var usuario_def_tests = [
     // 1.2. ATRIBUTO: "dni" con acción: "EDIT"
     [
         "usuario", "dni", "input", 6, "Validar longitud mínima de los caracteres del dni en EDIT", "min_size", "EDIT", "dni_min_size_ko",
-        "Error al modificar el DNI: es demasiado corto. Debe contener exactamente 9 caracteres (8 números y una letra)."
+        "El DNI es demasiado corto: debe tener 9 caracteres"
     ],
     [
         "usuario", "dni", "input", 7, "Validar longitud máxima de los caracteres del dni en EDIT", "max_size", "EDIT", "dni_max_size_ko",
-        "Error al modificar el DNI: sobrepasa el límite permitido. Debe contener exactamente 9 caracteres (8 números y una letra)."
+        "El DNI es demasiado largo: debe tener 9 caracteres"
     ],
     [
         "usuario", "dni", "input", 8, "Validar formato estandar de DNI (8 digitos y 1 letra) en EDIT", "format", "EDIT", "dni_format_ko",
-        "Error al modificar el DNI: formato incorrecto. Debe contener 8 dígitos numéricos seguidos de una letra mayúscula."
+        "El formato del DNI no es válido: deben ser 8 dígitos seguidos de una letra (mayúscula o minúscula). En la búsqueda se admite un DNI parcial"
     ],
     [
         "usuario", "dni", "input", 9, "Validar calculo de la letra del DNI en EDIT", "personalized", "EDIT", "dni_personalized_ko",
-        "Error al modificar el DNI: la letra indicada no coincide con el cálculo del algoritmo oficial del Ministerio del Interior para el DNI introducido."
+        "El DNI no es válido: la letra de control no es correcta o el DNI ya está en uso"
     ],
     [
         "usuario", "dni", "input", 10, "Validar DNI correcto y verificado en EDIT", "valid", "EDIT", true,
@@ -75,11 +80,11 @@ var usuario_def_tests = [
     // 1.3. ATRIBUTO: "dni" con acción: "SEARCH"
     [ 
         "usuario", "dni", "input", 11, "Validar longitud maxima en la busqueda de DNI en SEARCH", "max_size", "SEARCH", "dni_max_size_ko", 
-        "El valor del DNI para búsqueda no debe exceder los 9 caracteres de longitud."
+        "El DNI es demasiado largo: debe tener 9 caracteres"
     ],
     [ 
         "usuario", "dni", "input", 12, "Validar formato estandar de DNI en SEARCH", "format", "SEARCH", "dni_format_ko", 
-        "El DNI debe tener un formato válido: 8 dígitos numéricos seguidos de una letra mayúscula."
+        "El formato del DNI no es válido: deben ser 8 dígitos seguidos de una letra (mayúscula o minúscula). En la búsqueda se admite un DNI parcial"
     ],
     [ 
         "usuario", "dni", "input", 13, "Validar busqueda de DNI correcta en SEARCH", "valid", "SEARCH", true, 
@@ -105,15 +110,15 @@ var usuario_def_tests = [
     // 2.2. ATRIBUTO: "usuario" con acción: "EDIT"
     [
         "usuario", "usuario", "input", 18, "Validar longitud minima de nombre de usuario en EDIT", "min_size", "EDIT", "usuario_min_size_ko",
-        "Error al modificar el usuario: el nuevo nombre debe tener al menos 5 caracteres alfabéticos."
+        "El nombre de usuario es demasiado corto. Debe tener una longitud mínima de 5 caracteres alfabéticos."
     ],
     [
         "usuario", "usuario", "input", 19, "Validar longitud maxima de nombre de usuario en EDIT", "max_size", "EDIT", "usuario_max_size_ko",
-        "Error al modificar el usuario: el nombre sobrepasa la longitud máxima de 45 caracteres."
+        "El nombre de usuario supera el límite máximo permitido. No puede exceder de 45 caracteres."
     ],
     [
         "usuario", "usuario", "input", 20, "Validar formato alfabetico estricto en EDIT", "format", "EDIT", "usuario_format_ko",
-        "Error al modificar el usuario: no se permiten caracteres numéricos, acentos, 'ñ' ni símbolos especiales."
+        "El nombre de usuario debe contener únicamente caracteres alfabéticos, sin 'ñ' ni acentos."
     ],
     [
         "usuario", "usuario", "input", 21, "Validar nombre de usuario valido en EDIT", "valid", "EDIT", true,
@@ -122,11 +127,11 @@ var usuario_def_tests = [
     // 2.3. ATRIBUTO: "usuario" con acción: "SEARCH"
     [
         "usuario", "usuario", "input", 22, "Validar longitud maxima de busqueda por usuario en SEARCH", "max_size", "SEARCH", "usuario_max_size_ko",
-        "El criterio de búsqueda para el nombre de usuario supera el límite máximo permitido de 45 caracteres."
+        "El nombre de usuario supera el límite máximo permitido. No puede exceder de 45 caracteres."
     ],
     [
         "usuario", "usuario", "input", 23, "Validar formato permitido en busqueda de usuario en SEARCH", "format", "SEARCH", "usuario_format_ko",
-        "El criterio de búsqueda contiene caracteres no válidos. Solo se admiten letras simples sin acentos ni 'ñ'."
+        "El nombre de usuario debe contener únicamente caracteres alfabéticos, sin 'ñ' ni acentos."
     ],
     [
         "usuario", "usuario", "input", 24, "Validar busqueda de usuario correcta en SEARCH", "valid", "SEARCH", true,
@@ -152,15 +157,15 @@ var usuario_def_tests = [
     // 3.2. ATRIBUTO: "contrasena" con acción: "EDIT"
     [
         "usuario", "contrasena", "input", 29, "Validar longitud minima de contrasena en EDIT", "min_size", "EDIT", "contrasena_min_size_ko",
-        "Error al actualizar contraseña: el nuevo valor debe tener al menos 8 caracteres alfabéticos."
+        "La contraseña es demasiado corta. Por seguridad, se exige un mínimo estricto de 8 caracteres."
     ],
     [
         "usuario", "contrasena", "input", 30, "Validar longitud maxima de contrasena en EDIT", "max_size", "EDIT", "contrasena_max_size_ko",
-        "Error al actualizar contraseña: el valor excede el máximo permitido de 45 caracteres."
+        "La contraseña sobrepasa el límite de capacidad permitido. No puede superar los 45 caracteres."
     ],
     [
         "usuario", "contrasena", "input", 31, "Validar formato alfabetico de contrasena en EDIT", "format", "EDIT", "contrasena_format_ko",
-        "Error al actualizar contraseña: se detectaron caracteres no permitidos (solo letras simples sin acentos ni 'ñ' ni números)."
+        "La contraseña solo puede contener caracteres alfabéticos, sin 'ñ' ni acentos."
     ],
     [
         "usuario", "contrasena", "input", 32, "Validar contrasena correcta en EDIT", "valid", "EDIT", true,
@@ -169,15 +174,15 @@ var usuario_def_tests = [
     // 4.1. ATRIBUTO: "id_rol" con acción: "ADD"
     [
         "usuario", "id_rol", "select", 33, "Validar longitud minima de id_rol en ADD", "min_size", "ADD", "id_rol_min_size_ko",
-        "El identificador del rol debe contener al menos 1 dígito numérico."
+        "El identificador del rol es obligatorio: debe seleccionar un rol"
     ],
     [
         "usuario", "id_rol", "select", 34, "Validar longitud maxima de digitos para id_rol en ADD", "max_size", "ADD", "id_rol_max_size_ko",
-        "El identificador del rol supera los 11 dígitos numéricos permitidos."
+        "El identificador del rol supera los 11 dígitos numéricos permitidos"
     ],
     [
         "usuario", "id_rol", "select", 35, "Validar formato numerico exclusivo para id_rol en ADD", "format", "ADD", "id_rol_format_ko",
-        "El identificador de rol solo puede componerse exclusivamente de dígitos numéricos enteros."
+        "El identificador del rol solo puede estar formado por dígitos numéricos"
     ],
     [
         "usuario", "id_rol", "select", 36, "Validar rol seleccionado correcto en ADD", "valid", "ADD", true,
@@ -186,15 +191,15 @@ var usuario_def_tests = [
     // 4.2. ATRIBUTO: "id_rol" con acción: "EDIT"
     [
         "usuario", "id_rol", "select", 37, "Validar longitud mínima de id_rol en EDIT", "min_size", "EDIT", "id_rol_min_size_ko",
-        "Error al cambiar el rol: debe seleccionar un rol válido (mínimo 1 dígito numérico)."
+        "El identificador del rol es obligatorio: debe seleccionar un rol"
     ],
     [
         "usuario", "id_rol", "select", 38, "Validar longitud máxima de dígitos para id_rol en EDIT", "max_size", "EDIT", "id_rol_max_size_ko",
-        "Error al cambiar el rol: el identificador del rol supera los 11 dígitos numéricos permitidos."
+        "El identificador del rol supera los 11 dígitos numéricos permitidos"
     ],
     [
         "usuario", "id_rol", "select", 39, "Validar formato numerico para id_rol en EDIT", "format", "EDIT", "id_rol_format_ko",
-        "Error al cambiar el rol: el valor seleccionado debe ser un identificador numérico válido."
+        "El identificador del rol solo puede estar formado por dígitos numéricos"
     ],
     [
         "usuario", "id_rol", "select", 40, "Validar rol correcto en EDIT", "valid", "EDIT", true,
@@ -204,11 +209,11 @@ var usuario_def_tests = [
     // 4.3. ATRIBUTO: "id_rol" con acción: "SEARCH"
      [
         "usuario", "id_rol", "select", 41, "Validar longitud máxima del filtro por id_rol en SEARCH", "max_size", "SEARCH", "id_rol_max_size_ko",
-        "El filtro de búsqueda por rol no puede superar los 11 dígitos numéricos."
+        "El identificador del rol supera los 11 dígitos numéricos permitidos"
     ],
     [
         "usuario", "id_rol", "select", 42, "Validar formato de filtro por id_rol en SEARCH", "format", "SEARCH", "id_rol_format_ko",
-        "El filtro de búsqueda por rol únicamente permite valores numéricos enteros."
+        "El identificador del rol solo puede estar formado por dígitos numéricos"
     ],
     [
         "usuario", "id_rol", "select", 43, "Validar busqueda por id_rol correcta en SEARCH", "valid", "SEARCH", true,
@@ -229,7 +234,7 @@ var usuario_pruebas = [
     // 1.2. ATRIBUTO: "dni" con acción: "EDIT"
     ["usuario", "dni", 6, 7, "EDIT", { "dni": "1234567Z" }, "dni_min_size_ko"],
     ["usuario", "dni", 7, 8, "EDIT", { "dni": "123456789Z" }, "dni_max_size_ko"],
-    ["usuario", "dni", 8, 9, "EDIT", { "dni": "1234567ZZ" }, "dni_format_ko"],
+    ["usuario", "dni", 8, 9, "EDIT", { "dni": "12345678z" }, "dni_format_ko"],
     ["usuario", "dni", 8, 10, "EDIT", { "dni": "1234567AZ" }, "dni_format_ko"],
     ["usuario", "dni", 9, 11, "EDIT", { "dni": "12345678A" }, "dni_personalized_ko"],
     ["usuario", "dni", 10, 12, "EDIT", { "dni": "12345678Z" }, true],

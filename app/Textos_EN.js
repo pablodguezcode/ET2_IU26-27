@@ -63,8 +63,7 @@ var textos_EN = {
 	'dni_min_size_ko': 'The ID number is too short: it must have 9 characters',
 	'dni_max_size_ko': 'The ID number is too long: it must have 9 characters',
 	'dni_format_ko': 'The ID number format is not valid: it must be 8 digits followed by a letter (uppercase or lowercase). In searches a partial ID number is accepted',
-	'dni_personalized_ko': 'The ID number letter is not correct',
-	'dni_existe_en_usuario_ko': 'A user with that ID number already exists',
+	'dni_personalized_ko': 'The ID number is not valid: the control letter is not correct or the ID number is already in use',
 	'dni_es_nulo_ko': 'DNI can not be empty',
 	'dni_EXISTE_en_persona_KO': 'A person with that ID number already exists',
 
@@ -137,6 +136,7 @@ var textos_EN = {
 	'usuario_min_size_ko': 'The user name is too short. It must have a minimum length of 5 alphabetic characters.',
 	'usuario_max_size_ko': 'The user name exceeds the maximum allowed. It cannot exceed 45 characters.',
 	'usuario_format_ko': 'The user name must contain only alphabetic characters, without \'ñ\' or accents.',
+	'usuario_personalized_ko': 'A user with that user name already exists. Choose another one.',
 
 	// --- Validation errors - Password
 	'contrasena_min_size_ko': 'The password is too short. For security reasons, a strict minimum of 8 characters is required.',
@@ -266,8 +266,8 @@ var textos_EN = {
 	'text_test_col_respuestaesperada': 'Expected result',
 	'text_test_col_resultadoprueba': 'Actual result',
 	'text_test_col_pruebastatus': 'Status',
-	'text_matriz_id_funcionalidad': 'id funcionalidad',
-	'text_matriz_id_accion': 'id acción',
+	'text_matriz_id_funcionalidad': 'Feature ID',
+	'text_matriz_id_accion': 'Action ID',
 	'test_ventana_bloqueada_ko': 'The browser has blocked the test results window. Allow pop-ups for this page.',
 
 }

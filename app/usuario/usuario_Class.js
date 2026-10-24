@@ -15,6 +15,13 @@ class usuario extends AbstractEntidad {
 		this.validations = new entity_validations();
 		this.access_functions = new ExternalAccess();
 
+		// El back permite dni y usuario repetidos, asi que la unicidad se comprueba aqui (validacion personalized de dni y de usuario).
+		// usuarios_existentes: {dni, usuario} de los usuarios del back. Se carga al abrir ADD y EDIT y se vuelve a pedir justo antes de enviar.
+		// Vacia (modo test) no encuentra repetidos, de modo que las validaciones siguen siendo sincronas y no usan el back.
+		this.usuarios_existentes = [];
+		// dni de la tupla que se esta editando (null en ADD): su propio usuario no cuenta como repetido en EDIT
+		this.dni_en_edicion = null;
+
 		//init
 		if (esTest == 'test'){}
 		else{
@@ -76,19 +83,27 @@ class usuario extends AbstractEntidad {
 
 //Atributo dni
 
-	//El usuario puede escribir la letra del DNI en minuscula o mayuscula, pero al back siempre se le envia en mayuscula: se pasa el
-	//valor del campo a mayuscula antes de validarlo. Las validaciones se ejecutan al salir del campo y en el onsubmit (antes de
-	//enviar al back), asi que el valor que se envia ya esta en mayuscula.
+	//El usuario puede escribir la letra del DNI en minuscula o mayuscula, pero al back siempre se le envia en mayuscula: el valor del
+	//campo se pasa a mayuscula antes de validarlo, en el onblur del campo y en el onsubmit del formulario (ver createForm_ADD y
+	//createForm_SEARCH). Las validaciones NO modifican el campo, asi que una letra en minuscula que llegue a ellas (como en las
+	//pruebas de usuario_tests.js) se rechaza por formato (dni_format_ko).
 	dni_a_mayusculas(){
 
 		var campo = document.getElementById('dni');
+		if (campo == null){ return; }
 		campo.value = campo.value.toUpperCase();
 	}
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	//En ADD el dni ademas debe ser unico (personalized)
 	ADD_dni_validation(){
 
-		this.dni_a_mayusculas();
+		return this.validar_dni(true);
+	}
+
+	//Validacion del dni compartida por ADD y EDIT. En EDIT el dni es el de la propia tupla (solo lectura), por lo que no se comprueba la unicidad.
+	validar_dni(comprobar_unicidad){
+
 		if (!(this.validations.min_size('dni',9))){
 			this.dom.mostrar_error_campo('dni','dni_min_size_ko');
 			return "dni_min_size_ko";
@@ -102,8 +117,8 @@ class usuario extends AbstractEntidad {
 			this.dom.mostrar_error_campo('dni','dni_format_ko');
 			return "dni_format_ko";
 		}
-		//letra de control (modulo 23). La funcion recibe el valor, no lee del DOM
-		if (!(this.personalize_dni(document.getElementById('dni').value))){
+		//personalized: letra de control (modulo 23) y, en ADD, que no exista ya un usuario con ese dni. La funcion recibe el valor, no lee del DOM
+		if (!(this.personalize_dni(document.getElementById('dni').value, comprobar_unicidad))){
 			this.dom.mostrar_error_campo('dni','dni_personalized_ko');
 			return "dni_personalized_ko";
 		}
@@ -112,18 +127,32 @@ class usuario extends AbstractEntidad {
 
 	}
 
-	//Retorna true si la letra de control (numero mod 23) coincide con la del DNI, si no devuelve false.
-	//Recibe el valor por parametro (no lee del DOM). Se llama despues de comprobar el formato (8 digitos + letra).
-	personalize_dni(dni){
+	//Retorna true si la letra de control (numero mod 23) coincide con la del DNI y, si se pide, no existe ya un usuario con ese DNI.
+	//Si no, devuelve false. Recibe el valor por parametro (no lee del DOM). Se llama despues de comprobar el formato (8 digitos + letra).
+	personalize_dni(dni, comprobar_unicidad=false){
 
 		var dni_letters = "TRWAGMYFPDXBNJZSQVHLCKE";
-		return dni_letters.charAt(parseInt(dni.substring(0, 8), 10) % 23) == dni.charAt(8);
+		if (dni_letters.charAt(parseInt(dni.substring(0, 8), 10) % 23) != dni.charAt(8)){
+			return false;
+		}
+		if (comprobar_unicidad && this.usuarios_existentes.some(existente => existente.dni == dni)){
+			return false;
+		}
+		return true;
 	}
 
 //Atributo usuario
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	//En ADD el usuario ademas debe ser unico (personalized)
 	ADD_usuario_validation(){
+
+		return this.validar_usuario(null);
+	}
+
+	//Validacion del usuario compartida por ADD y EDIT.
+	//dni_excluido: dni de la tupla que se edita (null en ADD), para que su propio usuario no cuente como repetido
+	validar_usuario(dni_excluido){
 
 		if (!(this.validations.min_size('usuario',5))){
 			this.dom.mostrar_error_campo('usuario','usuario_min_size_ko');
@@ -138,8 +167,21 @@ class usuario extends AbstractEntidad {
 			this.dom.mostrar_error_campo('usuario','usuario_format_ko');
 			return "usuario_format_ko";
 		}
+		//personalized: el usuario es UNIQUE y el back no lo impide
+		if (!(this.personalize_usuario(document.getElementById('usuario').value, dni_excluido))){
+			this.dom.mostrar_error_campo('usuario','usuario_personalized_ko');
+			return "usuario_personalized_ko";
+		}
 		this.dom.mostrar_exito_campo('usuario');
 		return true;
+	}
+
+	//Retorna true si no existe otro usuario con ese nombre de usuario, si no devuelve false.
+	//Recibe el valor por parametro (no lee del DOM). Se compara exactamente (el back es utf8_bin: distingue mayusculas).
+	//dni_excluido: dni de la tupla que se edita; esa tupla no cuenta como repetida (null en ADD).
+	personalize_usuario(usuario, dni_excluido=null){
+
+		return !this.usuarios_existentes.some(existente => existente.usuario == usuario && existente.dni != dni_excluido);
 	}
 
 //Atributo contrasena
@@ -219,16 +261,17 @@ class usuario extends AbstractEntidad {
 ****************************************************************************************************************************/
 
 //En usuario los codigos de error y las restricciones de EDIT son los mismos que los de ADD (ver usuario_tests.js).
-//dni se puede modificar en EDIT, por eso lleva las mismas restricciones que en ADD.
+//El dni va en solo lectura en EDIT (identifica la tupla en el back), pero lleva las mismas restricciones que en ADD por si el valor se manipula.
+//Lo unico que cambia es la unicidad: el dni de la propia tupla no cuenta como repetido y el usuario solo se compara con el resto de tuplas.
 
 	EDIT_dni_validation(){
 
-		return this.ADD_dni_validation();
+		return this.validar_dni(false);
 	}
 
 	EDIT_usuario_validation(){
 
-		return this.ADD_usuario_validation();
+		return this.validar_usuario(this.dni_en_edicion);
 	}
 
 	EDIT_contrasena_validation(){
@@ -279,13 +322,12 @@ class usuario extends AbstractEntidad {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_dni_validation(){
 
-		this.dni_a_mayusculas();
 		if (!(this.validations.max_size('dni',9))){
 			this.dom.mostrar_error_campo('dni','dni_max_size_ko');
 			return "dni_max_size_ko";
 		}
 		//busqueda parcial: vacio (sin filtro), o hasta 8 digitos y opcionalmente la letra al final (cualquier trozo de un DNI).
-		//La letra ya esta en mayuscula (dni_a_mayusculas). No se recalcula la letra (ver usuario_tests.js)
+		//La letra va en mayuscula (el formulario la pasa a mayuscula antes de validar, ver dni_a_mayusculas). No se recalcula la letra (ver usuario_tests.js)
 		if (!(this.validations.format('dni', '^[0-9]{0,8}[A-Z]?$'))){
 			this.dom.mostrar_error_campo('dni','dni_format_ko');
 			return "dni_format_ko";
@@ -387,17 +429,21 @@ class usuario extends AbstractEntidad {
 		this.dom.show_element('Div_IU_form');
 
 		// poner onsubmit y action
-		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.ADD_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu','onsubmit','entidad.dni_a_mayusculas(); return entidad.dom.validarsubmit(entidad.ADD_submit_'+this.nombreentidad+'())');
 		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.ADD();');
 
 		// los select de la entidad se rellenan desde el back (el formulario se acaba de repintar y solo tiene la opcion vacia)
 		this.cargar_roles();
 
+		// ADD no edita ninguna tupla y los usuarios existentes se piden al back para comprobar la unicidad de dni y usuario
+		this.dni_en_edicion = null;
+		this.cargar_usuarios_existentes();
+
 		// poner las validaciones
 		this.dom.colocarvalidaciones('form_iu','ADD');
 
-		// el dni, ademas de las validaciones de formato, se comprueba en el back al salir del campo (ver comprobar_dni_en_back)
-		document.getElementById('dni').setAttribute('onblur','entidad.comprobar_dni_en_back();');
+		// el dni se pasa a mayuscula al salir del campo, antes de validarlo
+		document.getElementById('dni').setAttribute('onblur','entidad.dni_a_mayusculas(); entidad.ADD_dni_validation();');
 
 		// colocar boton de submit
 		this.dom.colocarboton('ADD');
@@ -438,10 +484,14 @@ class usuario extends AbstractEntidad {
 		// la clave primaria no se puede modificar
 		this.dom.assign_property_value('dni','readonly',true);
 
+		// tupla que se edita: su propio usuario no cuenta como repetido (ver personalize_usuario)
+		this.dni_en_edicion = fila['dni'];
+
 		setLang();
 
-		// los roles llegan del back: hasta que no estan cargados no se puede seleccionar el de la fila
-		await this.cargar_roles();
+		// los roles llegan del back: hasta que no estan cargados no se puede seleccionar el de la fila.
+		// Los usuarios existentes se piden a la vez para comprobar la unicidad del usuario
+		await Promise.all([this.cargar_roles(), this.cargar_usuarios_existentes()]);
 
 		// el formulario puede haberse cerrado o sustituido por otro (ADD, SEARCH...) mientras llegaba la respuesta del back
 		var form = document.getElementById('form_iu');
@@ -475,7 +525,7 @@ class usuario extends AbstractEntidad {
 		this.dom.show_element('Div_IU_form');
 
 		// poner onsubmit y action
-		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu','onsubmit','entidad.dni_a_mayusculas(); return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
 		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.SEARCH();');
 
 		// la contrasena no es criterio de busqueda
@@ -488,6 +538,9 @@ class usuario extends AbstractEntidad {
 
 		// poner las validaciones
 		this.dom.colocarvalidaciones('form_iu','SEARCH');
+
+		// el dni se pasa a mayuscula al salir del campo, antes de validarlo
+		document.getElementById('dni').setAttribute('onblur','entidad.dni_a_mayusculas(); entidad.SEARCH_dni_validation();');
 
 		// colocar boton de submit
 		this.dom.colocarboton('SEARCH');
@@ -629,61 +682,45 @@ class usuario extends AbstractEntidad {
 
 
 /***************************************************************************************************************************
-                                 			Comprobacion en el back del DNI en ADD
+                                 			Unicidad de dni y usuario (el back no la impide)
 ****************************************************************************************************************************/
 
 	/**
-	 * Refactoriza AbstractEntidad.ADD() (misma definicion): antes de enviar el alta comprueba en el back que no exista ya un usuario con
-	 * ese DNI. Si existe, no se envia el alta: se marca el error en el campo dni y se muestra el modal de error; el formulario sigue
-	 * como estaba para poder corregir el DNI. Si no existe, el alta sigue como siempre (AbstractEntidad.ADD()).
+	 * Refactoriza AbstractEntidad.ADD() (misma definicion). El back permite dni y usuario repetidos, por lo que la unicidad la
+	 * comprueba el front como validacion personalized (dni_personalized_ko / usuario_personalized_ko, ver personalize_dni y
+	 * personalize_usuario). Las validaciones de campo usan la lista cargada al abrir el formulario; justo antes de enviar se vuelve a
+	 * pedir al back por si otro usuario dio de alta uno mientras tanto y se validan de nuevo todos los campos. Si alguno falla no se
+	 * envia nada y quedan marcados los errores; si todo es correcto el alta sigue como siempre (AbstractEntidad.ADD()).
 	 */
 	async ADD(){
 
-		if (await this.dni_existe_en_back()){
-			this.dom.mostrar_error_campo('dni','dni_existe_en_usuario_ko');
-			this.dom.abrirModalError('dni_existe_en_usuario_ko');
-			return;
-		}
+		await this.cargar_usuarios_existentes();
+		if (this.ADD_submit_usuario() !== true){ return; }
 		await super.ADD();
 	}
 
 	/**
-	 * Validacion del campo dni en ADD al salir de el: primero las validaciones de formato (ADD_dni_validation, que muestra su error) y,
-	 * si son correctas, comprueba en el back que no exista ya un usuario con ese DNI y, si existe, marca el error en el campo.
-	 * La comprobacion se repite en ADD() al enviar, por si se envia sin haber salido del campo.
+	 * Refactoriza AbstractEntidad.EDIT() (misma definicion): igual que ADD(), comprueba antes de enviar que el usuario modificado
+	 * no lo tenga ya otra tupla (el usuario es UNIQUE y el back no lo impide).
 	 */
-	async comprobar_dni_en_back(){
+	async EDIT(){
 
-		if (this.ADD_dni_validation() !== true){ return; }
-
-		var dni = document.getElementById('dni').value;
-		var existe = await this.dni_existe_en_back();
-
-		// mientras llegaba la respuesta el formulario pudo cerrarse o el dni cambiar
-		var campo = document.getElementById('dni');
-		if (campo == null || campo.value != dni){ return; }
-
-		if (existe){
-			this.dom.mostrar_error_campo('dni','dni_existe_en_usuario_ko');
-		}
+		await this.cargar_usuarios_existentes();
+		if (this.EDIT_submit_usuario() !== true){ return; }
+		await super.EDIT();
 	}
 
 	/**
-	 * Pide al back los usuarios con el DNI del formulario (el campo ya esta validado y en mayuscula) y comprueba si alguno coincide
-	 * exactamente, por si el back filtra por coincidencia parcial. Solo se envia el dni como filtro (el resto de campos del
-	 * formulario de ADD no deben filtrar la busqueda).
-	 *
-	 * @returns {boolean} true si ya existe un usuario con ese DNI
+	 * Pide al back todos los usuarios y guarda en usuarios_existentes su dni y su usuario, que son los que se comprueban en
+	 * personalize_dni() y personalize_usuario(). Se envia un FormData vacio ('') para que los campos del formulario no filtren la busqueda.
 	 */
-	async dni_existe_en_back(){
+	async cargar_usuarios_existentes(){
 
-		var dni = document.getElementById('dni').value;
-		var respuesta = await this.access_functions.peticionBackGeneral('', 'usuario', 'SEARCH', {dni: dni});
+		var respuesta = await this.access_functions.peticionBackGeneral('', 'usuario', 'SEARCH');
 
-		if (respuesta['code'] != 'RECORDSET_DATOS'){
-			return false;
-		}
-		return respuesta['resource'].some(fila => this.valorclave(fila['dni'], 'dni') == dni);
+		this.usuarios_existentes = (respuesta['code'] == 'RECORDSET_DATOS')
+			? respuesta['resource'].map(fila => ({dni: this.valorclave(fila['dni'], 'dni'), usuario: fila['usuario']}))
+			: [];
 	}
 
 

@@ -143,6 +143,26 @@ class funcionalidad_accion extends AbstractEntidad {
 
 
 /***************************************************************************************************************************
+                                 			Campos de validacion para EDIT
+****************************************************************************************************************************/
+
+//Esta entidad especial no tiene formulario de EDIT en el front (no se modifican las parejas existentes), pero los tests de ET1 definen
+//EDIT para sus dos atributos (ver funcionalidad_accion_tests.js) y Data_Test invoca EDIT_<campo>_validation(). Las restricciones de
+//EDIT son las mismas que las de ADD, por lo que se reutilizan.
+
+	EDIT_id_funcionalidad_validation(){
+
+		return this.ADD_id_funcionalidad_validation();
+	}
+
+	EDIT_id_accion_validation(){
+
+		return this.ADD_id_accion_validation();
+	}
+
+
+
+/***************************************************************************************************************************
                                  			Campos de validacion para SEARCH
 ****************************************************************************************************************************/
 
