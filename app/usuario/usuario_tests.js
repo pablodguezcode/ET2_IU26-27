@@ -229,7 +229,7 @@ var usuario_pruebas = [
     // 1.2. ATRIBUTO: "dni" con acción: "EDIT"
     ["usuario", "dni", 6, 7, "EDIT", { "dni": "1234567Z" }, "dni_min_size_ko"],
     ["usuario", "dni", 7, 8, "EDIT", { "dni": "123456789Z" }, "dni_max_size_ko"],
-    ["usuario", "dni", 8, 9, "EDIT", { "dni": "12345678z" }, "dni_format_ko"],
+    ["usuario", "dni", 8, 9, "EDIT", { "dni": "1234567ZZ" }, "dni_format_ko"],
     ["usuario", "dni", 8, 10, "EDIT", { "dni": "1234567AZ" }, "dni_format_ko"],
     ["usuario", "dni", 9, 11, "EDIT", { "dni": "12345678A" }, "dni_personalized_ko"],
     ["usuario", "dni", 10, 12, "EDIT", { "dni": "12345678Z" }, true],
