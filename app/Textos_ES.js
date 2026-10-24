@@ -156,6 +156,9 @@ var textos_ES = {
 	// ============================================================================
 	// --- Títulos de formularios
 	'text_contenido_titulo_form_rol_ADD': 'Formulario Alta Rol',
+	'text_contenido_titulo_form_rol_EDIT': 'Formulario Modificación Rol',
+	'text_contenido_titulo_form_rol_SEARCH': 'Formulario Búsqueda Rol',
+	'text_contenido_titulo_form_rol_SHOWCURRENT': 'Detalle de Rol',
 
 	// --- Atributos (cabeceras de tabla)
 	'rol_name': 'Nombre del rol',
@@ -180,6 +183,9 @@ var textos_ES = {
 	// ============================================================================
 	// --- Títulos de formularios
 	'text_contenido_titulo_form_accion_ADD': 'Formulario Alta Acción',
+	'text_contenido_titulo_form_accion_EDIT': 'Formulario Modificación Acción',
+	'text_contenido_titulo_form_accion_SEARCH': 'Formulario Búsqueda Acción',
+	'text_contenido_titulo_form_accion_SHOWCURRENT': 'Detalle de Acción',
 
 	// --- Atributos (cabeceras de tabla)
 	'id_accion': 'Id. de acción',

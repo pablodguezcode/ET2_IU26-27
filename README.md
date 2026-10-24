@@ -30,13 +30,13 @@ El código desarrollado por el grupo está **únicamente en `app/`**. El resto d
 |--------------------------|----------------------------|----------------|--------------------------------------|--------------------------|
 | `persona`                | Hecha                      | Hecho          | Pendiente (stub con `alert`)         | 107 tests · 240 pruebas  |
 | `usuario`                | Hecha                      | Hecho          | Hecho                                | 43 tests · 50 pruebas    |
-| `rol`                    | Hecha                      | Hecho          | Pendiente (stub con `alert`)         | 33 tests · 82 pruebas    |
-| `accion`                 | Hecha                      | Hecho          | Pendiente (stub con `alert`)         | 33 tests · 79 pruebas    |
+| `rol`                    | Hecha                      | Hecho          | Hecho salvo DELETE (stub con `alert`) | 33 tests · 82 pruebas    |
+| `accion`                 | Hecha                      | Hecho          | Hecho salvo DELETE (stub con `alert`) | 33 tests · 79 pruebas    |
 | `funcionalidad_accion`   | Hecha                      | Hecho          | Hecho                                | 22 tests · 22 pruebas    |
 | `funcionalidad`          | Pendiente                  | Pendiente      | Pendiente                            | 33 tests · 60 pruebas    |
 | `rolaccionfuncionalidad` | Pendiente                  | Pendiente      | Pendiente                            | 33 tests · 42 pruebas    |
 
-Las validaciones `ADD_`, `EDIT_` y `SEARCH_` y sus submits **sí están implementadas en las cinco entidades hechas**. `usuario` y `funcionalidad_accion` están completas (todos los formularios: ADD, EDIT, DELETE, SHOWCURRENT y SEARCH). En `persona`, `rol` y `accion` lo pendiente son los `createForm_EDIT/DELETE/SHOWCURRENT/SEARCH`.
+Las validaciones `ADD_`, `EDIT_` y `SEARCH_` y sus submits **sí están implementadas en las cinco entidades hechas**. `usuario` y `funcionalidad_accion` están completas (todos los formularios: ADD, EDIT, DELETE, SHOWCURRENT y SEARCH). En `rol` y `accion` están hechos EDIT, SHOWCURRENT y SEARCH y solo falta `createForm_DELETE`; en `persona` lo pendiente son los `createForm_EDIT/DELETE/SHOWCURRENT/SEARCH`.
 
 `index.html` (oficial) ya enlaza `funcionalidad_Class.js` y `rolaccionfuncionalidad_Class.js`. Mientras esos ficheros no existan, el navegador mostrará un 404 en consola y sus opciones de menú no funcionarán.
 
@@ -243,6 +243,8 @@ Las expresiones regulares van siempre ancladas (`^...$`). En SEARCH no hay tama�
 | `accion` | `nombre_accion` | 5–48 | Letras (con ñ y acentos), sin espacios |
 | `accion` | `descrip_accion` (textarea) | 5–200 | Letras, espacios y puntuación; sin números |
 
+`id_rol` e `id_accion` son autoincrementales: el usuario no los introduce ni los conoce, así que **no aparecen en los formularios ADD, EDIT ni SEARCH** (ni se validan en sus submits). En EDIT el id va oculto y relleno, porque el back lo usa para identificar la tupla; en SHOWCURRENT sí se muestra, solo lectura. Sus validaciones `ADD_/EDIT_/SEARCH_<id>_validation()` se mantienen porque las pruebas de la ET1 las ejecutan. El SEARCH de `rol` y `accion` es parcial: no hay mínimo, vacío significa «sin filtro» y basta con escribir un trozo del valor.
+
 ### funcionalidad_accion
 
 `id_funcionalidad` e `id_accion` son dos `select` (clave primaria compuesta y claves foráneas): 1–11 dígitos, obligatorios en ADD.
@@ -316,7 +318,7 @@ Al añadir un campo o entidad nueva hay que añadir sus claves en **los dos** fi
 
 ## Limitaciones conocidas
 
-- En `persona`, `rol` y `accion`, EDIT, DELETE, SHOWCURRENT y SEARCH muestran un `alert` hasta que se implementen sus `createForm_*`.
+- En `persona`, EDIT, DELETE, SHOWCURRENT y SEARCH muestran un `alert` hasta que se implementen sus `createForm_*`; en `rol` y `accion` solo DELETE.
 - Falta el test (y su prueba) `nuevo_foto_persona_exist_file_ko` en ADD, aunque la validación existe.
 - El mensaje del test de `fechaNacimiento_persona_personalized_ko` solo menciona "no existe en el calendario", pero la validación también rechaza fechas futuras.
 - `AbstractEntidad` (oficial) escribe el JSON de la fila en el `onclick` de los iconos de la tabla con comillas simples; un dato con `'` rompería ese icono.
