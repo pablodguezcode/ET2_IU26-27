@@ -36,7 +36,7 @@ El código desarrollado por el grupo está **únicamente en `app/`**. El resto d
 | `funcionalidad`          | Pendiente                  | Pendiente      | Pendiente                            | 33 tests · 60 pruebas    |
 | `rolaccionfuncionalidad` | Pendiente                  | Pendiente      | Pendiente                            | 33 tests · 42 pruebas    |
 
-Las validaciones `ADD_`, `EDIT_` y `SEARCH_` y sus submits **sí están implementadas en las cinco entidades hechas**; lo pendiente son los `createForm_EDIT/DELETE/SHOWCURRENT/SEARCH`.
+Las validaciones `ADD_`, `EDIT_` y `SEARCH_` y sus submits **sí están implementadas en las cinco entidades hechas**. `usuario` y `funcionalidad_accion` están completas (todos los formularios: ADD, EDIT, DELETE, SHOWCURRENT y SEARCH). En `persona`, `rol` y `accion` lo pendiente son los `createForm_EDIT/DELETE/SHOWCURRENT/SEARCH`.
 
 `index.html` (oficial) ya enlaza `funcionalidad_Class.js` y `rolaccionfuncionalidad_Class.js`. Mientras esos ficheros no existan, el navegador mostrará un 404 en consola y sus opciones de menú no funcionarán.
 
@@ -169,7 +169,6 @@ Si `esTest == 'test'` el constructor no toca la página ni el back (así lo inst
 | Entidad | Atributo | Se muestra como |
 |---|---|---|
 | `persona` | `foto_persona` | Enlace al fichero en `http://193.147.87.202/ET2/filesuploaded/files_foto_persona/<fichero>` |
-| `usuario` | `id_rol` | `rol_name` (el back devuelve el objeto del rol) |
 | `funcionalidad_accion` | `id_funcionalidad`, `id_accion` | `nombre_funcionalidad` y `nombre_accion` |
 
 `AbstractEntidad.crearTablaDatos()` llama a `cambiarmostrarespecial(columna, valor)`; en cada entidad ese método delega en `mostrarcambioatributo()`.
@@ -317,7 +316,7 @@ Al añadir un campo o entidad nueva hay que añadir sus claves en **los dos** fi
 
 ## Limitaciones conocidas
 
-- EDIT, DELETE, SHOWCURRENT y SEARCH muestran un `alert` hasta que se implementen sus `createForm_*`.
+- En `persona`, `rol` y `accion`, EDIT, DELETE, SHOWCURRENT y SEARCH muestran un `alert` hasta que se implementen sus `createForm_*`.
 - Falta el test (y su prueba) `nuevo_foto_persona_exist_file_ko` en ADD, aunque la validación existe.
 - El mensaje del test de `fechaNacimiento_persona_personalized_ko` solo menciona "no existe en el calendario", pero la validación también rechaza fechas futuras.
 - `AbstractEntidad` (oficial) escribe el JSON de la fila en el `onclick` de los iconos de la tabla con comillas simples; un dato con `'` rompería ese icono.
