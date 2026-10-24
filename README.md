@@ -2,7 +2,7 @@
 
 Gestión de entidades en el FRONT (tablas de tuplas, formularios modales, validaciones de campo y de submit, y pruebas automáticas de datos) para la asignatura **Interfaces de Usuario**, curso 2026-2027. Grupo **IU262703**.
 
-El código desarrollado por el grupo está **únicamente en `app/`**. El resto de la arquitectura (`Core`, `Base`, `locale`, `css`, `iconos`, `index.html`) es la oficial del profesorado y no se modifica.
+El código desarrollado por el grupo está **únicamente en `app/`**. El resto de la arquitectura (`Core`, `Base`, `locale`, `css`, `iconos`, `index.html`) es la oficial del profesorado y no se modifica (ver [Qué se puede y qué no se puede modificar](#qué-se-puede-y-qué-no-se-puede-modificar)).
 
 ---
 
@@ -10,16 +10,17 @@ El código desarrollado por el grupo está **únicamente en `app/`**. El resto d
 
 1. [Estado de las entidades](#estado-de-las-entidades)
 2. [Estructura del proyecto](#estructura-del-proyecto)
-3. [Cómo ejecutar](#cómo-ejecutar)
-4. [Cómo funciona una entidad](#cómo-funciona-una-entidad)
-5. [Convenciones de nombres](#convenciones-de-nombres)
-6. [Restricciones y validaciones por entidad](#restricciones-y-validaciones-por-entidad)
-7. [Campos de fichero](#campos-de-fichero)
-8. [Tests y pruebas](#tests-y-pruebas)
-9. [Multi-idioma](#multi-idioma)
-10. [Clases genéricas de `app/`](#clases-genéricas-de-app)
-11. [Limitaciones conocidas](#limitaciones-conocidas)
-12. [Entrega](#entrega)
+3. [Qué se puede y qué no se puede modificar](#qué-se-puede-y-qué-no-se-puede-modificar)
+4. [Cómo ejecutar](#cómo-ejecutar)
+5. [Cómo funciona una entidad](#cómo-funciona-una-entidad)
+6. [Convenciones de nombres](#convenciones-de-nombres)
+7. [Restricciones y validaciones por entidad](#restricciones-y-validaciones-por-entidad)
+8. [Campos de fichero](#campos-de-fichero)
+9. [Tests y pruebas](#tests-y-pruebas)
+10. [Multi-idioma](#multi-idioma)
+11. [Clases genéricas de `app/`](#clases-genéricas-de-app)
+12. [Limitaciones conocidas](#limitaciones-conocidas)
+13. [Entrega](#entrega)
 
 ---
 
@@ -28,10 +29,10 @@ El código desarrollado por el grupo está **únicamente en `app/`**. El resto d
 | Entidad                  | Clase                      | Formulario ADD | EDIT / DELETE / SHOWCURRENT / SEARCH | Tests ET1 (`_tests.js`) |
 |--------------------------|----------------------------|----------------|--------------------------------------|--------------------------|
 | `persona`                | Hecha                      | Hecho          | Pendiente (stub con `alert`)         | 107 tests · 240 pruebas  |
-| `usuario`                | Hecha                      | Hecho          | Pendiente (stub con `alert`)         | 43 tests · 50 pruebas    |
+| `usuario`                | Hecha                      | Hecho          | Hecho                                | 43 tests · 50 pruebas    |
 | `rol`                    | Hecha                      | Hecho          | Pendiente (stub con `alert`)         | 33 tests · 82 pruebas    |
 | `accion`                 | Hecha                      | Hecho          | Pendiente (stub con `alert`)         | 33 tests · 79 pruebas    |
-| `funcionalidad_accion`   | Hecha                      | Hecho          | Pendiente (stub con `alert`)         | 22 tests · 22 pruebas    |
+| `funcionalidad_accion`   | Hecha                      | Hecho          | Hecho                                | 22 tests · 22 pruebas    |
 | `funcionalidad`          | Pendiente                  | Pendiente      | Pendiente                            | 33 tests · 60 pruebas    |
 | `rolaccionfuncionalidad` | Pendiente                  | Pendiente      | Pendiente                            | 33 tests · 42 pruebas    |
 
@@ -71,6 +72,40 @@ ET2_IU262703/
 ```
 
 > Si se detecta un error en los ficheros oficiales, se comunica al profesorado; no se corrige en local. La evaluación se realiza con la arquitectura oficial más el directorio `app` del grupo.
+
+---
+
+## Qué se puede y qué no se puede modificar
+
+Regla general: **todo lo que está en `index.html`, `Core/`, `Base/`, `locale/`, `css/` e `iconos/` es oficial y se usa sin modificaciones.** Solo se escribe código en `app/`. Si se detecta un error en un fichero oficial, se comunica al profesorado; no se corrige en local.
+
+### Clases y ficheros oficiales (NO se modifican)
+
+| Fichero / clase | Contenido | Cómo se adapta sin tocarlo |
+|---|---|---|
+| `index.html` | Menú de entidades, tabla, div modal del formulario (`form_iu`), modal de error. | Las entidades rellenan esos divs; no se añaden ni cambian ids ni scripts. |
+| `Base/AbstractEntidad_Class.js` (`AbstractEntidad`) | Métodos comunes de gestión de entidades: `ADD()`, `SEARCH()`, `EDIT()`, `DELETE()`, `crearTablaDatos()`... Todas las entidades heredan de ella. | Cada `<entidad>_Class.js` hereda y aporta lo propio (`createForm_*`, validaciones, `mostrarcambioatributo()`...). |
+| `Core/Validations_Class.js` (`Validations`) | Validaciones estándar: `exist_file()`, `min_size()`, `max_size()`, `format()`, `max_size_file()`, `type_file()`, `format_name_file()`. | Si no bastan, se amplía en `entity_validations` o se crea un `personalize_<atributo>()` en la entidad. |
+| `Core/Dom_Class.js`, `Core/Dom_form_Class.js`, `Core/Dom_table_Class.js` | Métodos de manipulación del DOM (general, formularios y tabla). | Se usan tal cual desde las clases de entidad. |
+| `Core/ExternalAccess.js` (`ExternalAccess`) | Acceso al back. | Se instancia en cada entidad (`this.access_functions`). |
+| `Core/Data_Test` | Clase principal que valida los tests y pruebas definidos y muestra el resultado en una ventana nueva. | Se hereda desde `entity_Test_Data`. |
+| `Core/Dom_fields_Class.js` (`dom_fields`) | Gestión de campos DOM del formulario. | Se hereda desde `entity_dom_fields`. **Sus métodos existentes no pueden cambiar de nombre.** |
+| `locale/idioma.js` | Soporte multi-idioma: `setLang()`. | Se alimenta con `Textos_ES.js` y `Textos_EN.js`. |
+| `css/` e `iconos/` | Estilos de los elementos modales e iconos de las acciones. | Solo se referencian; no se añaden iconos propios ni se editan estilos. |
+
+### Clases y ficheros del grupo (SÍ se modifican, dentro de `app/`)
+
+| Fichero / clase | Qué se puede hacer | Qué no se puede hacer |
+|---|---|---|
+| `app/<entidad>/<entidad>_Class.js` | Implementar `columnasamostrar`, `mostrarespecial`, `manual_form_creation()`, `createForm_*`, `ACCION_campo_validation()`, `ACCION_submit_ENTIDAD()`, `mostrarcambioatributo()` y `personalize_<atributo>()`. | Cambiar el nombre de la clase (debe coincidir con la entidad) ni los nombres de método fijados por el enunciado. No redefinir `ADD()`, `SEARCH()`, `EDIT()`, `DELETE()` salvo necesidad real. |
+| `app/<entidad>/<entidad>_tests.js` | Definir `<entidad>_def_tests` y `<entidad>_pruebas` con el formato de la ET1. | Cambiar el nombre del fichero ni de las variables. |
+| `app/Entity_Dom_fields_Class.js` (`entity_dom_fields`) | Sobrescribir métodos de `dom_fields` y añadir otros nuevos. | Renombrar métodos existentes de `dom_fields`. |
+| `app/Entity_Validations_Class.js` (`entity_validations`) | Ampliar el comportamiento de las validaciones estándar (`min_size()` y `max_size()` admiten `password`, `textarea` y `select`). | Añadir métodos nuevos ni modificar `Validations`. Las validaciones propias van en la entidad con prefijo `personalize_`. |
+| `app/Entity_Test_Data_Class.js` (`entity_Test_Data`) | Refactorizar métodos existentes de `Data_Test` o crear otros nuevos si se necesitan. | Dejar de heredar de `Data_Test` ni cambiar el nombre de la clase (el icono TEST la instancia con ese nombre). |
+| `app/Textos_ES.js` y `app/Textos_EN.js` | Añadir claves (siempre en **los dos** ficheros). | Cambiar los nombres de las variables `textos_ES` y `textos_EN`. |
+| `app/ET2_IU262703.js` | Completar los datos de entrega (alumno, entrega, horas). | Cambiar el formato `datosgenerales = { Lider: [...], ParticipanteN: [...] }`. |
+
+Ante la duda: si el fichero está en `Core/`, `Base/`, `locale/`, `css/`, `iconos/` o es `index.html`, **no se toca**; si está en `app/`, se puede, respetando los nombres del enunciado.
 
 ---
 
@@ -272,11 +307,11 @@ Al añadir un campo o entidad nueva hay que añadir sus claves en **los dos** fi
 
 ## Clases genéricas de `app/`
 
-| Clase | Hereda de | Qué hace |
-|---|---|---|
-| `entity_validations` | `Validations` | `min_size()` y `max_size()` admiten además `password`, `textarea` y `select`. No se pueden añadir métodos nuevos. |
-| `entity_dom_fields` | `dom_fields` | `crearElementoHtml()` crea también `select` y `textarea` de prueba. `abrirModalError()` pone el código como `class` para que `setLang()` lo traduzca. |
-| `entity_Test_Data` | `Data_Test` | Ejecuta las pruebas y las muestra en una ventana nueva; evita que el formulario real interfiera. |
+| Clase | Hereda de | Qué hace | Modificación permitida |
+|---|---|---|---|
+| `entity_validations` | `Validations` | `min_size()` y `max_size()` admiten además `password`, `textarea` y `select`. No se pueden añadir métodos nuevos. | Solo ampliar el comportamiento de los métodos estándar. `Validations` (oficial) no se toca. |
+| `entity_dom_fields` | `dom_fields` | `crearElementoHtml()` crea también `select` y `textarea` de prueba. `abrirModalError()` pone el código como `class` para que `setLang()` lo traduzca. | Sobrescribir y añadir métodos; no renombrar los existentes. `dom_fields` (oficial) no se toca. |
+| `entity_Test_Data` | `Data_Test` | Ejecuta las pruebas y las muestra en una ventana nueva; evita que el formulario real interfiera. | Refactorizar métodos existentes o crear nuevos. `Data_Test` (oficial) no se toca. |
 
 ---
 
