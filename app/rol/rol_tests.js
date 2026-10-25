@@ -44,7 +44,7 @@ var rol_def_tests = [
  
 //Acción: ADD
  
-    ["rol", "id_rol", "input", 1, "Comprobar tamaño mínimo", "min_size", "ADD", "id_rol_min_size_ko", "El identificador del rol es obligatorio: debe seleccionar un rol"],
+    ["rol", "id_rol", "input", 1, "Comprobar tamaño mínimo", "min_size", "ADD", "id_rol_min_size_ko", "El identificador del rol es obligatorio: debe tener al menos 1 dígito"],
  
     ["rol", "id_rol", "input", 2, "Comprobar tamaño máximo", "max_size", "ADD", "id_rol_max_size_ko", "El identificador del rol supera los 11 dígitos numéricos permitidos"],
  
@@ -72,7 +72,7 @@ var rol_def_tests = [
  
 //Acción: EDIT
  
-    ["rol", "id_rol", "input", 13, "Comprobar tamaño mínimo", "min_size", "EDIT", "id_rol_min_size_ko", "El identificador del rol es obligatorio: debe seleccionar un rol"],
+    ["rol", "id_rol", "input", 13, "Comprobar tamaño mínimo", "min_size", "EDIT", "id_rol_min_size_ko", "El identificador del rol es obligatorio: debe tener al menos 1 dígito"],
  
     ["rol", "id_rol", "input", 14, "Comprobar tamaño máximo", "max_size", "EDIT", "id_rol_max_size_ko", "El identificador del rol supera los 11 dígitos numéricos permitidos"],
  

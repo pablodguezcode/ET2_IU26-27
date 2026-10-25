@@ -174,7 +174,7 @@ var usuario_def_tests = [
     // 4.1. ATRIBUTO: "id_rol" con acción: "ADD"
     [
         "usuario", "id_rol", "select", 33, "Validar longitud minima de id_rol en ADD", "min_size", "ADD", "id_rol_min_size_ko",
-        "El identificador del rol es obligatorio: debe seleccionar un rol"
+        "El identificador del rol es obligatorio: debe tener al menos 1 dígito"
     ],
     [
         "usuario", "id_rol", "select", 34, "Validar longitud maxima de digitos para id_rol en ADD", "max_size", "ADD", "id_rol_max_size_ko",
@@ -191,7 +191,7 @@ var usuario_def_tests = [
     // 4.2. ATRIBUTO: "id_rol" con acción: "EDIT"
     [
         "usuario", "id_rol", "select", 37, "Validar longitud mínima de id_rol en EDIT", "min_size", "EDIT", "id_rol_min_size_ko",
-        "El identificador del rol es obligatorio: debe seleccionar un rol"
+        "El identificador del rol es obligatorio: debe tener al menos 1 dígito"
     ],
     [
         "usuario", "id_rol", "select", 38, "Validar longitud máxima de dígitos para id_rol en EDIT", "max_size", "EDIT", "id_rol_max_size_ko",

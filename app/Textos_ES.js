@@ -146,7 +146,7 @@ var textos_ES = {
 	'contrasena_format_ko': 'La contraseña solo puede contener caracteres alfabéticos, sin \'ñ\' ni acentos.',
 
 	// --- Errores de validación - Rol (en usuario)
-	'id_rol_min_size_ko': 'El identificador del rol es obligatorio: debe seleccionar un rol',
+	'id_rol_min_size_ko': 'El identificador del rol es obligatorio: debe tener al menos 1 dígito',
 	'id_rol_max_size_ko': 'El identificador del rol supera los 11 dígitos numéricos permitidos',
 	'id_rol_format_ko': 'El identificador del rol solo puede estar formado por dígitos numéricos',
 

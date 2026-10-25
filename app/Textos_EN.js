@@ -146,7 +146,7 @@ var textos_EN = {
 	'contrasena_format_ko': 'The password can only contain alphabetic characters, without \'ñ\' or accents.',
 
 	// --- Validation errors - Role (in user)
-	'id_rol_min_size_ko': 'The role identifier is required: you must select a role',
+	'id_rol_min_size_ko': 'The role identifier is required: it must have at least 1 digit',
 	'id_rol_max_size_ko': 'The role identifier exceeds the 11 numeric digits allowed',
 	'id_rol_format_ko': 'The role identifier can only consist of numeric digits',
 
