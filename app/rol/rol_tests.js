@@ -44,11 +44,11 @@ var rol_def_tests = [
  
 //Acción: ADD
  
-    ["rol", "id_rol", "input", 1, "Comprobar tamaño mínimo", "min_size", "ADD", "id_rol_min_size_ko", "El identificador del rol es obligatorio, introduzca por lo menos 1 dígito"],
+    ["rol", "id_rol", "input", 1, "Comprobar tamaño mínimo", "min_size", "ADD", "id_rol_min_size_ko", "El identificador del rol es obligatorio: debe seleccionar un rol"],
  
-    ["rol", "id_rol", "input", 2, "Comprobar tamaño máximo", "max_size", "ADD", "id_rol_max_size_ko", "El identificador del rol es demasiado largo, introduzca hasta 11 dígitos"],
+    ["rol", "id_rol", "input", 2, "Comprobar tamaño máximo", "max_size", "ADD", "id_rol_max_size_ko", "El identificador del rol supera los 11 dígitos numéricos permitidos"],
  
-    ["rol", "id_rol", "input", 3, "Comprobar si el formato del identificador es correcto", "format", "ADD", "id_rol_format_ko", "El formato del identificador es incorrecto. Solo se admiten dígitos numéricos, sin signos ni decimales"],
+    ["rol", "id_rol", "input", 3, "Comprobar si el formato del identificador es correcto", "format", "ADD", "id_rol_format_ko", "El identificador del rol solo puede estar formado por dígitos numéricos"],
  
     ["rol", "id_rol", "input", 4, "Valor correcto", "valid", "ADD", true, "Éxito"],
  
@@ -72,11 +72,11 @@ var rol_def_tests = [
  
 //Acción: EDIT
  
-    ["rol", "id_rol", "input", 13, "Comprobar tamaño mínimo", "min_size", "EDIT", "id_rol_min_size_ko", "El identificador del rol es obligatorio, introduzca por lo menos 1 dígito"],
+    ["rol", "id_rol", "input", 13, "Comprobar tamaño mínimo", "min_size", "EDIT", "id_rol_min_size_ko", "El identificador del rol es obligatorio: debe seleccionar un rol"],
  
-    ["rol", "id_rol", "input", 14, "Comprobar tamaño máximo", "max_size", "EDIT", "id_rol_max_size_ko", "El identificador del rol es demasiado largo, introduzca hasta 11 dígitos"],
+    ["rol", "id_rol", "input", 14, "Comprobar tamaño máximo", "max_size", "EDIT", "id_rol_max_size_ko", "El identificador del rol supera los 11 dígitos numéricos permitidos"],
  
-    ["rol", "id_rol", "input", 15, "Comprobar si el formato del identificador es correcto", "format", "EDIT", "id_rol_format_ko", "El formato del identificador es incorrecto. Solo se admiten dígitos numéricos, sin signos ni decimales"],
+    ["rol", "id_rol", "input", 15, "Comprobar si el formato del identificador es correcto", "format", "EDIT", "id_rol_format_ko", "El identificador del rol solo puede estar formado por dígitos numéricos"],
  
     ["rol", "id_rol", "input", 16, "Valor correcto", "valid", "EDIT", true, "Éxito"],
  
@@ -100,9 +100,9 @@ var rol_def_tests = [
  
 //Acción: SEARCH
  
-    ["rol", "id_rol", "input", 25, "Comprobar tamaño máximo", "max_size", "SEARCH", "id_rol_max_size_ko", "El identificador del rol es demasiado largo, introduzca hasta 11 dígitos"],
+    ["rol", "id_rol", "input", 25, "Comprobar tamaño máximo", "max_size", "SEARCH", "id_rol_max_size_ko", "El identificador del rol supera los 11 dígitos numéricos permitidos"],
  
-    ["rol", "id_rol", "input", 26, "Comprobar si el formato del identificador es correcto", "format", "SEARCH", "id_rol_format_ko", "El formato del identificador es incorrecto. Solo se admiten dígitos numéricos, sin signos ni decimales"],
+    ["rol", "id_rol", "input", 26, "Comprobar si el formato del identificador es correcto", "format", "SEARCH", "id_rol_format_ko", "El identificador del rol solo puede estar formado por dígitos numéricos"],
  
     ["rol", "id_rol", "input", 27, "Valor correcto", "valid", "SEARCH", true, "Éxito"],
  

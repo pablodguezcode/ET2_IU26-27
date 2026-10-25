@@ -161,6 +161,7 @@ var textos_EN = {
 	'text_contenido_titulo_form_rol_EDIT': 'Role EDIT Form',
 	'text_contenido_titulo_form_rol_SEARCH': 'Role SEARCH Form',
 	'text_contenido_titulo_form_rol_SHOWCURRENT': 'Role Detail',
+	'text_contenido_titulo_form_rol_DELETE': 'Role DELETE Form',
 
 	// --- Attributes (table headers)
 	'rol_name': 'Role name',
@@ -188,6 +189,7 @@ var textos_EN = {
 	'text_contenido_titulo_form_accion_EDIT': 'Action EDIT Form',
 	'text_contenido_titulo_form_accion_SEARCH': 'Action SEARCH Form',
 	'text_contenido_titulo_form_accion_SHOWCURRENT': 'Action Detail',
+	'text_contenido_titulo_form_accion_DELETE': 'Action DELETE Form',
 
 	// --- Attributes (table headers)
 	'id_accion': 'Action ID',

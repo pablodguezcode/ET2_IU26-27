@@ -38,11 +38,11 @@ var accion_def_tests = [
  
 //Acción: ADD
  
-    ["accion", "id_accion", "input", 1, "Comprobar tamaño mínimo", "min_size", "ADD", "id_accion_min_size_ko", "El identificador de la acción es obligatorio, introduzca por lo menos 1 dígito"],
+    ["accion", "id_accion", "input", 1, "Comprobar tamaño mínimo", "min_size", "ADD", "id_accion_min_size_ko", "El identificador de la acción es obligatorio: debe tener al menos 1 dígito"],
  
-    ["accion", "id_accion", "input", 2, "Comprobar tamaño máximo", "max_size", "ADD", "id_accion_max_size_ko", "El identificador de la acción es demasiado largo, introduzca hasta 11 dígitos"],
+    ["accion", "id_accion", "input", 2, "Comprobar tamaño máximo", "max_size", "ADD", "id_accion_max_size_ko", "El identificador de la acción supera los 11 dígitos numéricos permitidos"],
  
-    ["accion", "id_accion", "input", 3, "Comprobar si el formato del identificador es correcto", "format", "ADD", "id_accion_format_ko", "El formato del identificador es incorrecto. Solo se admiten dígitos numéricos, sin signos ni decimales"],
+    ["accion", "id_accion", "input", 3, "Comprobar si el formato del identificador es correcto", "format", "ADD", "id_accion_format_ko", "El identificador de la acción solo puede estar formado por dígitos numéricos"],
  
     ["accion", "id_accion", "input", 4, "Valor correcto", "valid", "ADD", true, "Éxito"],
  
@@ -66,11 +66,11 @@ var accion_def_tests = [
  
 //Acción: EDIT
  
-    ["accion", "id_accion", "input", 13, "Comprobar tamaño mínimo", "min_size", "EDIT", "id_accion_min_size_ko", "El identificador de la acción es obligatorio, introduzca por lo menos 1 dígito"],
+    ["accion", "id_accion", "input", 13, "Comprobar tamaño mínimo", "min_size", "EDIT", "id_accion_min_size_ko", "El identificador de la acción es obligatorio: debe tener al menos 1 dígito"],
  
-    ["accion", "id_accion", "input", 14, "Comprobar tamaño máximo", "max_size", "EDIT", "id_accion_max_size_ko", "El identificador de la acción es demasiado largo, introduzca hasta 11 dígitos"],
+    ["accion", "id_accion", "input", 14, "Comprobar tamaño máximo", "max_size", "EDIT", "id_accion_max_size_ko", "El identificador de la acción supera los 11 dígitos numéricos permitidos"],
  
-    ["accion", "id_accion", "input", 15, "Comprobar si el formato del identificador es correcto", "format", "EDIT", "id_accion_format_ko", "El formato del identificador es incorrecto. Solo se admiten dígitos numéricos, sin signos ni decimales"],
+    ["accion", "id_accion", "input", 15, "Comprobar si el formato del identificador es correcto", "format", "EDIT", "id_accion_format_ko", "El identificador de la acción solo puede estar formado por dígitos numéricos"],
  
     ["accion", "id_accion", "input", 16, "Valor correcto", "valid", "EDIT", true, "Éxito"],
  
@@ -94,9 +94,9 @@ var accion_def_tests = [
  
 //Acción: SEARCH
  
-    ["accion", "id_accion", "input", 25, "Comprobar tamaño máximo", "max_size", "SEARCH", "id_accion_max_size_ko", "El identificador de la acción es demasiado largo, introduzca hasta 11 dígitos"],
+    ["accion", "id_accion", "input", 25, "Comprobar tamaño máximo", "max_size", "SEARCH", "id_accion_max_size_ko", "El identificador de la acción supera los 11 dígitos numéricos permitidos"],
  
-    ["accion", "id_accion", "input", 26, "Comprobar si el formato del identificador es correcto", "format", "SEARCH", "id_accion_format_ko", "El formato del identificador es incorrecto. Solo se admiten dígitos numéricos, sin signos ni decimales"],
+    ["accion", "id_accion", "input", 26, "Comprobar si el formato del identificador es correcto", "format", "SEARCH", "id_accion_format_ko", "El identificador de la acción solo puede estar formado por dígitos numéricos"],
  
     ["accion", "id_accion", "input", 27, "Valor correcto", "valid", "SEARCH", true, "Éxito"],
  

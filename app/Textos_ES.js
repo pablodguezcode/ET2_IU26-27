@@ -161,6 +161,7 @@ var textos_ES = {
 	'text_contenido_titulo_form_rol_EDIT': 'Formulario Modificación Rol',
 	'text_contenido_titulo_form_rol_SEARCH': 'Formulario Búsqueda Rol',
 	'text_contenido_titulo_form_rol_SHOWCURRENT': 'Detalle de Rol',
+	'text_contenido_titulo_form_rol_DELETE': 'Formulario Baja Rol',
 
 	// --- Atributos (cabeceras de tabla)
 	'rol_name': 'Nombre del rol',
@@ -188,6 +189,7 @@ var textos_ES = {
 	'text_contenido_titulo_form_accion_EDIT': 'Formulario Modificación Acción',
 	'text_contenido_titulo_form_accion_SEARCH': 'Formulario Búsqueda Acción',
 	'text_contenido_titulo_form_accion_SHOWCURRENT': 'Detalle de Acción',
+	'text_contenido_titulo_form_accion_DELETE': 'Formulario Baja Acción',
 
 	// --- Atributos (cabeceras de tabla)
 	'id_accion': 'Id. de acción',

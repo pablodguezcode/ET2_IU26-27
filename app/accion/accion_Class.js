@@ -398,10 +398,57 @@ class accion extends AbstractEntidad {
 		setLang();
 	}
 
-	//Stub (alert): el formulario de DELETE todavia no esta implementado (se mantiene tal y como estaba en la entrega anterior).
+	/**
+	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
+	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 */
+	DELETE_submit_accion(){
 
-	createForm_DELETE(){
-		alert('crear formulario DELETE');
+		return true;
+	}
+
+	/**
+	 * Construye el formulario de DELETE de accion: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - Opciones del modal: confirmar el borrado (boton submit con el icono DELETE) o cancelarlo (icono BACK de index.html).
+	 * - El boton de submit solo se coloca cuando el formulario ya esta relleno, para no poder enviar un borrado sin datos.
+	 * - id_accion (clave primaria autoincremental) no se muestra: va oculto y relleno con el id de la fila, para que el back
+	 *   identifique la tupla que se borra (igual que en EDIT).
+	 * - Si el back responde ok, AbstractEntidad.DELETE() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono DELETE
+	 */
+	createForm_DELETE(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_accion_DELETE');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.DELETE_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.DELETE();');
+
+		// el id no se muestra, pero se envia al back para identificar la tupla
+		this.ocultar_id_accion(false);
+
+		// rellenar los campos con los valores de la fila (el back puede devolver null en un campo)
+		const valor = (dato) => (dato === undefined || dato === null) ? '' : dato;
+		this.dom.rellenarvaloresform({
+			id_accion: valor(fila['id_accion']),
+			nombre_accion: valor(fila['nombre_accion']),
+			descrip_accion: valor(fila['descrip_accion'])
+		});
+
+		// todos los campos en solo lectura
+		this.dom.colocartodosreadonly('form_iu');
+
+		// colocar boton de submit
+		this.dom.colocarboton('DELETE');
+
+		setLang();
 	}
 
 	/**
