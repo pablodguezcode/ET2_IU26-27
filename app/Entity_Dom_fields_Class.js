@@ -53,15 +53,34 @@ class entity_dom_fields extends dom_fields{
 
     /**
      * Refactorizacion de abrirModalError(): mantiene la definicion. Coloca el codigo de error como class del mensaje
-     * para que setLang() lo sustituya por su texto traducido y, si el codigo no tiene traduccion, se muestra el propio codigo.
+     * para que setLang() lo sustituya por su texto traducido. Si el codigo no tiene traduccion en el idioma activo no se
+     * muestra solo el codigo en crudo: se muestra un texto generico traducido (text_error_back_generico) seguido del codigo
+     * entre parentesis, para que el usuario entienda que ha fallado y se pueda identificar el error.
      *
      * @param {string} errorMsg codigo de error devuelto por el back
      */
     abrirModalError(errorMsg){
         document.getElementById('error_action_modal').style.display = 'block';
         document.getElementById('modal_action_overlay').style.display = 'block';
-        document.getElementById('error_action_msg').className = errorMsg;
-        document.getElementById('error_action_msg').innerHTML = errorMsg;
+        var mensaje = document.getElementById('error_action_msg');
+        var textos = window.traduccion;
+        var traducido = (typeof textos === 'object' && textos !== null && Object.prototype.hasOwnProperty.call(textos, errorMsg));
+        if (traducido || typeof textos !== 'object' || textos === null){
+            mensaje.className = errorMsg;
+            mensaje.innerHTML = errorMsg;
+        }
+        else{
+            mensaje.removeAttribute('class');
+            mensaje.innerHTML = '';
+            var generico = document.createElement('span');
+            generico.className = 'text_error_back_generico';
+            mensaje.append(generico);
+            if (errorMsg){
+                var codigo = document.createElement('span');
+                codigo.textContent = ' (' + errorMsg + ')';
+                mensaje.append(codigo);
+            }
+        }
         setLang();
     }
     /**

@@ -37,6 +37,8 @@ var textos_ES = {
 	'text_contenido_titulo_form_persona_ADD': 'Formulario Alta Datos Personales',
 	'text_contenido_titulo_form_persona_EDIT': 'Formulario Modificación Datos Personales',
 	'text_contenido_titulo_form_persona_SEARCH': 'Formulario Búsqueda Datos Personales',
+	'text_contenido_titulo_form_persona_SHOWCURRENT': 'Detalle de Datos Personales',
+	'text_contenido_titulo_form_persona_DELETE': 'Formulario Baja Datos Personales',
 
 	// --- Atributos (cabeceras de tabla)
 	'dni': 'DNI',
@@ -79,8 +81,8 @@ var textos_ES = {
 
 	// --- Errores de validación - Fecha de nacimiento
 	'fechaNacimiento_persona_min_size_ko': 'La fecha de nacimiento es demasiado corta: debe tener 8 caracteres (dd/mm/aaaa) o (d/m/aaaa)',
-	'fechaNacimiento_persona_max_size_ko': 'La fecha de nacimiento es demasiado larga: debe tener 10 caracteres (dd/mm/aaaa)',
-	'fechaNacimiento_persona_format_ko': 'El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa',
+	'fechaNacimiento_persona_max_size_ko': 'La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa)',
+	'fechaNacimiento_persona_format_ko': 'El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa (en la búsqueda solo se permiten dígitos y /)',
 	'fechaNacimiento_persona_personalized_ko': 'La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy',
 
 	// --- Errores de validación - Dirección
@@ -90,14 +92,14 @@ var textos_ES = {
 
 	// --- Errores de validación - Teléfono
 	'telefono_persona_min_size_ko': 'El teléfono es demasiado corto: debe tener 9 dígitos',
-	'telefono_persona_max_size_ko': 'El teléfono es demasiado largo: debe tener 9 dígitos',
-	'telefono_persona_format_ko': 'El formato del teléfono no es válido: solo se permiten 9 dígitos numéricos',
+	'telefono_persona_max_size_ko': 'El teléfono es demasiado largo: no puede superar los 9 dígitos',
+	'telefono_persona_format_ko': 'El formato del teléfono no es válido: solo se permiten dígitos numéricos (9 en total)',
 	'telefono_persona_personalized_ko': 'El teléfono no es un número español válido: debe empezar por 6, 7, 8 o 9',
 
 	// --- Errores de validación - Email
 	'email_persona_min_size_ko': 'El email es demasiado corto: debe tener al menos 6 caracteres',
 	'email_persona_max_size_ko': 'El email es demasiado largo: no puede superar los 45 caracteres',
-	'email_persona_format_ko': 'El formato del email no es válido: debe ser del tipo usuario@dominio.ext',
+	'email_persona_format_ko': 'El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos y guiones)',
 
 	// --- Errores de validación - Foto (metadatos)
 	'foto_persona_min_size_ko': 'El nombre del fichero es demasiado corto: debe tener al menos 5 caracteres extensión incluida',
@@ -251,9 +253,19 @@ var textos_ES = {
 	'text_contenido_titulo_form_funcionalidad_accion_DELETE': 'Formulario Baja Funcionalidad_Acción',
 
 	// ============================================================================
+	// CABECERAS DE LAS COLUMNAS DE ACCION DE LA TABLA
+	// (la clave es el nombre de la columna: dom_table la pone como class del th y setLang() la traduce)
+	// ============================================================================
+	'EDIT': 'Editar',
+	'DELETE': 'Borrar',
+	'SHOWCURRENT': 'Ver detalle',
+
+	// ============================================================================
 	// MENSAJES DE ERROR GENERALES
 	// ============================================================================
 	'RECORDSET_VACIO': 'No hay coincidencias para la búsqueda',
+	// Texto que se muestra delante del codigo cuando el back devuelve un codigo de error que no tiene traduccion (ver abrirModalError)
+	'text_error_back_generico': 'Se ha producido un error al realizar la operación',
 
 	// ============================================================================
 	// VENTANA DE RESULTADOS DE TEST
@@ -272,6 +284,10 @@ var textos_ES = {
 	'text_test_col_respuestaesperada': 'Respuesta esperada',
 	'text_test_col_resultadoprueba': 'Resultado obtenido',
 	'text_test_col_pruebastatus': 'Estado',
+	'text_test_col_traduccionError': 'Mensaje de respuesta',
+	// Data_Test busca la traduccion con window.traduccion[resultadoprueba]; cuando la validacion devuelve true la clave es 'true'.
+	// Sin esta clave la columna del mensaje mostraba 'sintraduccion' en todas las pruebas de exito.
+	'true': 'Valor válido: cumple todas las comprobaciones',
 	'text_matriz_id_funcionalidad': 'id funcionalidad',
 	'text_matriz_id_accion': 'id acción',
 	'test_ventana_bloqueada_ko': 'El navegador ha bloqueado la ventana de resultados de las pruebas. Permita las ventanas emergentes para esta página.',

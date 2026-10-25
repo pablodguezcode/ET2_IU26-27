@@ -179,8 +179,28 @@ class persona extends AbstractEntidad {
 
 //Atributo fechaNacimiento_persona
 
+	/**
+	 * Completa con un 0 delante el dia y el mes de una fecha d/m/aaaa escrita en el campo (1/2/2000 -> 01/02/2000),
+	 * de modo que quede siempre en el formato dd/mm/aaaa. Solo actua cuando el campo tiene una fecha completa
+	 * (1 o 2 digitos de dia, 1 o 2 de mes y 4 de anio): cualquier otro valor se deja tal cual para que lo juzgue la validacion.
+	 * Tambien quita los espacios sobrantes de los extremos cuando se reconoce una fecha completa.
+	 */
+	completar_ceros_fechaNacimiento_persona(){
+
+		var campo = document.getElementById('fechaNacimiento_persona');
+		var partes = campo.value.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+
+		if (partes !== null){
+			campo.value = partes[1].padStart(2,'0') + '/' + partes[2].padStart(2,'0') + '/' + partes[3];
+		}
+	}
+
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	ADD_fechaNacimiento_persona_validation(){
+
+		// La fecha se autocompleta a dd/mm/aaaa al salir del campo y tambien al enviar (el submit llama a esta validacion).
+		// EDIT_fechaNacimiento_persona_validation() delega en esta, asi que EDIT queda cubierto.
+		this.completar_ceros_fechaNacimiento_persona();
 
 		if (!(this.validations.min_size('fechaNacimiento_persona',8))){
 			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_min_size_ko');
@@ -565,6 +585,9 @@ class persona extends AbstractEntidad {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_fechaNacimiento_persona_validation(){
 
+		// En la busqueda solo se autocompleta una fecha completa: un trozo (p. ej. "1/") es un comienzo valido y no se toca.
+		this.completar_ceros_fechaNacimiento_persona();
+
 		if (!(this.validations.max_size('fechaNacimiento_persona',10))){
 			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_max_size_ko');
 			return "fechaNacimiento_persona_max_size_ko";
@@ -841,9 +864,6 @@ class persona extends AbstractEntidad {
 		select.value = valoractual;
 	}
 
-	//Stubs (alert): los formularios de DELETE y SHOWCURRENT todavia no estan implementados
-	//(se mantienen tal y como estaban en la entrega anterior).
-
 
 
 /***************************************************************************************************************************
@@ -928,8 +948,45 @@ class persona extends AbstractEntidad {
                                  					Formulario DELETE
 ****************************************************************************************************************************/
 
-	createForm_DELETE(){
-		alert('crear formulario DELETE');
+	/**
+	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
+	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 */
+	DELETE_submit_persona(){
+
+		return true;
+	}
+
+	/**
+	 * Construye el formulario de DELETE de persona: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - Opciones del modal: confirmar el borrado (boton submit con el icono DELETE) o cancelarlo (icono BACK de index.html).
+	 * - Todos los campos en solo lectura. foto_persona (nombre del fichero) se muestra con su enlace al fichero;
+	 *   nuevo_foto_persona (input file) y su label no se muestran en DELETE.
+	 * - Si el back responde ok, AbstractEntidad.DELETE() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono DELETE
+	 */
+	createForm_DELETE(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_persona_DELETE');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.DELETE_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.DELETE();');
+
+		// datos de la fila en solo lectura, sin input file y con el enlace al fichero
+		this.preparar_form_solo_lectura(fila);
+
+		// colocar boton de submit
+		this.dom.colocarboton('DELETE');
+
+		setLang();
 	}
 
 
@@ -938,8 +995,82 @@ class persona extends AbstractEntidad {
                                  					Formulario SHOWCURRENT
 ****************************************************************************************************************************/
 
-	createForm_SHOWCURRENT(){
-		alert('crear formulario DETALLE');
+	/**
+	 * Construye el formulario de SHOWCURRENT de persona: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - La unica opcion del modal es cerrarlo (icono BACK de index.html): no hay boton de submit ni se envia nada al back.
+	 * - foto_persona (nombre del fichero) en solo lectura con su enlace al fichero; nuevo_foto_persona (input file) y su label no se muestran.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono SHOWCURRENT
+	 */
+	createForm_SHOWCURRENT(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_persona_SHOWCURRENT');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// el formulario no se envia
+		this.dom.assign_property_value('form_iu','onsubmit','return false');
+
+		// datos de la fila en solo lectura, sin input file y con el enlace al fichero
+		this.preparar_form_solo_lectura(fila);
+
+		// el dni es un select: readonly no le afecta, asi que se deshabilita (aqui no se envia nada)
+		document.getElementById('dni').disabled = true;
+
+		setLang();
+	}
+
+	/**
+	 * Parte comun de DELETE y SHOWCURRENT: rellena el formulario con los datos de la fila y lo deja en solo lectura.
+	 * - dni es un select y readonly no le afecta: se deja con una unica opcion, la del dni de la fila (igual que en EDIT).
+	 * - foto_persona (nombre del fichero actual) y su label se muestran en solo lectura (el back puede devolver null si no hay foto).
+	 * - nuevo_foto_persona (input file) y su label no se muestran, y el input se deshabilita para que no se envie al back.
+	 * - link_foto_persona se muestra con el href al fichero en el servidor (si no hay foto no se muestra).
+	 *
+	 * @param {Object} fila datos de la tupla
+	 */
+	preparar_form_solo_lectura(fila){
+
+		// dni: el select queda solo con la opcion de la fila (seleccionada)
+		var selectdni = document.getElementById('dni');
+		var opciondni = document.createElement('option');
+		opciondni.value = fila['dni'];
+		opciondni.text = fila['dni'];
+		selectdni.append(opciondni);
+		Array.from(selectdni.options).filter(opcion => opcion.value != fila['dni']).forEach(opcion => opcion.remove());
+
+		// el input file nuevo no se muestra ni se envia
+		this.dom.hide_element_form('nuevo_foto_persona');
+		this.dom.hide_element('span_error_nuevo_foto_persona');
+		document.getElementById('nuevo_foto_persona').disabled = true;
+
+		// rellenar los campos con los valores de la fila (el back puede devolver null en la foto)
+		var foto = (fila['foto_persona'] === undefined || fila['foto_persona'] === null) ? '' : fila['foto_persona'];
+		this.dom.rellenarvaloresform({
+			dni: fila['dni'],
+			nombre_persona: fila['nombre_persona'],
+			apellidos_persona: fila['apellidos_persona'],
+			fechaNacimiento_persona: fila['fechaNacimiento_persona'],
+			direccion_persona: fila['direccion_persona'],
+			telefono_persona: fila['telefono_persona'],
+			email_persona: fila['email_persona'],
+			foto_persona: foto
+		});
+
+		// enlace al fichero actual (si no hay foto no se muestra)
+		if (foto == ''){
+			this.dom.hide_element('link_foto_persona');
+		}
+		else{
+			this.dom.show_element('link_foto_persona');
+			this.dom.assign_property_value('link_foto_persona','href','http://193.147.87.202/ET2/filesuploaded/files_foto_persona/'+foto);
+		}
+
+		// todos los campos en solo lectura
+		this.dom.colocartodosreadonly('form_iu');
 	}
 
 

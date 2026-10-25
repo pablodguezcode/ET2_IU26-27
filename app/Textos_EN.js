@@ -37,6 +37,8 @@ var textos_EN = {
 	'text_contenido_titulo_form_persona_ADD': 'Personal Data ADD Form',
 	'text_contenido_titulo_form_persona_EDIT': 'Personal Data EDIT Form',
 	'text_contenido_titulo_form_persona_SEARCH': 'Personal Data SEARCH Form',
+	'text_contenido_titulo_form_persona_SHOWCURRENT': 'Personal Data Detail',
+	'text_contenido_titulo_form_persona_DELETE': 'Personal Data DELETE Form',
 
 	// --- Attributes (table headers)
 	'dni': 'ID number (DNI)',
@@ -79,8 +81,8 @@ var textos_EN = {
 
 	// --- Validation errors - Date of birth
 	'fechaNacimiento_persona_min_size_ko': 'The date of birth is too short: it must have 8 characters (dd/mm/yyyy) or (d/m/yyyy)',
-	'fechaNacimiento_persona_max_size_ko': 'The date of birth is too long: it must have 10 characters (dd/mm/yyyy)',
-	'fechaNacimiento_persona_format_ko': 'The date of birth format is not valid: it must be dd/mm/yyyy',
+	'fechaNacimiento_persona_max_size_ko': 'The date of birth is too long: it cannot exceed 10 characters (dd/mm/yyyy)',
+	'fechaNacimiento_persona_format_ko': 'The date of birth format is not valid: it must be dd/mm/yyyy (in the search only digits and / are allowed)',
 	'fechaNacimiento_persona_personalized_ko': 'The date of birth is not valid: it must exist in the calendar and cannot be later than today',
 
 	// --- Validation errors - Address
@@ -90,14 +92,14 @@ var textos_EN = {
 
 	// --- Validation errors - Phone
 	'telefono_persona_min_size_ko': 'The phone number is too short: it must have 9 digits',
-	'telefono_persona_max_size_ko': 'The phone number is too long: it must have 9 digits',
-	'telefono_persona_format_ko': 'The phone number format is not valid: only 9 numeric digits are allowed',
+	'telefono_persona_max_size_ko': 'The phone number is too long: it cannot exceed 9 digits',
+	'telefono_persona_format_ko': 'The phone number format is not valid: only numeric digits are allowed (9 in total)',
 	'telefono_persona_personalized_ko': 'The phone number is not a valid Spanish number: it must start with 6, 7, 8 or 9',
 
 	// --- Validation errors - Email
 	'email_persona_min_size_ko': 'The email is too short: it must have at least 6 characters',
 	'email_persona_max_size_ko': 'The email is too long: it cannot exceed 45 characters',
-	'email_persona_format_ko': 'The email format is not valid: it must be of the form user@domain.ext',
+	'email_persona_format_ko': 'The email format is not valid: it must be of the form user@domain.ext (in the search a fragment is accepted, with letters, numbers, @, periods and hyphens)',
 
 	// --- Validation errors - Photo (metadata)
 	'foto_persona_min_size_ko': 'The file name is too short: it must have at least 5 characters including the extension',
@@ -251,9 +253,19 @@ var textos_EN = {
 	'text_contenido_titulo_form_funcionalidad_accion_DELETE': 'Feature-Action DELETE Form',
 
 	// ============================================================================
+	// TABLE ACTION COLUMN HEADERS
+	// (the key is the column name: dom_table sets it as the th class and setLang() translates it)
+	// ============================================================================
+	'EDIT': 'Edit',
+	'DELETE': 'Delete',
+	'SHOWCURRENT': 'Details',
+
+	// ============================================================================
 	// GENERAL ERROR MESSAGES
 	// ============================================================================
 	'RECORDSET_VACIO': 'There are not results for your search',
+	// Text shown before the code when the back returns an error code that has no translation (see abrirModalError)
+	'text_error_back_generico': 'An error occurred while performing the operation',
 
 	// ============================================================================
 	// TEST RESULTS WINDOW
@@ -272,6 +284,10 @@ var textos_EN = {
 	'text_test_col_respuestaesperada': 'Expected result',
 	'text_test_col_resultadoprueba': 'Actual result',
 	'text_test_col_pruebastatus': 'Status',
+	'text_test_col_traduccionError': 'Response message',
+	// Data_Test busca la traduccion con window.traduccion[resultadoprueba]; cuando la validacion devuelve true la clave es 'true'.
+	// Sin esta clave la columna del mensaje mostraba 'sintraduccion' en todas las pruebas de exito.
+	'true': 'Valid value: it passes all the checks',
 	'text_matriz_id_funcionalidad': 'Feature ID',
 	'text_matriz_id_accion': 'Action ID',
 	'test_ventana_bloqueada_ko': 'The browser has blocked the test results window. Allow pop-ups for this page.',
