@@ -95,7 +95,45 @@ class entity_dom_fields extends dom_fields{
      */
     showData(idcomponente, test_result, marked=null){
         document.getElementById(idcomponente).classList.remove('RECORDSET_VACIO');
+        if (test_result !== null && typeof test_result === 'object'){
+            Object.values(test_result).forEach(fila => this.sanear_iconos_accion(fila));
+        }
         super.showData(idcomponente, test_result, marked);
+    }
+
+    /**
+     * AbstractEntidad.crearTablaDatos() (codigo oficial, no modificable) construye cada icono EDIT, DELETE y SHOWCURRENT como
+     * <img ... onclick='entidad.createForm_ACCION({datos de la fila en JSON});'>, con el atributo entre comillas simples y los datos
+     * de la fila sin escapar. Si algun valor de la fila lleva un apostrofo (p. ej. una descripcion "rol d'un gestor", que tambien
+     * llega dentro de las claves foraneas, como id_rol en usuario), el apostrofo cierra el atributo antes de tiempo y el onclick
+     * queda como codigo JavaScript roto ("Invalid or unexpected token"): los tres iconos de esa fila dejan de responder.
+     * Este metodo reescribe el HTML de un icono con el atributo entre comillas dobles y los datos escapados (& y "), que el
+     * navegador vuelve a convertir en los datos originales al ejecutar el onclick. Solo se reescribe un icono cuando sus datos llevan
+     * un apostrofo (lo que rompe el onclick) o un & (que el navegador convertiria en otro caracter, p. ej. &amp; en &): cualquier otro
+     * icono, es decir, la inmensa mayoria, queda byte a byte como lo genero AbstractEntidad, asi que ninguna entidad cambia su
+     * comportamiento salvo en las filas que antes dejaban de responder.
+     *
+     * @param {object} fila datos de una fila de la tabla, con las columnas EDIT, DELETE y SHOWCURRENT ya incluidas
+     */
+    sanear_iconos_accion(fila){
+        if (fila === null || typeof fila !== 'object'){ return; }
+
+        ['EDIT', 'DELETE', 'SHOWCURRENT'].forEach(accion => {
+            var html = fila[accion];
+            if (typeof html !== 'string'){ return; }
+
+            var inicio = "onclick='entidad.createForm_" + accion + "(";
+            var fin = ");'>";
+            var desde = html.indexOf(inicio);
+            var hasta = html.lastIndexOf(fin);
+            // solo se toca el icono con la forma exacta que genera AbstractEntidad
+            if (desde < 0 || hasta < desde + inicio.length || hasta + fin.length != html.length){ return; }
+
+            var datos = html.substring(desde + inicio.length, hasta);
+            if (datos.indexOf("'") < 0 && datos.indexOf('&') < 0){ return; }
+            var escapado = datos.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+            fila[accion] = html.substring(0, desde) + 'onclick="entidad.createForm_' + accion + '(' + escapado + ');">';
+        });
     }
 
     crearSeleccionablecolumnas(columnasamostrar, atributos){
