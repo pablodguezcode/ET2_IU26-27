@@ -1,18 +1,10 @@
-/* -----------------------------------------------------------------------------
-   Entidad: rolaccionfuncionalidad
-   Campos : id_funcionalidad (select, FK), id_accion (select, FK), id_rol (select, FK)
-            (los tres forman la clave primaria compuesta)
------------------------------------------------------------------------------ */
-class rolaccionfuncionalidad extends AbstractEntidad {
+class rolaccionfuncionalidad extends AbstractEntidad{
 
-	constructor(esTest=null){
-
+	constructor(esTest = null){
 		super();
 
 		this.columnasamostrar = ['id_funcionalidad', 'id_accion', 'id_rol'];
-		// las tres columnas son claves foraneas con tratamiento especial: el back las devuelve como el objeto de la
-		// funcionalidad, de la accion y del rol y en la tabla se muestra su nombre (ver mostrarcambioatributo)
-		this.mostrarespecial = ['id_funcionalidad', 'id_accion', 'id_rol'];
+		this.mostrarespecial = ['atributoEspecial']; //ejemplo foto_persona
 		this.nombreentidad = 'rolaccionfuncionalidad';
 
 		this.dom = new entity_dom_fields();
@@ -20,12 +12,14 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 		this.access_functions = new ExternalAccess();
 
 		//init
-		if (esTest == 'test'){}
+		if (esTest == 'test'){
+
+		}
 		else{
 			//visualizar seccion tabla y botones
 			document.getElementById('IU_manage_entity').style.display = 'block';
 			document.getElementById('text_title_page').className = 'text_titulo_page_'+this.nombreentidad;
-
+			
 			//crear el formulario vacio
 			document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
 
@@ -33,21 +27,19 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 			this.SEARCH();
 		}
 
-	}
+	}	
 
 	/**
-	 * devuelve el html del formulario de la entidad
-	 * @returns {string}
+	 * replace the content of section element with a particular entity menu
+	 * @returns 
 	 */
-	manual_form_creation(){
+manual_form_creation(){
 		var form_content = `
 			<form id = 'form_iu' action="" method="POST" enctype="multipart/form-data" onsubmit="" class='formulario'>
 
 
 			<label class="label_id_funcionalidad">Funcionalidad</label>
 			<select id='id_funcionalidad' name='id_funcionalidad'>
-				<!-- la primera opcion vacia permite que min_size falle si no se elige funcionalidad (y es "sin filtro" en SEARCH).
-				     Las demas opciones (value = id_funcionalidad, texto = nombre_funcionalidad) se rellenan desde el back. -->
 				<option value=""></option>
 			</select>
 			<span id="span_error_id_funcionalidad"><a id="error_id_funcionalidad"></a></span>
@@ -55,7 +47,6 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 
 			<label class="label_id_accion">Acción</label>
 			<select id='id_accion' name='id_accion'>
-				<!-- igual que id_funcionalidad: opciones (value = id_accion, texto = nombre_accion) rellenadas desde el back -->
 				<option value=""></option>
 			</select>
 			<span id="span_error_id_accion"><a id="error_id_accion"></a></span>
@@ -63,7 +54,6 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 
 			<label class="label_id_rol">Rol</label>
 			<select id='id_rol' name='id_rol'>
-				<!-- igual que id_funcionalidad: opciones (value = id_rol, texto = rol_name) rellenadas desde el back -->
 				<option value=""></option>
 			</select>
 			<span id="span_error_id_rol"><a id="error_id_rol"></a></span>
@@ -74,18 +64,15 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 
 	}
 
-/***************************************************************************************************************************
+	/***************************************************************************************************************************
                                  			Campos de validacion para ADD
-****************************************************************************************************************************/
-
-//id_funcionalidad, id_accion e id_rol son la clave primaria compuesta y claves foraneas: los tres son select
+	****************************************************************************************************************************/
 
 //Atributo id_funcionalidad
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//min_size falla si se deja la opcion vacia
 	ADD_id_funcionalidad_validation(){
-
+		
 		if (!(this.validations.min_size('id_funcionalidad',1))){
 			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_min_size_ko');
 			return "id_funcionalidad_min_size_ko";
@@ -94,21 +81,21 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_max_size_ko');
 			return "id_funcionalidad_max_size_ko";
 		}
-		//solo digitos
-		if (!(this.validations.format('id_funcionalidad', '^[0-9]*$'))){
+				
+		if (!(this.validations.format('id_funcionalidad', '^[0-9]{1,11}$'))){
 			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_format_ko');
 			return "id_funcionalidad_format_ko";
-		}
+		}		
 		this.dom.mostrar_exito_campo('id_funcionalidad');
 		return true;
+
 	}
 
 //Atributo id_accion
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//min_size falla si se deja la opcion vacia
 	ADD_id_accion_validation(){
-
+		
 		if (!(this.validations.min_size('id_accion',1))){
 			this.dom.mostrar_error_campo('id_accion','id_accion_min_size_ko');
 			return "id_accion_min_size_ko";
@@ -117,8 +104,8 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 			this.dom.mostrar_error_campo('id_accion','id_accion_max_size_ko');
 			return "id_accion_max_size_ko";
 		}
-		//solo digitos
-		if (!(this.validations.format('id_accion', '^[0-9]*$'))){
+				
+		if (!(this.validations.format('id_accion', '^[0-9]{1,11}$'))){
 			this.dom.mostrar_error_campo('id_accion','id_accion_format_ko');
 			return "id_accion_format_ko";
 		}
@@ -129,9 +116,8 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 //Atributo id_rol
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//min_size falla si se deja la opcion vacia
 	ADD_id_rol_validation(){
-
+		
 		if (!(this.validations.min_size('id_rol',1))){
 			this.dom.mostrar_error_campo('id_rol','id_rol_min_size_ko');
 			return "id_rol_min_size_ko";
@@ -140,8 +126,8 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 			this.dom.mostrar_error_campo('id_rol','id_rol_max_size_ko');
 			return "id_rol_max_size_ko";
 		}
-		//solo digitos
-		if (!(this.validations.format('id_rol', '^[0-9]*$'))){
+				
+		if (!(this.validations.format('id_rol', '^[0-9]{1,11}$'))){
 			this.dom.mostrar_error_campo('id_rol','id_rol_format_ko');
 			return "id_rol_format_ko";
 		}
@@ -149,10 +135,9 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 		return true;
 	}
 
-
-/***************************************************************************************************************************
+	/***************************************************************************************************************************
                                  			SUMMIT ADD formulario validaciones
-****************************************************************************************************************************/
+	****************************************************************************************************************************/
 
 	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
 	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
@@ -173,33 +158,25 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 		return set_result;
 	}
 
-
-
-/***************************************************************************************************************************
-                                 			Campos de validacion para EDIT
-****************************************************************************************************************************/
-
-//Los codigos de error y las restricciones de EDIT son los mismos que los de ADD (ver rolaccionfuncionalidad_tests.js).
+	/***************************************************************************************************************************
+												Campos de validacion para EDIT
+	****************************************************************************************************************************/
 
 	EDIT_id_funcionalidad_validation(){
-
 		return this.ADD_id_funcionalidad_validation();
 	}
 
 	EDIT_id_accion_validation(){
-
 		return this.ADD_id_accion_validation();
 	}
 
 	EDIT_id_rol_validation(){
-
 		return this.ADD_id_rol_validation();
 	}
 
-
-/***************************************************************************************************************************
+	/***************************************************************************************************************************
                                  			SUMMIT EDIT formulario validaciones
-****************************************************************************************************************************/
+	****************************************************************************************************************************/
 
 	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
 	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
@@ -220,41 +197,43 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 		return set_result;
 	}
 
-
-
-/***************************************************************************************************************************
+	/***************************************************************************************************************************
                                  			Campos de validacion para SEARCH
-****************************************************************************************************************************/
+	****************************************************************************************************************************/
 
-//En SEARCH no hay min_size: el filtro es opcional y vacio significa "sin filtro". Si hay maximo y formato.
+	//El SEARCH puede ser parcial (no hay minimo, vacio = sin filtro) pero si maximo y debe respetar el conjunto de caracteres de cada atributo.
+	//Las expresiones regulares son las mismas que en ADD/EDIT: llevan * (no +) y el conjunto de caracteres no cambia, asi que
+	//cualquier valor parcial o vacio las cumple. El minimo lo controla min_size, que aqui no se llama.
 
 //Atributo id_funcionalidad
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	SEARCH_id_funcionalidad_validation(){
-
+    SEARCH_id_funcionalidad_validation(){
 		if (!(this.validations.max_size('id_funcionalidad',11))){
 			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_max_size_ko');
 			return "id_funcionalidad_max_size_ko";
 		}
-		if (!(this.validations.format('id_funcionalidad', '^[0-9]*$'))){
+				
+		if (!(this.validations.format('id_funcionalidad', '^[0-9]{1,11}$'))){
 			this.dom.mostrar_error_campo('id_funcionalidad','id_funcionalidad_format_ko');
 			return "id_funcionalidad_format_ko";
 		}
+				
 		this.dom.mostrar_exito_campo('id_funcionalidad');
 		return true;
+
 	}
 
 //Atributo id_accion
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_id_accion_validation(){
-
 		if (!(this.validations.max_size('id_accion',11))){
 			this.dom.mostrar_error_campo('id_accion','id_accion_max_size_ko');
 			return "id_accion_max_size_ko";
 		}
-		if (!(this.validations.format('id_accion', '^[0-9]*$'))){
+				
+		if (!(this.validations.format('id_accion', '^[0-9]{1,11}$'))){
 			this.dom.mostrar_error_campo('id_accion','id_accion_format_ko');
 			return "id_accion_format_ko";
 		}
@@ -266,12 +245,12 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_id_rol_validation(){
-
 		if (!(this.validations.max_size('id_rol',11))){
 			this.dom.mostrar_error_campo('id_rol','id_rol_max_size_ko');
 			return "id_rol_max_size_ko";
 		}
-		if (!(this.validations.format('id_rol', '^[0-9]*$'))){
+				
+		if (!(this.validations.format('id_rol', '^[0-9]{1,11}$'))){
 			this.dom.mostrar_error_campo('id_rol','id_rol_format_ko');
 			return "id_rol_format_ko";
 		}
@@ -279,15 +258,14 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 		return true;
 	}
 
-
-
-/***************************************************************************************************************************
+	/***************************************************************************************************************************
                                  			SUMMIT SEARCH formulario validaciones
-****************************************************************************************************************************/
+	****************************************************************************************************************************/
 
 	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
 	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
 	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+
 	SEARCH_submit_rolaccionfuncionalidad(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -304,37 +282,207 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 		return set_result;
 	}
 
-/***************************************************************************************************************************
-                                                     FORMULARIOS
-****************************************************************************************************************************/
+	/***************************************************************************************************************************
+														 FORMULARIOS
+	****************************************************************************************************************************/
 
-	//Stubs (alert): los formularios de ADD, EDIT, DELETE, SHOWCURRENT y SEARCH todavia no estan implementados.
+	/**
+	 * Construye el formulario de ADD de funcionalidad y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la accion (boton submit con el icono ADD) o cancelarla (icono BACK de index.html).
+	 * - Cada campo se valida al salir de el (colocarvalidaciones) y todos se comprueban en el onsubmit antes de enviar al back.
+	 * - Si el back responde ok, AbstractEntidad.ADD() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 */
 
 	createForm_ADD(){
-		alert('crear formulario ADD');
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_rolaccionfuncionalidad_ADD');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de un ADD anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.ADD_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.ADD();');
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu', 'ADD');
+
+		// colocar boton de submit
+		this.dom.colocarboton('ADD');
+
+		setLang();
 	}
 
+	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
+
+	/**
+	 * Construye el formulario de EDIT de rolaccionfuncionalidad, relleno con los datos de la fila, y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la accion (boton submit con el icono EDIT) o cancelarla (icono BACK de index.html).
+	 * - id_rolaccionfuncionalidad (clave primaria autoincremental) no se muestra: va oculto, relleno con el id de la fila, para que el back identifique la tupla.
+	 * - Si el back responde ok, AbstractEntidad.EDIT() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono EDIT
+	 */
+	
 	createForm_EDIT(fila){
 
-		alert('crear formulario EDIT');
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_rolaccionfuncionalidad_EDIT');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.EDIT_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.EDIT();');
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','EDIT');
+
+		// colocar boton de submit
+		this.dom.colocarboton('EDIT');
+
+		// rellenar los campos con los valores de la fila (el back puede devolver null en un campo)
+		const valor = (dato) => (dato === undefined || dato === null) ? '' : dato;
+		this.dom.rellenarvaloresform({
+			id_funcionalidad: valor(fila['id_funcionalidad']),
+			id_accion: valor(fila['id_accion']),
+			id_rol: valor(fila['id_rol'])
+		});
+
+		setLang();
 	}
 
-	createForm_DELETE(){
-		alert('crear formulario DELETE');
-	}
+	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
 
-	createForm_SHOWCURRENT(){
-		alert('crear formulario DETALLE');
-	}
-
+	/**
+	 * Construye el formulario de SEARCH de rolaccionfuncionalidad y lo muestra en el div modal (Div_IU_form).
+	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
+	 * - La busqueda es parcial: todos los campos son opcionales, vacio significa "sin filtro" y basta con escribir un trozo
+	 *   del valor (ver SEARCH_<campo>_validation: sin minimo, solo maximo y formato).
+	 * - id_rolaccionfuncionalidad es autoincremental y el usuario no lo conoce: no se muestra ni se envia como criterio de busqueda.
+	 * - Si el back responde, AbstractEntidad.SEARCH() oculta el formulario y muestra en la tabla las tuplas que coinciden.
+	 */
 	createForm_SEARCH(){
-		alert('crear formulario SEARCH');
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_rolaccionfuncionalidad_SEARCH');
+
+		// formulario vacio y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.SEARCH();');
+
+		// los select se rellenan desde el back
+		this.cargar_opciones();
+
+		// poner las validaciones
+		this.dom.colocarvalidaciones('form_iu','SEARCH');
+
+		// colocar boton de submit
+		this.dom.colocarboton('SEARCH');
+
+		setLang();
 	}
 
+	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
 
-/***************************************************************************************************************************
+	/**
+	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
+	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 */
+	DELETE_submit_rolaccionfuncionalidad(){
+
+		return true;
+	}
+
+	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
+
+	/**
+	 * Construye el formulario de DELETE de accion: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - Opciones del modal: confirmar el borrado (boton submit con el icono DELETE) o cancelarlo (icono BACK de index.html).
+	 * - El boton de submit solo se coloca cuando el formulario ya esta relleno, para no poder enviar un borrado sin datos.
+	 * - id_accion (clave primaria autoincremental) no se muestra: va oculto y relleno con el id de la fila, para que el back
+	 *   identifique la tupla que se borra (igual que en EDIT).
+	 * - Si el back responde ok, AbstractEntidad.DELETE() oculta el formulario y actualiza la tabla; si responde error, se muestra
+	 *   el modal de error y el formulario sigue como antes del envio.
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono DELETE
+	 */
+	createForm_DELETE(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_rolaccionfuncionalidad_DELETE');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// poner onsubmit y action
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.DELETE_submit_'+this.nombreentidad+'())');
+		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.DELETE();');
+
+		// rellenar los campos con los valores de la fila (el back puede devolver null en un campo)
+		const valor = (dato) => (dato === undefined || dato === null) ? '' : dato;
+		this.dom.rellenarvaloresform({
+			id_funcionalidad: valor(fila['id_funcionalidad']),
+			id_accion: valor(fila['id_accion']),
+			id_rol: valor(fila['id_rol'])
+		});
+
+		// todos los campos en solo lectura
+		this.dom.colocartodosreadonly('form_iu');
+
+		// colocar boton de submit
+		this.dom.colocarboton('DELETE');
+
+		setLang();
+	}
+
+	/**
+	 * Construye el formulario de SHOWCURRENT de rolaccionfuncionalidad: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
+	 * - La unica opcion del modal es cerrarlo (icono BACK de index.html): no hay boton de submit ni se envia nada al back.
+	 * - Es solo informativo, asi que aqui si se muestra el id_rolaccionfuncionalidad (el mismo que se ve en la tabla).
+	 *
+	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono SHOWCURRENT
+	 */
+	createForm_SHOWCURRENT(fila){
+
+		// poner titulo al formulario
+		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_rolaccionfuncionalidad_SHOWCURRENT');
+
+		// formulario vacio (se regenera siempre para que no queden datos ni errores de una accion anterior) y visible como div modal
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.show_element('Div_IU_form');
+
+		// el formulario no se envia
+		this.dom.assign_property_value('form_iu','onsubmit','return false');
+
+		// rellenar los campos con los valores de la fila (el back puede devolver null en un campo)
+		const valor = (dato) => (dato === undefined || dato === null) ? '' : dato;
+		this.dom.rellenarvaloresform({
+			id_funcionalidad: valor(fila['id_funcionalidad']),
+			id_accion: valor(fila['id_accion']),
+			id_rol: valor(fila['id_rol'])
+			
+		});
+
+		// todos los campos en solo lectura
+		this.dom.colocartodosreadonly('form_iu');
+
+		setLang();
+	}
+
+	/***************************************************************************************************************************
                                  			Atributos con formato especial en la tabla
-****************************************************************************************************************************/
+	****************************************************************************************************************************/
 
 	/**
 	 * Devuelve el formato especial con el que se muestra en la tabla el valor de un atributo incluido en mostrarespecial.
@@ -371,4 +519,58 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 		return this.mostrarcambioatributo(columna, valor);
 	}
 
+	/***************************************************************************************************************************
+                                 			Carga de opciones de los select desde el back
+****************************************************************************************************************************/
+
+	/**
+	 * pide al back el listado de una entidad y rellena con el un select del formulario actual
+	 * (value y texto = el id, campovalor). La primera opcion vacia viene de manual_form_creation().
+	 * Se envia un FormData vacio ('') para que los campos del formulario no lleguen a la otra entidad como filtro.
+	 *
+	 * @param {string} idselect id del select a rellenar
+	 * @param {string} controlador entidad del back que se consulta
+	 * @param {string} campovalor columna del back que va en value y se muestra como texto (solo se muestran ids)
+	 */
+	async cargar_select(idselect, controlador, campovalor){
+
+		await this.access_functions.peticionBackGeneral('', controlador, 'SEARCH')
+		.then((respuesta) => {
+
+			var select = document.getElementById(idselect);
+			//el formulario puede haberse repintado o no existir mientras llegaba la respuesta
+			if (select == null){ return; }
+
+			if (respuesta['code'] == 'RECORDSET_DATOS'){
+				var valoractual = select.value;
+				//dejo solo la opcion vacia para no duplicar opciones si se llama mas de una vez
+				while (select.options.length > 1){
+					select.remove(1);
+				}
+				for (let fila of respuesta['resource']){
+					var opcion = document.createElement('option');
+					opcion.value = fila[campovalor];
+					opcion.text = fila[campovalor];
+					select.append(opcion);
+				}
+				select.value = valoractual;
+			}
+		});
+
+	}
+
+	/**
+	 * rellena los dos select del formulario: funcionalidades y acciones. Las dos peticiones son independientes y se lanzan a la vez;
+	 * devuelve una promesa que se cumple cuando estan cargados los dos (SHOWCURRENT la espera para poder seleccionar los valores de la fila).
+	 */
+	async cargar_opciones(){
+
+		await Promise.all([
+			this.cargar_select('id_funcionalidad', 'funcionalidad', 'id_funcionalidad'),
+			this.cargar_select('id_accion', 'accion', 'id_accion'),
+			this.cargar_select('id_rol', 'rol', 'id_rol')
+		]);
+
+	}
 }
+
