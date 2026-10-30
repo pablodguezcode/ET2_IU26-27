@@ -4,6 +4,32 @@
 class entity_dom_fields extends dom_fields{
     constructor(){
         super();
+        // true en las entidades que no tienen ADD (funcionalidad_accion): su icono ADD de index.html debe quedar oculto
+        this.sin_boton_add = false;
+    }
+
+    /**
+     * Refactorizacion de hide_element(): mantiene la definicion. Cuando se oculta el div del formulario (fin de un SEARCH, cancelar con BACK...)
+     * deja el icono ADD de index.html como corresponde a la entidad: oculto en las que no tienen ADD (sin_boton_add) y visible en las demas.
+     * Asi el icono ADD que oculta funcionalidad_accion se vuelve a mostrar al cambiar a otra entidad, sin tocar el codigo de cada entidad.
+     *
+     * @param {string} id id del elemento a ocultar
+     */
+    hide_element(id){
+        super.hide_element(id);
+        if (id == 'Div_IU_form'){
+            this.actualizar_boton_add();
+        }
+    }
+
+    /**
+     * Muestra u oculta el icono ADD de index.html segun sin_boton_add.
+     */
+    actualizar_boton_add(){
+        var boton = document.getElementById('botonADD');
+        if (boton != null){
+            boton.style.display = this.sin_boton_add ? 'none' : '';
+        }
     }
 
     /**
