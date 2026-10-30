@@ -6,6 +6,13 @@
 
 */ //-----------------//-----------------//-----------------//-----------------//
 
+/*
+    ACLARACIONES (entidad funcionalidad):
+    1. id_funcionalidad es autoincremental: no se pide en ADD ni se edita en EDIT. Sus tests y pruebas de ADD se mantienen (los exige la entrega),
+       pero no hay tests ni pruebas de EDIT para id_funcionalidad. En SEARCH si es criterio de busqueda y tiene sus tests.
+    2. El mensaje de cada test de error es el texto que la aplicacion muestra para su codigo de error (Textos_ES.js).
+*/
+
 var funcionalidad_def_tests = [
     
     //Acción: ADD
@@ -14,15 +21,15 @@ var funcionalidad_def_tests = [
 
     ["funcionalidad", "id_funcionalidad", "input", 1, "Comprobar el tamaño mínimo", "min_size",
         "ADD", "id_funcionalidad_min_size_ko",
-        "El tamaño del identificador es muy corto, escribe al menos un dígito"],
+        "El identificador de la funcionalidad es obligatorio: debe tener al menos 1 dígito"],
 
     ["funcionalidad", "id_funcionalidad", "input", 2, "Comprobar el tamaño máximo", "max_size",
         "ADD", "id_funcionalidad_max_size_ko",
-        "El tamaño del identificador es muy largo, solo está permitido introducir 11 dígitos"],
+        "El identificador de la funcionalidad supera los 11 dígitos numéricos permitidos"],
     
     ["funcionalidad", "id_funcionalidad", "input", 3, "Comprobar si cumple el formato", "format",
         "ADD", "id_funcionalidad_format_ko",
-        "El formato del identificador es inválido, solo puedes escribir dígitos"],
+        "El identificador de la funcionalidad solo puede estar formado por dígitos numéricos"],
     
     ["funcionalidad", "id_funcionalidad", "input", 4, "Estado de éxito", "valid",
         "ADD", true, "Caso de Éxito"],
@@ -30,15 +37,15 @@ var funcionalidad_def_tests = [
     //-----------------//-----------------/nombre_funcionalidad/-----------------//-----------------//
     ["funcionalidad", "nombre_funcionalidad", "input", 5, "Comprobar el tamaño mínimo", "min_size",
         "ADD", "nombre_funcionalidad_min_size_ko",
-        "El tamaño del nombre es muy corto, intenta añadirle al menos 5 caracteres"],
+        "El nombre de la funcionalidad es corto, introduzca por lo menos 5 caracteres"],
 
     ["funcionalidad", "nombre_funcionalidad", "input", 6, "Comprobar el tamaño máximo", "max_size",
         "ADD", "nombre_funcionalidad_max_size_ko", 
-        "El tamaño del nombre es muy largo, solo está permitido introducir 48 caracteres"],
+        "El nombre de la funcionalidad es demasiado largo, introduzca hasta 48 caracteres"],
 
     ["funcionalidad", "nombre_funcionalidad", "input", 7, "Comprobar si cumple el formato", "format",
         "ADD", "nombre_funcionalidad_format_ko", 
-        "El formato del nombre es inválido, solo puedes escribir caracteres alfabéticos"],
+        "El formato del nombre de la funcionalidad es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), sin espacios, números ni signos"],
     
     ["funcionalidad", "nombre_funcionalidad", "input", 8, "Estado de éxito", "valid",
         "ADD", true, "Caso de Éxito"],
@@ -47,15 +54,15 @@ var funcionalidad_def_tests = [
 
     ["funcionalidad", "descrip_funcionalidad", "textarea", 9, "Comprobar el tamaño mínimo", "min_size",
         "ADD", "descrip_funcionalidad_min_size_ko",
-        "El tamaño de la descripción es muy corto, intenta añadirle al menos 5 caracteres"],
+        "La descripción de la funcionalidad es corta, introduzca por lo menos 5 caracteres"],
 
     ["funcionalidad", "descrip_funcionalidad", "textarea", 10, "Comprobar el tamaño máximo", "max_size",
         "ADD", "descrip_funcionalidad_max_size_ko", 
-        "El tamaño de la descripción es muy largo, solo está permitido introducir 200 caracteres"],
+        "La descripción de la funcionalidad es demasiado larga, introduzca hasta 200 caracteres"],
 
     ["funcionalidad", "descrip_funcionalidad", "textarea", 11, "Comprobar si cumple el formato", "format",
         "ADD", "descrip_funcionalidad_format_ko", 
-        "El formato de la descripción es inválido, solo puedes escribir caracteres alfabéticos, espacios y signos de puntuación"],
+        "El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números"],
     
     ["funcionalidad", "descrip_funcionalidad", "textarea", 12, "Estado de éxito", "valid",
         "ADD", true, "Caso de Éxito"],
@@ -64,94 +71,79 @@ var funcionalidad_def_tests = [
 
     //-----------------//-----------------/id_funcionalidad/-----------------//-----------------//
 
-    ["funcionalidad", "id_funcionalidad", "input", 13, "Comprobar el tamaño mínimo", "min_size",
-        "EDIT", "id_funcionalidad_min_size_ko",
-        "El tamaño del identificador es muy corto, intenta añadirle al menos 1 caracter"],
-
-    ["funcionalidad", "id_funcionalidad", "input", 14, "Comprobar el tamaño máximo", "max_size",
-        "EDIT", "id_funcionalidad_max_size_ko",
-        "El tamaño del identificador es muy largo, solo está permitido introducir 11 dígitos"],
-    
-    ["funcionalidad", "id_funcionalidad", "input", 15, "Comprobar si cumple el formato", "format",
-        "EDIT", "id_funcionalidad_format_ko",
-        "El formato del identificador es inválido, solo puedes escribir dígitos"],
-    
-    ["funcionalidad", "id_funcionalidad", "input", 16, "Estado de éxito", "valid",
-        "EDIT", true, "Caso de Éxito"],
-
     //-----------------//-----------------/nombre_funcionalidad/-----------------//-----------------//
     
-    ["funcionalidad", "nombre_funcionalidad", "input", 17, "Comprobar el tamaño mínimo", "min_size",
+    ["funcionalidad", "nombre_funcionalidad", "input", 13, "Comprobar el tamaño mínimo", "min_size",
         "EDIT", "nombre_funcionalidad_min_size_ko",
-        "El tamaño del nombre es muy corto, intenta añadirle al menos 5 caracteres"],
+        "El nombre de la funcionalidad es corto, introduzca por lo menos 5 caracteres"],
 
-    ["funcionalidad", "nombre_funcionalidad", "input", 18, "Comprobar el tamaño máximo", "max_size",
+    ["funcionalidad", "nombre_funcionalidad", "input", 14, "Comprobar el tamaño máximo", "max_size",
         "EDIT", "nombre_funcionalidad_max_size_ko", 
-        "El tamaño del nombre es muy largo, solo está permitido introducir 48 caracteres"],
+        "El nombre de la funcionalidad es demasiado largo, introduzca hasta 48 caracteres"],
 
-    ["funcionalidad", "nombre_funcionalidad", "input", 19, "Comprobar si cumple el formato", "format",
+    ["funcionalidad", "nombre_funcionalidad", "input", 15, "Comprobar si cumple el formato", "format",
         "EDIT", "nombre_funcionalidad_format_ko", 
-        "El formato del nombre es inválido, solo puedes escribir caracteres alfabéticos"],
+        "El formato del nombre de la funcionalidad es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), sin espacios, números ni signos"],
     
-    ["funcionalidad", "nombre_funcionalidad", "input", 20, "Estado de éxito", "valid",
+    ["funcionalidad", "nombre_funcionalidad", "input", 16, "Estado de éxito", "valid",
         "EDIT", true, "Caso de Éxito"],
     
     //-----------------//-----------------/descrip_funcionalidad/-----------------//-----------------//
 
-    ["funcionalidad", "descrip_funcionalidad", "textarea", 21, "Comprobar el tamaño mínimo", "min_size",
+    ["funcionalidad", "descrip_funcionalidad", "textarea", 17, "Comprobar el tamaño mínimo", "min_size",
         "EDIT", "descrip_funcionalidad_min_size_ko",
-        "El tamaño de la descripción es muy corto, intenta añadirle al menos 5 caracteres"],
+        "La descripción de la funcionalidad es corta, introduzca por lo menos 5 caracteres"],
 
-    ["funcionalidad", "descrip_funcionalidad", "textarea", 22, "Comprobar el tamaño máximo", "max_size",
+    ["funcionalidad", "descrip_funcionalidad", "textarea", 18, "Comprobar el tamaño máximo", "max_size",
         "EDIT", "descrip_funcionalidad_max_size_ko", 
-        "El tamaño de la descripción es muy largo, solo está permitido introducir 200 caracteres"],
+        "La descripción de la funcionalidad es demasiado larga, introduzca hasta 200 caracteres"],
 
-    ["funcionalidad", "descrip_funcionalidad", "textarea", 23, "Comprobar si cumple el formato", "format",
+    ["funcionalidad", "descrip_funcionalidad", "textarea", 19, "Comprobar si cumple el formato", "format",
         "EDIT", "descrip_funcionalidad_format_ko", 
-        "El formato de la descripción es inválido, solo puedes escribir caracteres alfabéticos, espacios y signos de puntuación"],
+        "El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números"],
     
-    ["funcionalidad", "descrip_funcionalidad", "textarea", 24, "Estado de éxito", "valid",
+    ["funcionalidad", "descrip_funcionalidad", "textarea", 20, "Estado de éxito", "valid",
         "EDIT", true, "Caso de Éxito"],
 
     //Acción: SEARCH
 
     //-----------------//-----------------/id_funcionalidad/-----------------//-----------------//
 
-    ["funcionalidad", "id_funcionalidad", "input", 25, "Comprobar el tamaño máximo", "max_size",
+    ["funcionalidad", "id_funcionalidad", "input", 21, "Comprobar el tamaño máximo", "max_size",
         "SEARCH", "id_funcionalidad_max_size_ko",
-        "El tamaño del identificador es muy largo, solo está permitido introducir 11 dígitos"],
+        "El identificador de la funcionalidad supera los 11 dígitos numéricos permitidos"],
     
-    ["funcionalidad", "id_funcionalidad", "input", 26, "Comprobar si cumple el formato", "format",
+    ["funcionalidad", "id_funcionalidad", "input", 22, "Comprobar si cumple el formato", "format",
         "SEARCH", "id_funcionalidad_format_ko",
-        "El formato del identificador es inválido, solo puedes escribir dígitos"],
+        "El identificador de la funcionalidad solo puede estar formado por dígitos numéricos"],
     
-    ["funcionalidad", "id_funcionalidad", "input", 27, "Estado de éxito", "valid",
+    ["funcionalidad", "id_funcionalidad", "input", 23, "Estado de éxito", "valid",
         "SEARCH", true, "Caso de Éxito"],
 
     //-----------------//-----------------/nombre_funcionalidad/-----------------//-----------------//
 
-    ["funcionalidad", "nombre_funcionalidad", "input", 28, "Comprobar el tamaño máximo", "max_size",
+    ["funcionalidad", "nombre_funcionalidad", "input", 24, "Comprobar el tamaño máximo", "max_size",
         "SEARCH", "nombre_funcionalidad_max_size_ko", 
-        "El tamaño del nombre es muy largo, solo está permitido introducir 48 caracteres"],
+        "El nombre de la funcionalidad es demasiado largo, introduzca hasta 48 caracteres"],
 
-    ["funcionalidad", "nombre_funcionalidad", "input", 29, "Comprobar si cumple el formato", "format",
+    ["funcionalidad", "nombre_funcionalidad", "input", 25, "Comprobar si cumple el formato", "format",
         "SEARCH", "nombre_funcionalidad_format_ko", 
-        "El formato del nombre es inválido, solo puedes escribir caracteres alfabéticos"],
+        "El formato del nombre de la funcionalidad es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), sin espacios, números ni signos"],
     
-    ["funcionalidad", "nombre_funcionalidad", "input", 30, "Estado de éxito", "valid",
+    ["funcionalidad", "nombre_funcionalidad", "input", 26, "Estado de éxito", "valid",
         "SEARCH", true, "Caso de Éxito"],
 
     //-----------------//-----------------/descrip_funcionalidad/-----------------//-----------------//
 
-    ["funcionalidad", "descrip_funcionalidad", "textarea", 31, "Comprobar el tamaño máximo", "max_size",
+    ["funcionalidad", "descrip_funcionalidad", "textarea", 27, "Comprobar el tamaño máximo", "max_size",
         "SEARCH", "descrip_funcionalidad_max_size_ko", 
-        "El tamaño de la descripción es muy largo, solo está permitido introducir 200 caracteres"],
+        "La descripción de la funcionalidad es demasiado larga, introduzca hasta 200 caracteres"],
 
-    ["funcionalidad", "descrip_funcionalidad", "textarea", 32, "Comprobar si cumple el formato", "format",
+    ["funcionalidad", "descrip_funcionalidad", "textarea", 28, "Comprobar si cumple el formato", "format",
         "SEARCH", "descrip_funcionalidad_format_ko", 
-        "El formato de la descripción es inválido, solo puedes escribir caracteres alfabéticos, espacios y signos de puntuación"],
+        "El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números"],
     
-    ["funcionalidad", "descrip_funcionalidad", "textarea", 33, "Estado de éxito", "valid",
+    ["funcionalidad", "descrip_funcionalidad", "textarea", 29, "Estado de éxito", "valid",
         "SEARCH", true, "Caso de Éxito"]
 ];
 
@@ -239,133 +231,109 @@ var funcionalidad_pruebas = [
 
     //-----------------//-----------------/id_funcionalidad/-----------------//-----------------//
     
-    ["funcionalidad", "id_funcionalidad", 13, 22, "EDIT", {"id_funcionalidad" : ""},
-        "id_funcionalidad_min_size_ko"],
-
-    ["funcionalidad", "id_funcionalidad", 14, 23, "EDIT", {"id_funcionalidad" : "111111111111"},
-        "id_funcionalidad_max_size_ko"],
-
-    ["funcionalidad", "id_funcionalidad", 15, 24, "EDIT", {"id_funcionalidad" : "id"},
-        "id_funcionalidad_format_ko"],
-
-    ["funcionalidad", "id_funcionalidad", 15, 25, "EDIT", {"id_funcionalidad" : "1.5"},
-        "id_funcionalidad_format_ko"],
-
-    ["funcionalidad", "id_funcionalidad", 15, 26, "EDIT", {"id_funcionalidad" : "-83"},
-        "id_funcionalidad_format_ko"],
-
-    ["funcionalidad", "id_funcionalidad", 15, 27, "EDIT", {"id_funcionalidad" : "46*"},
-        "id_funcionalidad_format_ko"],
-
-    ["funcionalidad", "id_funcionalidad", 15, 28, "EDIT", {"id_funcionalidad" : "uno"},
-        "id_funcionalidad_format_ko"],
-
-    ["funcionalidad", "id_funcionalidad", 16, 29, "EDIT", {"id_funcionalidad" : "1234"},
-        true],
-
     //-----------------//-----------------/nombre_funcionalidad/-----------------//-----------------//  
     
-    ["funcionalidad", "nombre_funcionalidad", 17, 30, "EDIT", {"nombre_funcionalidad" : "fun"},
+    ["funcionalidad", "nombre_funcionalidad", 13, 22, "EDIT", {"nombre_funcionalidad" : "fun"},
         "nombre_funcionalidad_min_size_ko"],
     
-    ["funcionalidad", "nombre_funcionalidad", 18, 31, "EDIT", {"nombre_funcionalidad" : "a".repeat(49)},
+    ["funcionalidad", "nombre_funcionalidad", 14, 23, "EDIT", {"nombre_funcionalidad" : "a".repeat(49)},
         "nombre_funcionalidad_max_size_ko"],
 
-    ["funcionalidad", "nombre_funcionalidad", 19, 32, "EDIT", {"nombre_funcionalidad" : "function1"},
+    ["funcionalidad", "nombre_funcionalidad", 15, 24, "EDIT", {"nombre_funcionalidad" : "function1"},
         "nombre_funcionalidad_format_ko"],
 
-    ["funcionalidad", "nombre_funcionalidad", 19, 33, "EDIT", {"nombre_funcionalidad" : "function*"},
+    ["funcionalidad", "nombre_funcionalidad", 15, 25, "EDIT", {"nombre_funcionalidad" : "function*"},
         "nombre_funcionalidad_format_ko"],
     
-    ["funcionalidad", "nombre_funcionalidad", 19, 34, "EDIT", {"nombre_funcionalidad" : "function_"},
+    ["funcionalidad", "nombre_funcionalidad", 15, 26, "EDIT", {"nombre_funcionalidad" : "function_"},
         "nombre_funcionalidad_format_ko"],
     
-    ["funcionalidad", "nombre_funcionalidad", 19, 35, "EDIT", {"nombre_funcionalidad" : "function name"},
+    ["funcionalidad", "nombre_funcionalidad", 15, 27, "EDIT", {"nombre_funcionalidad" : "function name"},
         "nombre_funcionalidad_format_ko"],
     
-    ["funcionalidad", "nombre_funcionalidad", 20, 36, "EDIT", {"nombre_funcionalidad" : "function"},
+    ["funcionalidad", "nombre_funcionalidad", 16, 28, "EDIT", {"nombre_funcionalidad" : "function"},
         true],
 
     //-----------------//-----------------/descrip_funcionalidad/-----------------//-----------------//
 
-    ["funcionalidad", "descrip_funcionalidad", 21, 37, "EDIT", {"descrip_funcionalidad": "cut"},
+    ["funcionalidad", "descrip_funcionalidad", 17, 29, "EDIT", {"descrip_funcionalidad": "cut"},
         "descrip_funcionalidad_min_size_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 22, 38, "EDIT", {"descrip_funcionalidad": "a".repeat(201)},
+    ["funcionalidad", "descrip_funcionalidad", 18, 30, "EDIT", {"descrip_funcionalidad": "a".repeat(201)},
         "descrip_funcionalidad_max_size_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 23, 39, "EDIT", {"descrip_funcionalidad": "descripcion*"},
+    ["funcionalidad", "descrip_funcionalidad", 19, 31, "EDIT", {"descrip_funcionalidad": "descripcion*"},
         "descrip_funcionalidad_format_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 23, 40, "EDIT", {"descrip_funcionalidad": "decripcion_"},
+    ["funcionalidad", "descrip_funcionalidad", 19, 32, "EDIT", {"descrip_funcionalidad": "decripcion_"},
         "descrip_funcionalidad_format_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 23, 41, "EDIT", {"descrip_funcionalidad": "descripcion&"},
+    ["funcionalidad", "descrip_funcionalidad", 19, 33, "EDIT", {"descrip_funcionalidad": "descripcion&"},
         "descrip_funcionalidad_format_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 24, 42, "EDIT", {"descrip_funcionalidad": "descripcion"},
+    ["funcionalidad", "descrip_funcionalidad", 20, 34, "EDIT", {"descrip_funcionalidad": "descripcion"},
         true],
 
     //Acción: SEARCH
 
     //-----------------//-----------------/id_funcionalidad/-----------------//-----------------//
 
-    ["funcionalidad", "id_funcionalidad", 25, 43, "SEARCH", {"id_funcionalidad" : "111111111111"},
+    ["funcionalidad", "id_funcionalidad", 21, 35, "SEARCH", {"id_funcionalidad" : "111111111111"},
         "id_funcionalidad_max_size_ko"],
 
-    ["funcionalidad", "id_funcionalidad", 26, 44, "SEARCH", {"id_funcionalidad" : "id"},
+    ["funcionalidad", "id_funcionalidad", 22, 36, "SEARCH", {"id_funcionalidad" : "id"},
         "id_funcionalidad_format_ko"],
 
-    ["funcionalidad", "id_funcionalidad", 26, 45, "SEARCH", {"id_funcionalidad" : "1.5"},
+    ["funcionalidad", "id_funcionalidad", 22, 37, "SEARCH", {"id_funcionalidad" : "1.5"},
         "id_funcionalidad_format_ko"],
 
-    ["funcionalidad", "id_funcionalidad", 26, 46, "SEARCH", {"id_funcionalidad" : "-83"},
+    ["funcionalidad", "id_funcionalidad", 22, 38, "SEARCH", {"id_funcionalidad" : "-83"},
         "id_funcionalidad_format_ko"],
 
-    ["funcionalidad", "id_funcionalidad", 26, 47, "SEARCH", {"id_funcionalidad" : "46*"},
+    ["funcionalidad", "id_funcionalidad", 22, 39, "SEARCH", {"id_funcionalidad" : "46*"},
         "id_funcionalidad_format_ko"],
 
-    ["funcionalidad", "id_funcionalidad", 26, 48, "SEARCH", {"id_funcionalidad" : "uno"},
+    ["funcionalidad", "id_funcionalidad", 22, 40, "SEARCH", {"id_funcionalidad" : "uno"},
         "id_funcionalidad_format_ko"],
 
-    ["funcionalidad", "id_funcionalidad", 27, 49, "SEARCH", {"id_funcionalidad" : "1234"},
+    ["funcionalidad", "id_funcionalidad", 23, 41, "SEARCH", {"id_funcionalidad" : "1234"},
         true],
 
     //-----------------//-----------------/nombre_funcionalidad/-----------------//-----------------//  
     
-    ["funcionalidad", "nombre_funcionalidad", 28, 50, "SEARCH", {"nombre_funcionalidad" : "a".repeat(49)},
+    ["funcionalidad", "nombre_funcionalidad", 24, 42, "SEARCH", {"nombre_funcionalidad" : "a".repeat(49)},
         "nombre_funcionalidad_max_size_ko"],
 
-    ["funcionalidad", "nombre_funcionalidad", 29, 51, "SEARCH", {"nombre_funcionalidad" : "function1"},
+    ["funcionalidad", "nombre_funcionalidad", 25, 43, "SEARCH", {"nombre_funcionalidad" : "function1"},
         "nombre_funcionalidad_format_ko"],
 
-    ["funcionalidad", "nombre_funcionalidad", 29, 52, "SEARCH", {"nombre_funcionalidad" : "function*"},
+    ["funcionalidad", "nombre_funcionalidad", 25, 44, "SEARCH", {"nombre_funcionalidad" : "function*"},
         "nombre_funcionalidad_format_ko"],
     
-    ["funcionalidad", "nombre_funcionalidad", 29, 53, "SEARCH", {"nombre_funcionalidad" : "function_"},
+    ["funcionalidad", "nombre_funcionalidad", 25, 45, "SEARCH", {"nombre_funcionalidad" : "function_"},
         "nombre_funcionalidad_format_ko"],
     
-    ["funcionalidad", "nombre_funcionalidad", 29, 54, "SEARCH", {"nombre_funcionalidad" : "function name"},
+    ["funcionalidad", "nombre_funcionalidad", 25, 46, "SEARCH", {"nombre_funcionalidad" : "function name"},
         "nombre_funcionalidad_format_ko"],
     
-    ["funcionalidad", "nombre_funcionalidad", 30, 55, "SEARCH", {"nombre_funcionalidad" : "function"},
+    ["funcionalidad", "nombre_funcionalidad", 26, 47, "SEARCH", {"nombre_funcionalidad" : "function"},
         true],
 
     //-----------------//-----------------/descrip_funcionalidad/-----------------//-----------------//
 
-    ["funcionalidad", "descrip_funcionalidad", 31, 56, "SEARCH", {"descrip_funcionalidad": "a".repeat(201)},
+    ["funcionalidad", "descrip_funcionalidad", 27, 48, "SEARCH", {"descrip_funcionalidad": "a".repeat(201)},
         "descrip_funcionalidad_max_size_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 32, 57, "SEARCH", {"descrip_funcionalidad": "descripcion*"},
+    ["funcionalidad", "descrip_funcionalidad", 28, 49, "SEARCH", {"descrip_funcionalidad": "descripcion*"},
         "descrip_funcionalidad_format_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 32, 58, "SEARCH", {"descrip_funcionalidad": "decripcion_"},
+    ["funcionalidad", "descrip_funcionalidad", 28, 50, "SEARCH", {"descrip_funcionalidad": "decripcion_"},
         "descrip_funcionalidad_format_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 32, 59, "SEARCH", {"descrip_funcionalidad": "descripcion&"},
+    ["funcionalidad", "descrip_funcionalidad", 28, 51, "SEARCH", {"descrip_funcionalidad": "descripcion&"},
         "descrip_funcionalidad_format_ko"],
 
-    ["funcionalidad", "descrip_funcionalidad", 33, 60, "SEARCH", {"descrip_funcionalidad": "descripcion"},
+    ["funcionalidad", "descrip_funcionalidad", 29, 52, "SEARCH", {"descrip_funcionalidad": "descripcion"},
         true]
 
 ];

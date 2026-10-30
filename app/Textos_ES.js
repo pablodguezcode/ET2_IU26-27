@@ -162,6 +162,11 @@ var textos_ES = {
 	'text_contenido_titulo_form_rol_SEARCH': 'Formulario Búsqueda Rol',
 	'text_contenido_titulo_form_rol_SHOWCURRENT': 'Detalle de Rol',
 	'text_contenido_titulo_form_rol_DELETE': 'Formulario Baja Rol',
+	'text_contenido_titulo_form_funcionalidad_ADD': 'Formulario Alta Funcionalidad',
+	'text_contenido_titulo_form_funcionalidad_EDIT': 'Formulario Modificación Funcionalidad',
+	'text_contenido_titulo_form_funcionalidad_SEARCH': 'Formulario Búsqueda Funcionalidad',
+	'text_contenido_titulo_form_funcionalidad_SHOWCURRENT': 'Detalle de Funcionalidad',
+	'text_contenido_titulo_form_funcionalidad_DELETE': 'Formulario Baja Funcionalidad',
 
 	// --- Atributos (cabeceras de tabla)
 	'rol_name': 'Nombre del rol',

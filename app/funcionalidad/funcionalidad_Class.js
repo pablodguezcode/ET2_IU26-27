@@ -145,7 +145,7 @@ class funcionalidad extends AbstractEntidad{
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
 		var set_result = {};
 
-		set_result.id_funcionalidad = this.ADD_id_funcionalidad_validation();
+		// id_funcionalidad (autoincremental) no se pide en el formulario: no se valida en el submit
 		set_result.nombre_funcionalidad = this.ADD_nombre_funcionalidad_validation();
 		set_result.descrip_funcionalidad = this.ADD_descrip_funcionalidad_validation();
 
@@ -160,6 +160,9 @@ class funcionalidad extends AbstractEntidad{
 												Campos de validacion para EDIT
 	****************************************************************************************************************************/
 
+	//id_funcionalidad no se edita (es autoincremental): no hay tests de EDIT para este campo y EDIT_submit_funcionalidad() no lo valida.
+	//EDIT_id_funcionalidad_validation() se conserva solo por coherencia con colocarvalidaciones('form_iu','EDIT'), que asigna una
+	//validacion a cada campo del formulario, aunque el campo va oculto y nunca llega a validarse.
 	EDIT_id_funcionalidad_validation(){
 
 		return this.ADD_id_funcionalidad_validation();
@@ -188,7 +191,7 @@ class funcionalidad extends AbstractEntidad{
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
 		var set_result = {};
 
-		set_result.id_funcionalidad = this.EDIT_id_funcionalidad_validation();
+		// id_funcionalidad (autoincremental) va oculto y no se edita: no se valida en el submit
 		set_result.nombre_funcionalidad = this.EDIT_nombre_funcionalidad_validation();
 		set_result.descrip_funcionalidad = this.EDIT_descrip_funcionalidad_validation();
 
@@ -305,6 +308,9 @@ class funcionalidad extends AbstractEntidad{
 		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.ADD_submit_'+this.nombreentidad+'())');
 		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.ADD();');
 
+		// el id es autoincremental: no se muestra ni se envia, lo genera el back
+		this.ocultar_id_funcionalidad(true);
+
 		// poner las validaciones
 		this.dom.colocarvalidaciones('form_iu', 'ADD');
 
@@ -317,9 +323,9 @@ class funcionalidad extends AbstractEntidad{
 	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
 
 	/**
-	 * id_funcionalidad es autoincremental: el usuario no lo introduce ni lo conoce, asi que no se muestra en ADD, EDIT ni SEARCH
-	 * (se oculta el bloque completo: label, campo y mensaje de error).
-	 * - deshabilitar = true (ADD y SEARCH): el campo no se envia al back (en ADD lo genera el back; en SEARCH no se filtra por el).
+	 * id_funcionalidad es autoincremental: el usuario no lo introduce ni lo modifica, asi que no se muestra en ADD, EDIT ni DELETE
+	 * (se oculta el bloque completo: label, campo y mensaje de error). En SEARCH si se muestra, como criterio de busqueda.
+	 * - deshabilitar = true (ADD): el campo no se envia al back (lo genera el back).
 	 * - deshabilitar = false (EDIT): el campo oculto se queda habilitado y relleno con el id de la fila, porque es lo que usa
 	 *   el back para identificar la tupla que se modifica.
 	 *
@@ -383,7 +389,7 @@ class funcionalidad extends AbstractEntidad{
 	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
 	 * - La busqueda es parcial: todos los campos son opcionales, vacio significa "sin filtro" y basta con escribir un trozo
 	 *   del valor (ver SEARCH_<campo>_validation: sin minimo, solo maximo y formato).
-	 * - id_funcionalidad es autoincremental y el usuario no lo conoce: no se muestra ni se envia como criterio de busqueda.
+	 * - id_funcionalidad (numerico) tambien es criterio de busqueda: se muestra, se valida y se envia al back como el resto de campos.
 	 * - Si el back responde, AbstractEntidad.SEARCH() oculta el formulario y muestra en la tabla las tuplas que coinciden.
 	 */
 	createForm_SEARCH(){
@@ -399,10 +405,7 @@ class funcionalidad extends AbstractEntidad{
 		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
 		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.SEARCH();');
 
-		// el id no es criterio de busqueda
-		this.ocultar_id_funcionalidad(true);
-
-		// poner las validaciones
+		// poner las validaciones (id_funcionalidad visible y habilitado: es criterio de busqueda)
 		this.dom.colocarvalidaciones('form_iu','SEARCH');
 
 		// colocar boton de submit
@@ -493,8 +496,8 @@ class funcionalidad extends AbstractEntidad{
 		const valor = (dato) => (dato === undefined || dato === null) ? '' : dato;
 		this.dom.rellenarvaloresform({
 			id_funcionalidad: valor(fila['id_funcionalidad']),
-			funcionalidad_name: valor(fila['funcionalidad_name']),
-			funcionalidad_description: valor(fila['funcionalidad_description'])
+			nombre_funcionalidad: valor(fila['nombre_funcionalidad']),
+			descrip_funcionalidad: valor(fila['descrip_funcionalidad'])
 		});
 
 		// todos los campos en solo lectura
