@@ -64,8 +64,8 @@ var textos_EN = {
 	// --- Validation errors - DNI
 	'dni_min_size_ko': 'The ID number is too short: it must have 9 characters',
 	'dni_max_size_ko': 'The ID number is too long: it must have 9 characters',
-	'dni_format_ko': 'The ID number format is not valid: it must be 8 digits followed by a letter (uppercase or lowercase). In searches a partial ID number is accepted',
-	'dni_personalized_ko': 'The ID number is not valid: the control letter is not correct or the ID number is already in use',
+	'dni_format_ko': 'The ID number format is not valid: it must be 8 digits and an uppercase letter (in searches: only digits and at most one letter, at the end)',
+	'dni_personalized_ko': 'The ID number is not valid: the control letter is not correct',
 	'dni_es_nulo_ko': 'DNI can not be empty',
 	'dni_EXISTE_en_persona_KO': 'A person with that ID number already exists',
 
@@ -80,9 +80,9 @@ var textos_EN = {
 	'apellidos_persona_format_ko': 'The last name contains invalid characters: only letters (including ñ and accents), periods, hyphens and spaces are allowed',
 
 	// --- Validation errors - Date of birth
-	'fechaNacimiento_persona_min_size_ko': 'The date of birth is too short: it must have 8 characters (dd/mm/yyyy) or (d/m/yyyy)',
-	'fechaNacimiento_persona_max_size_ko': 'The date of birth is too long: it cannot exceed 10 characters (dd/mm/yyyy)',
-	'fechaNacimiento_persona_format_ko': 'The date of birth format is not valid: it must be dd/mm/yyyy (in the search only digits and / are allowed)',
+	'fechaNacimiento_persona_min_size_ko': 'The date of birth is too short: it must have at least 8 characters (d/m/yyyy or d-m-yyyy)',
+	'fechaNacimiento_persona_max_size_ko': 'The date of birth is too long: it cannot exceed 10 characters (dd/mm/yyyy or dd-mm-yyyy)',
+	'fechaNacimiento_persona_format_ko': 'The date of birth format is not valid: it must be dd/mm/yyyy or dd-mm-yyyy (in ADD and EDIT also yyyy/mm/dd or mm/dd/yyyy with a day greater than 12, which are reordered; in the search only digits, / and -)',
 	'fechaNacimiento_persona_personalized_ko': 'The date of birth is not valid: it must exist in the calendar and cannot be later than today',
 
 	// --- Validation errors - Address
@@ -99,7 +99,7 @@ var textos_EN = {
 	// --- Validation errors - Email
 	'email_persona_min_size_ko': 'The email is too short: it must have at least 6 characters',
 	'email_persona_max_size_ko': 'The email is too long: it cannot exceed 45 characters',
-	'email_persona_format_ko': 'The email format is not valid: it must be of the form user@domain.ext (in the search a fragment is accepted, with letters, numbers, @, periods and hyphens)',
+	'email_persona_format_ko': 'The email format is not valid: it must be of the form user@domain.ext (in the search a fragment is accepted, with letters, numbers, @, periods, hyphens and underscores)',
 
 	// --- Validation errors - Photo (metadata)
 	'foto_persona_min_size_ko': 'The file name is too short: it must have at least 5 characters including the extension',

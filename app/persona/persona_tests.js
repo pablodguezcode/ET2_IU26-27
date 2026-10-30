@@ -18,406 +18,342 @@ var persona_def_tests = [
 
         //Acción: ADD
 
-            ["persona", "dni", "input", 1, "Validar tamaño mínimo (9 caracteres) del dni en ADD", "min_size", "ADD",
+            ["persona", "dni", "select", 1, "Validar tamaño mínimo (9 caracteres) del dni en ADD", "min_size", "ADD",
         "dni_min_size_ko", "El DNI es demasiado corto: debe tener 9 caracteres"],
 
-            ["persona", "dni", "input", 2, "Validar tamaño máximo (9 caracteres) del dni en ADD", "max_size", "ADD",
+            ["persona", "dni", "select", 2, "Validar tamaño máximo (9 caracteres) del dni en ADD", "max_size", "ADD",
         "dni_max_size_ko", "El DNI es demasiado largo: debe tener 9 caracteres"],
 
-            ["persona", "dni", "input", 3, "Validar formato (8 dígitos y una letra) del dni en ADD", "format", "ADD",
-        "dni_format_ko", "El formato del DNI no es válido: deben ser 8 dígitos seguidos de una letra (mayúscula o minúscula). En la búsqueda se admite un DNI parcial"],
+            ["persona", "dni", "select", 3, "Validar formato (8 dígitos y una letra) del dni en ADD", "format", "ADD",
+        "dni_format_ko", "El formato del DNI no es válido: deben ser 8 dígitos y una letra mayúscula (en la búsqueda: solo dígitos y como mucho una letra, al final)"],
 
-            ["persona", "dni", "input", 4, "Validar que la letra del dni es correcta en ADD ", "personalized", "ADD",
-        "dni_personalized_ko", "El DNI no es válido: la letra de control no es correcta o el DNI ya está en uso"],
+            ["persona", "dni", "select", 4, "Validar que la letra del dni es correcta en ADD ", "personalized", "ADD",
+        "dni_personalized_ko", "El DNI no es válido: la letra de control no es correcta"],
 
-            ["persona", "dni", "input", 5, "Validar dni correcto en ADD", "valid", "ADD",
-        true, "DNI correcto"],
-
-        //Acción: EDIT
-
-            ["persona", "dni", "input", 6, "Validar tamaño mínimo (9 caracteres) del dni en EDIT", "min_size", "EDIT",
-        "dni_min_size_ko", "El DNI es demasiado corto: debe tener 9 caracteres"],
-
-            ["persona", "dni", "input", 7, "Validar tamaño máximo (9 caracteres) del dni en EDIT", "max_size", "EDIT",
-        "dni_max_size_ko", "El DNI es demasiado largo: debe tener 9 caracteres"],
-
-            ["persona", "dni", "input", 8, "Validar formato (8 dígitos y una letra) del dni en EDIT", "format", "EDIT",
-        "dni_format_ko", "El formato del DNI no es válido: deben ser 8 dígitos seguidos de una letra (mayúscula o minúscula). En la búsqueda se admite un DNI parcial"],
-
-            ["persona", "dni", "input", 9, "Validar que la letra del dni es correcta en EDIT ", "personalized", "EDIT",
-        "dni_personalized_ko", "El DNI no es válido: la letra de control no es correcta o el DNI ya está en uso"],
-
-            ["persona", "dni", "input", 10, "Validar dni correcto en EDIT", "valid", "EDIT",
+            ["persona", "dni", "select", 5, "Validar dni correcto en ADD", "valid", "ADD",
         true, "DNI correcto"],
 
         //Acción: SEARCH
             
-            ["persona", "dni", "input", 11, "Validar tamaño máximo (9 caracteres) del dni en SEARCH", "max_size", "SEARCH",
+            ["persona", "dni", "input", 6, "Validar tamaño máximo (9 caracteres) del dni en SEARCH", "max_size", "SEARCH",
         "dni_max_size_ko", "El DNI es demasiado largo: debe tener 9 caracteres"],
 
-            ["persona", "dni", "input", 12, "Validar formato (solo dígitos y letras) del dni en SEARCH", "format", "SEARCH",
-        "dni_format_ko", "El formato del DNI no es válido: deben ser 8 dígitos seguidos de una letra (mayúscula o minúscula). En la búsqueda se admite un DNI parcial"],
+            ["persona", "dni", "input", 7, "Validar formato (solo dígitos y como mucho una letra, al final) del dni en SEARCH; una letra antes de los números se pasa al final", "format", "SEARCH",
+        "dni_format_ko", "El formato del DNI no es válido: deben ser 8 dígitos y una letra mayúscula (en la búsqueda: solo dígitos y como mucho una letra, al final)"],
 
-            ["persona", "dni", "input", 13, "Validar dni correcto en SEARCH", "valid", "SEARCH",
+            ["persona", "dni", "input", 8, "Validar dni correcto en SEARCH (parcial, o con la letra antes de los números, que se corrige)", "valid", "SEARCH",
         true, "DNI correcto"],
 
     //Campo: nombre_persona
 
         //Acción: ADD
 
-            ["persona", "nombre_persona", "input", 14, "Validar tamaño mínimo (2 caracteres) del nombre en ADD", "min_size", "ADD",
+            ["persona", "nombre_persona", "input", 9, "Validar tamaño mínimo (2 caracteres) del nombre en ADD", "min_size", "ADD",
         "nombre_persona_min_size_ko", "El nombre es demasiado corto: debe tener al menos 2 caracteres"],
 
-            ["persona", "nombre_persona", "input", 15, "Validar tamaño máximo (45 caracteres) del nombre en ADD", "max_size", "ADD",
+            ["persona", "nombre_persona", "input", 10, "Validar tamaño máximo (45 caracteres) del nombre en ADD", "max_size", "ADD",
         "nombre_persona_max_size_ko", "El nombre es demasiado largo: no puede superar los 45 caracteres"],
 
-            ["persona", "nombre_persona", "input", 16, "Validar formato del nombre en ADD", "format", "ADD",
+            ["persona", "nombre_persona", "input", 11, "Validar formato del nombre en ADD", "format", "ADD",
         "nombre_persona_format_ko", "El nombre contiene caracteres no válidos: solo se permiten letras (incluida ñ y acentos), puntos, guiones y espacios"],
 
-            ["persona", "nombre_persona", "input", 17, "Validar nombre correcto en ADD", "valid", "ADD",
+            ["persona", "nombre_persona", "input", 12, "Validar nombre correcto en ADD", "valid", "ADD",
         true, "Nombre correcto"],
 
         //Acción: EDIT
 
-            ["persona", "nombre_persona", "input", 18, "Validar tamaño mínimo (2 caracteres) del nombre en EDIT", "min_size", "EDIT",
+            ["persona", "nombre_persona", "input", 13, "Validar tamaño mínimo (2 caracteres) del nombre en EDIT", "min_size", "EDIT",
         "nombre_persona_min_size_ko", "El nombre es demasiado corto: debe tener al menos 2 caracteres"],
 
-            ["persona", "nombre_persona", "input", 19, "Validar tamaño máximo (45 caracteres) del nombre en EDIT", "max_size", "EDIT",
+            ["persona", "nombre_persona", "input", 14, "Validar tamaño máximo (45 caracteres) del nombre en EDIT", "max_size", "EDIT",
         "nombre_persona_max_size_ko", "El nombre es demasiado largo: no puede superar los 45 caracteres"],
 
-            ["persona", "nombre_persona", "input", 20, "Validar formato del nombre en EDIT", "format", "EDIT",
+            ["persona", "nombre_persona", "input", 15, "Validar formato del nombre en EDIT", "format", "EDIT",
         "nombre_persona_format_ko", "El nombre contiene caracteres no válidos: solo se permiten letras (incluida ñ y acentos), puntos, guiones y espacios"],
 
-            ["persona", "nombre_persona", "input", 21, "Validar nombre correcto en EDIT", "valid", "EDIT",
+            ["persona", "nombre_persona", "input", 16, "Validar nombre correcto en EDIT", "valid", "EDIT",
         true, "Nombre correcto"],
             
         //Acción: SEARCH
 
-            ["persona", "nombre_persona", "input", 22, "Validar tamaño máximo (45 caracteres) del nombre en SEARCH", "max_size", "SEARCH",
+            ["persona", "nombre_persona", "input", 17, "Validar tamaño máximo (45 caracteres) del nombre en SEARCH", "max_size", "SEARCH",
         "nombre_persona_max_size_ko", "El nombre es demasiado largo: no puede superar los 45 caracteres"],
 
-            ["persona", "nombre_persona", "input", 23, "Validar formato del nombre en SEARCH", "format", "SEARCH",
+            ["persona", "nombre_persona", "input", 18, "Validar formato del nombre en SEARCH", "format", "SEARCH",
         "nombre_persona_format_ko", "El nombre contiene caracteres no válidos: solo se permiten letras (incluida ñ y acentos), puntos, guiones y espacios"],
 
-            ["persona", "nombre_persona", "input", 24, "Validar nombre correcto en SEARCH", "valid", "SEARCH",
+            ["persona", "nombre_persona", "input", 19, "Validar nombre correcto en SEARCH", "valid", "SEARCH",
         true, "Nombre correcto"],
 
     //Campo: apellidos_persona
 
         //Acción: ADD
 
-            ["persona", "apellidos_persona", "input", 25, "Validar tamaño mínimo (3 caracteres) de los apellidos en ADD", "min_size", "ADD",
+            ["persona", "apellidos_persona", "input", 20, "Validar tamaño mínimo (3 caracteres) de los apellidos en ADD", "min_size", "ADD",
         "apellidos_persona_min_size_ko", "Los apellidos son demasiado cortos: deben tener al menos 3 caracteres"],
 
-            ["persona", "apellidos_persona", "input", 26, "Validar tamaño máximo (100 caracteres) de los apellidos en ADD", "max_size", "ADD",
+            ["persona", "apellidos_persona", "input", 21, "Validar tamaño máximo (100 caracteres) de los apellidos en ADD", "max_size", "ADD",
         "apellidos_persona_max_size_ko", "Los apellidos son demasiado largos: no pueden superar los 100 caracteres"],
 
-            ["persona", "apellidos_persona", "input", 27, "Validar formato de los apellidos en ADD", "format", "ADD",
+            ["persona", "apellidos_persona", "input", 22, "Validar formato de los apellidos en ADD", "format", "ADD",
         "apellidos_persona_format_ko", "Los apellidos contienen caracteres no válidos: solo se permiten letras (incluida ñ y acentos), puntos, guiones y espacios"],
 
-            ["persona", "apellidos_persona", "input", 28, "Validar apellidos correctos en ADD", "valid", "ADD",
+            ["persona", "apellidos_persona", "input", 23, "Validar apellidos correctos en ADD", "valid", "ADD",
         true, "Apellidos correctos"],
 
         //Acción: EDIT
 
-            ["persona", "apellidos_persona", "input", 29, "Validar tamaño mínimo (3 caracteres) de los apellidos en EDIT", "min_size", "EDIT",
+            ["persona", "apellidos_persona", "input", 24, "Validar tamaño mínimo (3 caracteres) de los apellidos en EDIT", "min_size", "EDIT",
         "apellidos_persona_min_size_ko", "Los apellidos son demasiado cortos: deben tener al menos 3 caracteres"],
 
-            ["persona", "apellidos_persona", "input", 30, "Validar tamaño máximo (100 caracteres) de los apellidos en EDIT", "max_size", "EDIT",
+            ["persona", "apellidos_persona", "input", 25, "Validar tamaño máximo (100 caracteres) de los apellidos en EDIT", "max_size", "EDIT",
         "apellidos_persona_max_size_ko", "Los apellidos son demasiado largos: no pueden superar los 100 caracteres"],
 
-            ["persona", "apellidos_persona", "input", 31, "Validar formato de los apellidos en EDIT", "format", "EDIT",
+            ["persona", "apellidos_persona", "input", 26, "Validar formato de los apellidos en EDIT", "format", "EDIT",
         "apellidos_persona_format_ko", "Los apellidos contienen caracteres no válidos: solo se permiten letras (incluida ñ y acentos), puntos, guiones y espacios"],
 
-            ["persona", "apellidos_persona", "input", 32, "Validar apellidos correctos en EDIT", "valid", "EDIT",
+            ["persona", "apellidos_persona", "input", 27, "Validar apellidos correctos en EDIT", "valid", "EDIT",
         true, "Apellidos correctos"],
 
         //Acción: SEARCH
 
-            ["persona", "apellidos_persona", "input", 33, "Validar tamaño máximo (100 caracteres) de los apellidos en SEARCH", "max_size", "SEARCH",
+            ["persona", "apellidos_persona", "input", 28, "Validar tamaño máximo (100 caracteres) de los apellidos en SEARCH", "max_size", "SEARCH",
         "apellidos_persona_max_size_ko", "Los apellidos son demasiado largos: no pueden superar los 100 caracteres"],
 
-            ["persona", "apellidos_persona", "input", 34, "Validar formato de los apellidos en SEARCH", "format", "SEARCH",
+            ["persona", "apellidos_persona", "input", 29, "Validar formato de los apellidos en SEARCH", "format", "SEARCH",
         "apellidos_persona_format_ko", "Los apellidos contienen caracteres no válidos: solo se permiten letras (incluida ñ y acentos), puntos, guiones y espacios"],
 
-            ["persona", "apellidos_persona", "input", 35, "Validar apellidos correctos en SEARCH", "valid", "SEARCH",
+            ["persona", "apellidos_persona", "input", 30, "Validar apellidos correctos en SEARCH", "valid", "SEARCH",
         true, "Apellidos correctos"],
 
     //Campo: fechaNacimiento_persona
 
         //Acción: ADD
 
-            ["persona", "fechaNacimiento_persona", "input", 36, "Validar tamaño mínimo (8 caracteres) de la fecha de nacimiento en ADD", "min_size", "ADD",
-        "fechaNacimiento_persona_min_size_ko", "La fecha de nacimiento es demasiado corta: debe tener 8 caracteres (dd/mm/aaaa) o (d/m/aaaa)"],
+            ["persona", "fechaNacimiento_persona", "input", 31, "Validar tamaño mínimo (8 caracteres) de la fecha de nacimiento en ADD", "min_size", "ADD",
+        "fechaNacimiento_persona_min_size_ko", "La fecha de nacimiento es demasiado corta: debe tener al menos 8 caracteres (d/m/aaaa o d-m-aaaa)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 37, "Validar tamaño máximo (10 caracteres) de la fecha de nacimiento en ADD", "max_size", "ADD",
-        "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa)"],
+            ["persona", "fechaNacimiento_persona", "input", 32, "Validar tamaño máximo (10 caracteres) de la fecha de nacimiento en ADD", "max_size", "ADD",
+        "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 38, "Validar formato dd/mm/aaaa de la fecha de nacimiento en ADD", "format", "ADD",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa (en la búsqueda solo se permiten dígitos y /)"],
+            ["persona", "fechaNacimiento_persona", "input", 33, "Validar formato dd/mm/aaaa o dd-mm-aaaa (mismo separador) de la fecha de nacimiento en ADD; el formato anglosajón se reordena antes de validar", "format", "ADD",
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también aaaa/mm/dd o mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dígitos, / y -)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 39, "Validar que la fecha de nacimiento existe en el calendario y no es posterior a la fecha actual en ADD", "personalized", "ADD",
+            ["persona", "fechaNacimiento_persona", "input", 34, "Validar que la fecha de nacimiento existe en el calendario y no es posterior a la fecha actual en ADD", "personalized", "ADD",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],
 
-            ["persona", "fechaNacimiento_persona", "input", 40, "Validar fecha de nacimiento correcta en ADD", "valid", "ADD",
+            ["persona", "fechaNacimiento_persona", "input", 35, "Validar fecha de nacimiento correcta en ADD", "valid", "ADD",
         true, "Fecha de nacimiento correcta"],
 
         //Acción: EDIT
 
-            ["persona", "fechaNacimiento_persona", "input", 41, "Validar tamaño mínimo (8 caracteres) de la fecha de nacimiento en EDIT", "min_size", "EDIT",
-        "fechaNacimiento_persona_min_size_ko", "La fecha de nacimiento es demasiado corta: debe tener 8 caracteres (dd/mm/aaaa) o (d/m/aaaa)"],
+            ["persona", "fechaNacimiento_persona", "input", 36, "Validar tamaño mínimo (8 caracteres) de la fecha de nacimiento en EDIT", "min_size", "EDIT",
+        "fechaNacimiento_persona_min_size_ko", "La fecha de nacimiento es demasiado corta: debe tener al menos 8 caracteres (d/m/aaaa o d-m-aaaa)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 42, "Validar tamaño máximo (10 caracteres) de la fecha de nacimiento en EDIT", "max_size", "EDIT",
-        "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa)"],
+            ["persona", "fechaNacimiento_persona", "input", 37, "Validar tamaño máximo (10 caracteres) de la fecha de nacimiento en EDIT", "max_size", "EDIT",
+        "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 43, "Validar formato dd/mm/aaaa de la fecha de nacimiento en EDIT", "format", "EDIT",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa (en la búsqueda solo se permiten dígitos y /)"],
+            ["persona", "fechaNacimiento_persona", "input", 38, "Validar formato dd/mm/aaaa o dd-mm-aaaa (mismo separador) de la fecha de nacimiento en EDIT; el formato anglosajón se reordena antes de validar", "format", "EDIT",
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también aaaa/mm/dd o mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dígitos, / y -)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 44, "Validar que la fecha de nacimiento existe en el calendario y no es posterior a la fecha actual en EDIT", "personalized", "EDIT",
+            ["persona", "fechaNacimiento_persona", "input", 39, "Validar que la fecha de nacimiento existe en el calendario y no es posterior a la fecha actual en EDIT", "personalized", "EDIT",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],
 
-            ["persona", "fechaNacimiento_persona", "input", 45, "Validar fecha de nacimiento correcta en EDIT", "valid", "EDIT",
+            ["persona", "fechaNacimiento_persona", "input", 40, "Validar fecha de nacimiento correcta en EDIT", "valid", "EDIT",
         true, "Fecha de nacimiento correcta"],
             
         //Acción: SEARCH
 
-            ["persona", "fechaNacimiento_persona", "input", 46, "Validar tamaño máximo (10 caracteres) de la fecha de nacimiento en SEARCH", "max_size", "SEARCH",
-        "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa)"],
+            ["persona", "fechaNacimiento_persona", "input", 41, "Validar tamaño máximo (10 caracteres) de la fecha de nacimiento en SEARCH", "max_size", "SEARCH",
+        "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 47, "Validar formato (solo dígitos y /) de la fecha de nacimiento en SEARCH", "format", "SEARCH",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa (en la búsqueda solo se permiten dígitos y /)"],
+            ["persona", "fechaNacimiento_persona", "input", 42, "Validar formato (solo dígitos, / y -) de la fecha de nacimiento en SEARCH; no se reordena nada", "format", "SEARCH",
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también aaaa/mm/dd o mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dígitos, / y -)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 48, "Validar que la fecha de nacimiento, cuando está completa (d/m/aaaa), existe en el calendario en SEARCH", "personalized", "SEARCH",
+            ["persona", "fechaNacimiento_persona", "input", 43, "Validar que la fecha de nacimiento, cuando está completa (d/m/aaaa), existe en el calendario en SEARCH", "personalized", "SEARCH",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],
 
-            ["persona", "fechaNacimiento_persona", "input", 49, "Validar fecha de nacimiento correcta en SEARCH", "valid", "SEARCH",
+            ["persona", "fechaNacimiento_persona", "input", 44, "Validar fecha de nacimiento correcta en SEARCH", "valid", "SEARCH",
         true, "Fecha de nacimiento correcta"],
 
     //Campo: direccion_persona
 
         //Acción: ADD
 
-            ["persona", "direccion_persona", "input", 50, "Validar tamaño mínimo (10 caracteres) de la dirección en ADD", "min_size", "ADD",
+            ["persona", "direccion_persona", "textarea", 45, "Validar tamaño mínimo (10 caracteres) de la dirección en ADD", "min_size", "ADD",
         "direccion_persona_min_size_ko", "La dirección es demasiado corta: debe tener al menos 10 caracteres"],
 
-            ["persona", "direccion_persona", "input", 51, "Validar tamaño máximo (200 caracteres) de la dirección en ADD", "max_size", "ADD",
+            ["persona", "direccion_persona", "textarea", 46, "Validar tamaño máximo (200 caracteres) de la dirección en ADD", "max_size", "ADD",
         "direccion_persona_max_size_ko", "La dirección es demasiado larga: no puede superar los 200 caracteres"],
 
-            ["persona", "direccion_persona", "input", 52, "Validar formato de la dirección en ADD", "format", "ADD",
+            ["persona", "direccion_persona", "textarea", 47, "Validar formato de la dirección en ADD", "format", "ADD",
         "direccion_persona_format_ko", "La dirección contiene caracteres no válidos: solo se permiten letras (incluida ñ y acentos), números, puntos, guiones, punto y coma, espacios y /"],
 
-            ["persona", "direccion_persona", "input", 53, "Validar dirección correcta en ADD", "valid", "ADD",
+            ["persona", "direccion_persona", "textarea", 48, "Validar dirección correcta en ADD", "valid", "ADD",
         true, "Dirección correcta"],
 
         //Acción: EDIT
 
-            ["persona", "direccion_persona", "input", 54, "Validar tamaño mínimo (10 caracteres) de la dirección en EDIT", "min_size", "EDIT",
+            ["persona", "direccion_persona", "textarea", 49, "Validar tamaño mínimo (10 caracteres) de la dirección en EDIT", "min_size", "EDIT",
         "direccion_persona_min_size_ko", "La dirección es demasiado corta: debe tener al menos 10 caracteres"],
 
-            ["persona", "direccion_persona", "input", 55, "Validar tamaño máximo (200 caracteres) de la dirección en EDIT", "max_size", "EDIT",
+            ["persona", "direccion_persona", "textarea", 50, "Validar tamaño máximo (200 caracteres) de la dirección en EDIT", "max_size", "EDIT",
         "direccion_persona_max_size_ko", "La dirección es demasiado larga: no puede superar los 200 caracteres"],
 
-            ["persona", "direccion_persona", "input", 56, "Validar formato de la dirección en EDIT", "format", "EDIT",
+            ["persona", "direccion_persona", "textarea", 51, "Validar formato de la dirección en EDIT", "format", "EDIT",
         "direccion_persona_format_ko", "La dirección contiene caracteres no válidos: solo se permiten letras (incluida ñ y acentos), números, puntos, guiones, punto y coma, espacios y /"],
 
-            ["persona", "direccion_persona", "input", 57, "Validar dirección correcta en EDIT", "valid", "EDIT",
+            ["persona", "direccion_persona", "textarea", 52, "Validar dirección correcta en EDIT", "valid", "EDIT",
         true, "Dirección correcta"],
 
         //Acción: SEARCH
 
-            ["persona", "direccion_persona", "input", 58, "Validar tamaño máximo (200 caracteres) de la dirección en SEARCH", "max_size", "SEARCH",
+            ["persona", "direccion_persona", "textarea", 53, "Validar tamaño máximo (200 caracteres) de la dirección en SEARCH", "max_size", "SEARCH",
         "direccion_persona_max_size_ko", "La dirección es demasiado larga: no puede superar los 200 caracteres"],
 
-            ["persona", "direccion_persona", "input", 59, "Validar formato de la dirección en SEARCH", "format", "SEARCH",
+            ["persona", "direccion_persona", "textarea", 54, "Validar formato de la dirección en SEARCH", "format", "SEARCH",
         "direccion_persona_format_ko", "La dirección contiene caracteres no válidos: solo se permiten letras (incluida ñ y acentos), números, puntos, guiones, punto y coma, espacios y /"],
 
-            ["persona", "direccion_persona", "input", 60, "Validar dirección correcta en SEARCH", "valid", "SEARCH",
+            ["persona", "direccion_persona", "textarea", 55, "Validar dirección correcta en SEARCH", "valid", "SEARCH",
         true, "Dirección correcta"],
 
     //Campo: telefono_persona
 
         //Acción: ADD
 
-            ["persona", "telefono_persona", "input", 61, "Validar tamaño mínimo (9 caracteres) del teléfono en ADD", "min_size", "ADD",
+            ["persona", "telefono_persona", "input", 56, "Validar tamaño mínimo (9 caracteres) del teléfono en ADD", "min_size", "ADD",
         "telefono_persona_min_size_ko", "El teléfono es demasiado corto: debe tener 9 dígitos"],
 
-            ["persona", "telefono_persona", "input", 62, "Validar tamaño máximo (9 caracteres) del teléfono en ADD", "max_size", "ADD",
+            ["persona", "telefono_persona", "input", 57, "Validar tamaño máximo (9 caracteres) del teléfono en ADD", "max_size", "ADD",
         "telefono_persona_max_size_ko", "El teléfono es demasiado largo: no puede superar los 9 dígitos"],
 
-            ["persona", "telefono_persona", "input", 63, "Validar formato (9 dígitos numéricos) del teléfono en ADD", "format", "ADD",
+            ["persona", "telefono_persona", "input", 58, "Validar formato (9 dígitos numéricos) del teléfono en ADD", "format", "ADD",
         "telefono_persona_format_ko", "El formato del teléfono no es válido: solo se permiten dígitos numéricos (9 en total)"],
 
-            ["persona", "telefono_persona", "input", 64, "Validar que el teléfono es español (empieza por 6, 7, 8 o 9) en ADD", "personalized", "ADD",
+            ["persona", "telefono_persona", "input", 59, "Validar que el teléfono es español (empieza por 6, 7, 8 o 9) en ADD", "personalized", "ADD",
         "telefono_persona_personalized_ko", "El teléfono no es un número español válido: debe empezar por 6, 7, 8 o 9"],
 
-            ["persona", "telefono_persona", "input", 65, "Validar teléfono correcto en ADD", "valid", "ADD",
+            ["persona", "telefono_persona", "input", 60, "Validar teléfono correcto en ADD", "valid", "ADD",
         true, "Teléfono correcto"],
 
         //Acción: EDIT
 
-            ["persona", "telefono_persona", "input", 66, "Validar tamaño mínimo (9 caracteres) del teléfono en EDIT", "min_size", "EDIT",
+            ["persona", "telefono_persona", "input", 61, "Validar tamaño mínimo (9 caracteres) del teléfono en EDIT", "min_size", "EDIT",
         "telefono_persona_min_size_ko", "El teléfono es demasiado corto: debe tener 9 dígitos"],
 
-            ["persona", "telefono_persona", "input", 67, "Validar tamaño máximo (9 caracteres) del teléfono en EDIT", "max_size", "EDIT",
+            ["persona", "telefono_persona", "input", 62, "Validar tamaño máximo (9 caracteres) del teléfono en EDIT", "max_size", "EDIT",
         "telefono_persona_max_size_ko", "El teléfono es demasiado largo: no puede superar los 9 dígitos"],
 
-            ["persona", "telefono_persona", "input", 68, "Validar formato (9 dígitos numéricos) del teléfono en EDIT", "format", "EDIT",
+            ["persona", "telefono_persona", "input", 63, "Validar formato (9 dígitos numéricos) del teléfono en EDIT", "format", "EDIT",
         "telefono_persona_format_ko", "El formato del teléfono no es válido: solo se permiten dígitos numéricos (9 en total)"],
 
-            ["persona", "telefono_persona", "input", 69, "Validar que el teléfono es español (empieza por 6, 7, 8 o 9) en EDIT", "personalized", "EDIT",
+            ["persona", "telefono_persona", "input", 64, "Validar que el teléfono es español (empieza por 6, 7, 8 o 9) en EDIT", "personalized", "EDIT",
         "telefono_persona_personalized_ko", "El teléfono no es un número español válido: debe empezar por 6, 7, 8 o 9"],
 
-            ["persona", "telefono_persona", "input", 70, "Validar teléfono correcto en EDIT", "valid", "EDIT",
+            ["persona", "telefono_persona", "input", 65, "Validar teléfono correcto en EDIT", "valid", "EDIT",
         true, "Teléfono correcto"],
             
         //Acción: SEARCH
 
-            ["persona", "telefono_persona", "input", 71, "Validar tamaño máximo (9 caracteres) del teléfono en SEARCH", "max_size", "SEARCH",
+            ["persona", "telefono_persona", "input", 66, "Validar tamaño máximo (9 caracteres) del teléfono en SEARCH", "max_size", "SEARCH",
         "telefono_persona_max_size_ko", "El teléfono es demasiado largo: no puede superar los 9 dígitos"],
 
-            ["persona", "telefono_persona", "input", 72, "Validar formato (solo dígitos) del teléfono en SEARCH", "format", "SEARCH",
+            ["persona", "telefono_persona", "input", 67, "Validar formato (solo dígitos) del teléfono en SEARCH", "format", "SEARCH",
         "telefono_persona_format_ko", "El formato del teléfono no es válido: solo se permiten dígitos numéricos (9 en total)"],
 
-            ["persona", "telefono_persona", "input", 73, "Validar que el teléfono (completo o su comienzo) es español, empieza por 6, 7, 8 o 9, en SEARCH", "personalized", "SEARCH",
+            ["persona", "telefono_persona", "input", 68, "Validar que el teléfono (completo o su comienzo) es español, empieza por 6, 7, 8 o 9, en SEARCH", "personalized", "SEARCH",
         "telefono_persona_personalized_ko", "El teléfono no es un número español válido: debe empezar por 6, 7, 8 o 9"],
 
-            ["persona", "telefono_persona", "input", 74, "Validar teléfono correcto en SEARCH", "valid", "SEARCH",
+            ["persona", "telefono_persona", "input", 69, "Validar teléfono correcto en SEARCH", "valid", "SEARCH",
         true, "Teléfono correcto"],
 
     //Campo: email_persona
 
         //Acción: ADD
-            ["persona", "email_persona", "input", 75, "Validar tamaño mínimo (6 caracteres) del email en ADD", "min_size", "ADD",
+            ["persona", "email_persona", "input", 70, "Validar tamaño mínimo (6 caracteres) del email en ADD", "min_size", "ADD",
         "email_persona_min_size_ko", "El email es demasiado corto: debe tener al menos 6 caracteres"],
 
-
-            ["persona", "email_persona", "input", 76, "Validar tamaño máximo (45 caracteres) del email en ADD", "max_size", "ADD",
+            ["persona", "email_persona", "input", 71, "Validar tamaño máximo (45 caracteres) del email en ADD", "max_size", "ADD",
         "email_persona_max_size_ko", "El email es demasiado largo: no puede superar los 45 caracteres"],
 
-            ["persona", "email_persona", "input", 77, "Validar formato del email en ADD", "format", "ADD",
-        "email_persona_format_ko", "El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos y guiones)"],
+            ["persona", "email_persona", "input", 72, "Validar formato del email en ADD", "format", "ADD",
+        "email_persona_format_ko", "El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos, guiones y guiones bajos)"],
 
-            ["persona", "email_persona", "input", 78, "Validar email correcto en ADD", "valid", "ADD",
+            ["persona", "email_persona", "input", 73, "Validar email correcto en ADD", "valid", "ADD",
         true, "Email correcto"],
 
         //Acción: EDIT
-            ["persona", "email_persona", "input", 79, "Validar tamaño mínimo (6 caracteres) del email en EDIT", "min_size", "EDIT",
+            ["persona", "email_persona", "input", 74, "Validar tamaño mínimo (6 caracteres) del email en EDIT", "min_size", "EDIT",
         "email_persona_min_size_ko", "El email es demasiado corto: debe tener al menos 6 caracteres"],
 
-
-            ["persona", "email_persona", "input", 80, "Validar tamaño máximo (45 caracteres) del email en EDIT", "max_size", "EDIT",
+            ["persona", "email_persona", "input", 75, "Validar tamaño máximo (45 caracteres) del email en EDIT", "max_size", "EDIT",
         "email_persona_max_size_ko", "El email es demasiado largo: no puede superar los 45 caracteres"],
 
-            ["persona", "email_persona", "input", 81, "Validar formato del email en EDIT", "format", "EDIT",
-        "email_persona_format_ko", "El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos y guiones)"],
+            ["persona", "email_persona", "input", 76, "Validar formato del email en EDIT", "format", "EDIT",
+        "email_persona_format_ko", "El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos, guiones y guiones bajos)"],
 
-            ["persona", "email_persona", "input", 82, "Validar email correcto en EDIT", "valid", "EDIT",
+            ["persona", "email_persona", "input", 77, "Validar email correcto en EDIT", "valid", "EDIT",
         true, "Email correcto"],
 
         //Acción: SEARCH
 
-            ["persona", "email_persona", "input", 83, "Validar tamaño máximo (45 caracteres) del email en SEARCH", "max_size", "SEARCH",
+            ["persona", "email_persona", "input", 78, "Validar tamaño máximo (45 caracteres) del email en SEARCH", "max_size", "SEARCH",
         "email_persona_max_size_ko", "El email es demasiado largo: no puede superar los 45 caracteres"],
 
-            ["persona", "email_persona", "input", 84, "Validar formato (solo letras, números, @, puntos, guiones y guiones bajos; no se exige estructura completa) del email en SEARCH", "format", "SEARCH",
-        "email_persona_format_ko", "El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos y guiones)"],
+            ["persona", "email_persona", "input", 79, "Validar formato (solo letras, números, @, puntos, guiones y guiones bajos; no se exige estructura completa) del email en SEARCH", "format", "SEARCH",
+        "email_persona_format_ko", "El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos, guiones y guiones bajos)"],
 
-            ["persona", "email_persona", "input", 85, "Validar email correcto en SEARCH", "valid", "SEARCH",
+            ["persona", "email_persona", "input", 80, "Validar email correcto en SEARCH", "valid", "SEARCH",
         true, "Email correcto"],
 
-    //Campo: foto_persona     //input de texto (nombre del fichero): min_size, max_size, format, personalized, valid
-
-        //Acción: ADD
-
-            ["persona", "foto_persona", "input", 86, "Validar tamaño mínimo (5 caracteres) del nombre del fichero de la foto (extensión incluida) en ADD", "min_size", "ADD",
-        "foto_persona_min_size_ko", "El nombre del fichero es demasiado corto: debe tener al menos 5 caracteres extensión incluida"],
-
-            ["persona", "foto_persona", "input", 87, "Validar tamaño máximo (15 caracteres) del nombre del fichero de la foto (extensión incluida) en ADD", "max_size", "ADD",
-        "foto_persona_max_size_ko", "El nombre del fichero es demasiado largo: no puede superar los 15 caracteres extensión incluida"],
-
-            ["persona", "foto_persona", "input", 88, "Validar formato del nombre del fichero de la foto (alfabético y punto) en ADD", "format", "ADD",
-        "foto_persona_format_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
-
-            ["persona", "foto_persona", "input", 89, "Validar que la extensión del fichero de la foto es jpg o jpeg en ADD", "personalized", "ADD",
-        "foto_persona_personalized_ko", "El tipo de fichero no está permitido: solo se admite jpg o jpeg"],
-
-            ["persona", "foto_persona", "input", 90, "Validar foto correcta en ADD", "valid", "ADD",
-        true, "Foto correcta"],
-
-        //Acción: EDIT
-
-            ["persona", "foto_persona", "input", 91, "Validar tamaño mínimo (5 caracteres) del nombre del fichero de la foto (extensión incluida) en EDIT", "min_size", "EDIT",
-        "foto_persona_min_size_ko", "El nombre del fichero es demasiado corto: debe tener al menos 5 caracteres extensión incluida"],
-
-            ["persona", "foto_persona", "input", 92, "Validar tamaño máximo (15 caracteres) del nombre del fichero de la foto (extensión incluida) en EDIT", "max_size", "EDIT",
-        "foto_persona_max_size_ko", "El nombre del fichero es demasiado largo: no puede superar los 15 caracteres extensión incluida"],
-
-            ["persona", "foto_persona", "input", 93, "Validar formato del nombre del fichero de la foto (alfabético y punto) en EDIT", "format", "EDIT",
-        "foto_persona_format_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
-
-            ["persona", "foto_persona", "input", 94, "Validar que la extensión del fichero de la foto es jpg o jpeg en EDIT", "personalized", "EDIT",
-        "foto_persona_personalized_ko", "El tipo de fichero no está permitido: solo se admite jpg o jpeg"],
-
-            ["persona", "foto_persona", "input", 95, "Validar foto correcta en EDIT o puede ser vacío", "valid", "EDIT",
-        true, "Foto correcta"],
+    //Campo: foto_persona     //input de texto (nombre del fichero): solo se muestra editable en SEARCH (en ADD no se muestra y en EDIT es de solo lectura)
 
         //Acción: SEARCH
 
-            ["persona", "foto_persona", "input", 96, "Validar tamaño máximo (15 caracteres) del nombre del fichero en SEARCH", "max_size", "SEARCH",
+            ["persona", "foto_persona", "input", 81, "Validar tamaño máximo (15 caracteres) del nombre del fichero en SEARCH", "max_size", "SEARCH",
         "foto_persona_max_size_ko", "El nombre del fichero es demasiado largo: no puede superar los 15 caracteres extensión incluida"],
 
-            ["persona", "foto_persona", "input", 97, "Validar formato del nombre del fichero (alfabético y punto) en SEARCH", "format", "SEARCH",
+            ["persona", "foto_persona", "input", 82, "Validar formato del nombre del fichero (alfabético y punto) en SEARCH", "format", "SEARCH",
         "foto_persona_format_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
 
-            ["persona", "foto_persona", "input", 98, "Validar foto correcta en SEARCH", "valid", "SEARCH",
+            ["persona", "foto_persona", "input", 83, "Validar foto correcta en SEARCH", "valid", "SEARCH",
         true, "Foto correcta"],
 
     //Campo: nuevo_foto_persona
 
         //Acción: ADD
 
-            ["persona", "nuevo_foto_persona", "file", 99, "Validar que se ha seleccionado un fichero en ADD", "exist_file", "ADD",
+            ["persona", "nuevo_foto_persona", "file", 84, "Validar que se ha seleccionado un fichero en ADD", "exist_file", "ADD",
         "nuevo_foto_persona_exist_file_ko", "No se ha seleccionado ningún fichero: debe subir una foto"],
 
-            ["persona", "nuevo_foto_persona", "file", 100, "Validar formato del nombre del fichero (alfabético y punto) a la vez de validar su tamaño maximo(15) y minimo(5) incluidas las extensiones en ADD", "format_name_file", "ADD",
+            ["persona", "nuevo_foto_persona", "file", 85, "Validar formato del nombre del fichero (alfabético y punto) a la vez de validar su tamaño maximo(15) y minimo(5) incluidas las extensiones en ADD", "format_name_file", "ADD",
         "nuevo_foto_persona_format_name_file_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
 
-            ["persona", "nuevo_foto_persona", "file", 101, "Validar tipo de fichero (jpg o jpeg) en ADD", "type_file", "ADD",
+            ["persona", "nuevo_foto_persona", "file", 86, "Validar tipo de fichero (jpg o jpeg) en ADD", "type_file", "ADD",
         "nuevo_foto_persona_type_file_ko", "El tipo de fichero no está permitido: solo se admite jpg o jpeg"],
 
-            ["persona", "nuevo_foto_persona", "file", 102, "Validar tamaño máximo del fichero (2 MB) en ADD", "max_size_file", "ADD",
+            ["persona", "nuevo_foto_persona", "file", 87, "Validar tamaño máximo del fichero (2 MB) en ADD", "max_size_file", "ADD",
         "nuevo_foto_persona_max_size_file_ko", "El fichero es demasiado grande: no puede superar los 2 MB"],
 
-            ["persona", "nuevo_foto_persona", "file", 103, "Validar foto correcta en ADD", "valid", "ADD",
+            ["persona", "nuevo_foto_persona", "file", 88, "Validar foto correcta en ADD", "valid", "ADD",
         true, "Foto correcta"],
 
         //Acción: EDIT
 
-            ["persona", "nuevo_foto_persona", "file", 104, "Validar que en EDIT no es obligatorio seleccionar un fichero (puede no existir)", "exist_file", "EDIT",
+            ["persona", "nuevo_foto_persona", "file", 89, "Validar que en EDIT no es obligatorio seleccionar un fichero (puede no existir)", "exist_file", "EDIT",
         true, "Fichero no obligatorio en EDIT"],
 
-            ["persona", "nuevo_foto_persona", "file", 105, "Validar formato del nombre del fichero (alfabético y punto) a la vez de validar su tamaño maximo(15) y minimo(5) incluidas las extensiones en EDIT", "format_name_file", "EDIT",
+            ["persona", "nuevo_foto_persona", "file", 90, "Validar formato del nombre del fichero (alfabético y punto) a la vez de validar su tamaño maximo(15) y minimo(5) incluidas las extensiones en EDIT", "format_name_file", "EDIT",
         "nuevo_foto_persona_format_name_file_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
 
-            ["persona", "nuevo_foto_persona", "file", 106, "Validar tipo de fichero (jpg o jpeg) en EDIT", "type_file", "EDIT",
+            ["persona", "nuevo_foto_persona", "file", 91, "Validar tipo de fichero (jpg o jpeg) en EDIT", "type_file", "EDIT",
         "nuevo_foto_persona_type_file_ko", "El tipo de fichero no está permitido: solo se admite jpg o jpeg"],
 
-            ["persona", "nuevo_foto_persona", "file", 107, "Validar tamaño máximo del fichero (2 MB) en EDIT", "max_size_file", "EDIT",
+            ["persona", "nuevo_foto_persona", "file", 92, "Validar tamaño máximo del fichero (2 MB) en EDIT", "max_size_file", "EDIT",
         "nuevo_foto_persona_max_size_file_ko", "El fichero es demasiado grande: no puede superar los 2 MB"],
 
-            ["persona", "nuevo_foto_persona", "file", 108, "Validar foto correcta en EDIT o puede ser vacío", "valid", "EDIT",
+            ["persona", "nuevo_foto_persona", "file", 93, "Validar foto correcta en EDIT o puede ser vacío", "valid", "EDIT",
         true, "Foto correcta"],
-
-        //Acción: SEARCH
-
-            ["persona", "nuevo_foto_persona", "input", 109, "Validar tamaño máximo (15 caracteres) del nombre del fichero en SEARCH", "max_size", "SEARCH",
-        "nuevo_foto_persona_max_size_ko", "El nombre del fichero es demasiado largo: no puede superar los 15 caracteres extensión incluida"],
-
-            ["persona", "nuevo_foto_persona", "input", 110, "Validar formato del nombre del fichero (alfabético y punto) en SEARCH", "format_name_file", "SEARCH",
-        "nuevo_foto_persona_format_name_file_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
-
-            ["persona", "nuevo_foto_persona", "file", 111, "Validar foto correcta en SEARCH", "valid", "SEARCH",
-        true, "Foto correcta"]
 
 ];
 
@@ -451,421 +387,388 @@ var persona_pruebas = [
             ["persona", "dni", 5, 11, "ADD", {"dni": "00000000T"}, true],
             ["persona", "dni", 5, 12, "ADD", {"dni": "11111111H"}, true],
 
-        //Acción: EDIT
-
-            ["persona", "dni", 6, 13, "EDIT", {"dni": "1234567Z"}, "dni_min_size_ko"],
-            ["persona", "dni", 6, 14, "EDIT", {"dni": ""}, "dni_min_size_ko"],
-
-            ["persona", "dni", 7, 15, "EDIT", {"dni": "12345678ZZ"}, "dni_max_size_ko"],
-
-            ["persona", "dni", 8, 16, "EDIT", {"dni": "123456789"}, "dni_format_ko"],
-            ["persona", "dni", 8, 17, "EDIT", {"dni": "1234A678Z"}, "dni_format_ko"],
-            ["persona", "dni", 8, 18, "EDIT", {"dni": "12345678z"}, "dni_format_ko"],
-
-            ["persona", "dni", 9, 19, "EDIT", {"dni": "12345678A"}, "dni_personalized_ko"],
-
-            ["persona", "dni", 10, 20, "EDIT", {"dni": "12345678Z"}, true],
-            ["persona", "dni", 10, 21, "EDIT", {"dni": "00000000T"}, true],
-
         //Acción: SEARCH
 
-            ["persona", "dni", 11, 22, "SEARCH", {"dni": "12345678ZZ"}, "dni_max_size_ko"],
+            ["persona", "dni", 6, 13, "SEARCH", {"dni": "12345678ZZ"}, "dni_max_size_ko"],
 
-            ["persona", "dni", 12, 23, "SEARCH", {"dni": "1234@678Z"}, "dni_format_ko"],
+            ["persona", "dni", 7, 14, "SEARCH", {"dni": "1234@678Z"}, "dni_format_ko"],
+            ["persona", "dni", 7, 15, "SEARCH", {"dni": "AB"}, "dni_format_ko"],
+            ["persona", "dni", 7, 16, "SEARCH", {"dni": "12AB"}, "dni_format_ko"],
+            ["persona", "dni", 7, 17, "SEARCH", {"dni": "12A34"}, "dni_format_ko"],
+            ["persona", "dni", 7, 18, "SEARCH", {"dni": "Z1234Z"}, "dni_format_ko"],
 
-            ["persona", "dni", 13, 24, "SEARCH", {"dni": "12345678Z"}, true],
-            ["persona", "dni", 13, 25, "SEARCH", {"dni": "1234"}, true],
-            ["persona", "dni", 13, 26, "SEARCH", {"dni": ""}, true],
-            ["persona", "dni", 13, 27, "SEARCH", {"dni": "12345678z"}, true],
+            ["persona", "dni", 8, 19, "SEARCH", {"dni": "12345678Z"}, true],
+            ["persona", "dni", 8, 20, "SEARCH", {"dni": "1234"}, true],
+            ["persona", "dni", 8, 21, "SEARCH", {"dni": ""}, true],
+            ["persona", "dni", 8, 22, "SEARCH", {"dni": "12345678z"}, true],
+            ["persona", "dni", 8, 23, "SEARCH", {"dni": "Z1234"}, true],
+            ["persona", "dni", 8, 24, "SEARCH", {"dni": "z12345678"}, true],
+            ["persona", "dni", 8, 25, "SEARCH", {"dni": "A"}, true],
+            ["persona", "dni", 8, 26, "SEARCH", {"dni": "5678Z"}, true],
 
     //Campo: nombre_persona
 
         //Acción: ADD
 
-            ["persona", "nombre_persona", 14, 28, "ADD", {"nombre_persona": "A"}, "nombre_persona_min_size_ko"],
-            ["persona", "nombre_persona", 14, 29, "ADD", {"nombre_persona": ""}, "nombre_persona_min_size_ko"],
+            ["persona", "nombre_persona", 9, 27, "ADD", {"nombre_persona": "A"}, "nombre_persona_min_size_ko"],
+            ["persona", "nombre_persona", 9, 28, "ADD", {"nombre_persona": ""}, "nombre_persona_min_size_ko"],
 
-            ["persona", "nombre_persona", 15, 30, "ADD", {"nombre_persona": "A".repeat(46)}, "nombre_persona_max_size_ko"],
+            ["persona", "nombre_persona", 10, 29, "ADD", {"nombre_persona": "A".repeat(46)}, "nombre_persona_max_size_ko"],
 
-            ["persona", "nombre_persona", 16, 31, "ADD", {"nombre_persona": "Ana123"}, "nombre_persona_format_ko"],
-            ["persona", "nombre_persona", 16, 32, "ADD", {"nombre_persona": "Ana_María"}, "nombre_persona_format_ko"],
+            ["persona", "nombre_persona", 11, 30, "ADD", {"nombre_persona": "Ana123"}, "nombre_persona_format_ko"],
+            ["persona", "nombre_persona", 11, 31, "ADD", {"nombre_persona": "Ana_María"}, "nombre_persona_format_ko"],
 
-            ["persona", "nombre_persona", 17, 33, "ADD", {"nombre_persona": "Al"}, true],
-            ["persona", "nombre_persona", 17, 34, "ADD", {"nombre_persona": "A".repeat(45)}, true],
-            ["persona", "nombre_persona", 17, 35, "ADD", {"nombre_persona": "María-José"}, true],
-            ["persona", "nombre_persona", 17, 36, "ADD", {"nombre_persona": "José Luis"}, true],
-            ["persona", "nombre_persona", 17, 37, "ADD", {"nombre_persona": "Ana M."}, true],
-            ["persona", "nombre_persona", 17, 38, "ADD", {"nombre_persona": "Begoña"}, true],
+            ["persona", "nombre_persona", 12, 32, "ADD", {"nombre_persona": "Al"}, true],
+            ["persona", "nombre_persona", 12, 33, "ADD", {"nombre_persona": "A".repeat(45)}, true],
+            ["persona", "nombre_persona", 12, 34, "ADD", {"nombre_persona": "María-José"}, true],
+            ["persona", "nombre_persona", 12, 35, "ADD", {"nombre_persona": "José Luis"}, true],
+            ["persona", "nombre_persona", 12, 36, "ADD", {"nombre_persona": "Ana M."}, true],
+            ["persona", "nombre_persona", 12, 37, "ADD", {"nombre_persona": "Begoña"}, true],
 
         //Acción: EDIT
 
-            ["persona", "nombre_persona", 18, 39, "EDIT", {"nombre_persona": "A"}, "nombre_persona_min_size_ko"],
+            ["persona", "nombre_persona", 13, 38, "EDIT", {"nombre_persona": "A"}, "nombre_persona_min_size_ko"],
 
-            ["persona", "nombre_persona", 19, 40, "EDIT", {"nombre_persona": "A".repeat(46)}, "nombre_persona_max_size_ko"],
+            ["persona", "nombre_persona", 14, 39, "EDIT", {"nombre_persona": "A".repeat(46)}, "nombre_persona_max_size_ko"],
 
-            ["persona", "nombre_persona", 20, 41, "EDIT", {"nombre_persona": "Ana123"}, "nombre_persona_format_ko"],
+            ["persona", "nombre_persona", 15, 40, "EDIT", {"nombre_persona": "Ana123"}, "nombre_persona_format_ko"],
 
-            ["persona", "nombre_persona", 21, 42, "EDIT", {"nombre_persona": "Al"}, true],
-            ["persona", "nombre_persona", 21, 43, "EDIT", {"nombre_persona": "A".repeat(45)}, true],
-            ["persona", "nombre_persona", 21, 44, "EDIT", {"nombre_persona": "María-José"}, true],
-            ["persona", "nombre_persona", 21, 45, "EDIT", {"nombre_persona": "José Luis"}, true],
+            ["persona", "nombre_persona", 16, 41, "EDIT", {"nombre_persona": "Al"}, true],
+            ["persona", "nombre_persona", 16, 42, "EDIT", {"nombre_persona": "A".repeat(45)}, true],
+            ["persona", "nombre_persona", 16, 43, "EDIT", {"nombre_persona": "María-José"}, true],
+            ["persona", "nombre_persona", 16, 44, "EDIT", {"nombre_persona": "José Luis"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "nombre_persona", 22, 46, "SEARCH", {"nombre_persona": "A".repeat(46)}, "nombre_persona_max_size_ko"],
+            ["persona", "nombre_persona", 17, 45, "SEARCH", {"nombre_persona": "A".repeat(46)}, "nombre_persona_max_size_ko"],
 
-            ["persona", "nombre_persona", 23, 47, "SEARCH", {"nombre_persona": "Ana123"}, "nombre_persona_format_ko"],
+            ["persona", "nombre_persona", 18, 46, "SEARCH", {"nombre_persona": "Ana123"}, "nombre_persona_format_ko"],
 
-            ["persona", "nombre_persona", 24, 48, "SEARCH", {"nombre_persona": "A".repeat(45)}, true],
-            ["persona", "nombre_persona", 24, 49, "SEARCH", {"nombre_persona": "An"}, true],
-            ["persona", "nombre_persona", 24, 50, "SEARCH", {"nombre_persona": "María"}, true],
-            ["persona", "nombre_persona", 24, 51, "SEARCH", {"nombre_persona": ""}, true],
+            ["persona", "nombre_persona", 19, 47, "SEARCH", {"nombre_persona": "A".repeat(45)}, true],
+            ["persona", "nombre_persona", 19, 48, "SEARCH", {"nombre_persona": "An"}, true],
+            ["persona", "nombre_persona", 19, 49, "SEARCH", {"nombre_persona": "María"}, true],
+            ["persona", "nombre_persona", 19, 50, "SEARCH", {"nombre_persona": ""}, true],
 
     //Campo: apellidos_persona
 
         //Acción: ADD
 
-            ["persona", "apellidos_persona", 25, 52, "ADD", {"apellidos_persona": "Ru"}, "apellidos_persona_min_size_ko"],
-            ["persona", "apellidos_persona", 25, 53, "ADD", {"apellidos_persona": ""}, "apellidos_persona_min_size_ko"],
+            ["persona", "apellidos_persona", 20, 51, "ADD", {"apellidos_persona": "Ru"}, "apellidos_persona_min_size_ko"],
+            ["persona", "apellidos_persona", 20, 52, "ADD", {"apellidos_persona": ""}, "apellidos_persona_min_size_ko"],
 
-            ["persona", "apellidos_persona", 26, 54, "ADD", {"apellidos_persona": "A".repeat(101)}, "apellidos_persona_max_size_ko"],
+            ["persona", "apellidos_persona", 21, 53, "ADD", {"apellidos_persona": "A".repeat(101)}, "apellidos_persona_max_size_ko"],
 
-            ["persona", "apellidos_persona", 27, 55, "ADD", {"apellidos_persona": "Pérez 2"}, "apellidos_persona_format_ko"],
+            ["persona", "apellidos_persona", 22, 54, "ADD", {"apellidos_persona": "Pérez 2"}, "apellidos_persona_format_ko"],
 
-            ["persona", "apellidos_persona", 28, 56, "ADD", {"apellidos_persona": "Paz"}, true],
-            ["persona", "apellidos_persona", 28, 57, "ADD", {"apellidos_persona": "A".repeat(100)}, true],
-            ["persona", "apellidos_persona", 28, 58, "ADD", {"apellidos_persona": "Pérez-Núñez"}, true],
-            ["persona", "apellidos_persona", 28, 59, "ADD", {"apellidos_persona": "García López"}, true],
-            ["persona", "apellidos_persona", 28, 60, "ADD", {"apellidos_persona": "Da Silva Jr."}, true],
-            ["persona", "apellidos_persona", 28, 61, "ADD", {"apellidos_persona": "Muñoz"}, true],
+            ["persona", "apellidos_persona", 23, 55, "ADD", {"apellidos_persona": "Paz"}, true],
+            ["persona", "apellidos_persona", 23, 56, "ADD", {"apellidos_persona": "A".repeat(100)}, true],
+            ["persona", "apellidos_persona", 23, 57, "ADD", {"apellidos_persona": "Pérez-Núñez"}, true],
+            ["persona", "apellidos_persona", 23, 58, "ADD", {"apellidos_persona": "García López"}, true],
+            ["persona", "apellidos_persona", 23, 59, "ADD", {"apellidos_persona": "Da Silva Jr."}, true],
+            ["persona", "apellidos_persona", 23, 60, "ADD", {"apellidos_persona": "Muñoz"}, true],
 
         //Acción: EDIT
 
-            ["persona", "apellidos_persona", 29, 62, "EDIT", {"apellidos_persona": "Ru"}, "apellidos_persona_min_size_ko"],
+            ["persona", "apellidos_persona", 24, 61, "EDIT", {"apellidos_persona": "Ru"}, "apellidos_persona_min_size_ko"],
 
-            ["persona", "apellidos_persona", 30, 63, "EDIT", {"apellidos_persona": "A".repeat(101)}, "apellidos_persona_max_size_ko"],
+            ["persona", "apellidos_persona", 25, 62, "EDIT", {"apellidos_persona": "A".repeat(101)}, "apellidos_persona_max_size_ko"],
 
-            ["persona", "apellidos_persona", 31, 64, "EDIT", {"apellidos_persona": "Pérez 2"}, "apellidos_persona_format_ko"],
+            ["persona", "apellidos_persona", 26, 63, "EDIT", {"apellidos_persona": "Pérez 2"}, "apellidos_persona_format_ko"],
 
-            ["persona", "apellidos_persona", 32, 65, "EDIT", {"apellidos_persona": "Paz"}, true],
-            ["persona", "apellidos_persona", 32, 66, "EDIT", {"apellidos_persona": "A".repeat(100)}, true],
-            ["persona", "apellidos_persona", 32, 67, "EDIT", {"apellidos_persona": "Pérez-Núñez"}, true],
-            ["persona", "apellidos_persona", 32, 68, "EDIT", {"apellidos_persona": "García López"}, true],
+            ["persona", "apellidos_persona", 27, 64, "EDIT", {"apellidos_persona": "Paz"}, true],
+            ["persona", "apellidos_persona", 27, 65, "EDIT", {"apellidos_persona": "A".repeat(100)}, true],
+            ["persona", "apellidos_persona", 27, 66, "EDIT", {"apellidos_persona": "Pérez-Núñez"}, true],
+            ["persona", "apellidos_persona", 27, 67, "EDIT", {"apellidos_persona": "García López"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "apellidos_persona", 33, 69, "SEARCH", {"apellidos_persona": "A".repeat(101)}, "apellidos_persona_max_size_ko"],
+            ["persona", "apellidos_persona", 28, 68, "SEARCH", {"apellidos_persona": "A".repeat(101)}, "apellidos_persona_max_size_ko"],
 
-            ["persona", "apellidos_persona", 34, 70, "SEARCH", {"apellidos_persona": "Pérez 2"}, "apellidos_persona_format_ko"],
+            ["persona", "apellidos_persona", 29, 69, "SEARCH", {"apellidos_persona": "Pérez 2"}, "apellidos_persona_format_ko"],
 
-            ["persona", "apellidos_persona", 35, 71, "SEARCH", {"apellidos_persona": "A".repeat(100)}, true],
-            ["persona", "apellidos_persona", 35, 72, "SEARCH", {"apellidos_persona": "Pé"}, true],
-            ["persona", "apellidos_persona", 35, 73, "SEARCH", {"apellidos_persona": "García"}, true],
-            ["persona", "apellidos_persona", 35, 74, "SEARCH", {"apellidos_persona": ""}, true],
+            ["persona", "apellidos_persona", 30, 70, "SEARCH", {"apellidos_persona": "A".repeat(100)}, true],
+            ["persona", "apellidos_persona", 30, 71, "SEARCH", {"apellidos_persona": "Pé"}, true],
+            ["persona", "apellidos_persona", 30, 72, "SEARCH", {"apellidos_persona": "García"}, true],
+            ["persona", "apellidos_persona", 30, 73, "SEARCH", {"apellidos_persona": ""}, true],
 
     //Campo: fechaNacimiento_persona
 
         //Acción: ADD
 
-            ["persona", "fechaNacimiento_persona", 36, 75, "ADD", {"fechaNacimiento_persona": "1/1/200"}, "fechaNacimiento_persona_min_size_ko"],
-            ["persona", "fechaNacimiento_persona", 36, 76, "ADD", {"fechaNacimiento_persona": ""}, "fechaNacimiento_persona_min_size_ko"],
+            ["persona", "fechaNacimiento_persona", 31, 74, "ADD", {"fechaNacimiento_persona": "1/1/200"}, "fechaNacimiento_persona_min_size_ko"],
+            ["persona", "fechaNacimiento_persona", 31, 75, "ADD", {"fechaNacimiento_persona": ""}, "fechaNacimiento_persona_min_size_ko"],
+            ["persona", "fechaNacimiento_persona", 31, 76, "ADD", {"fechaNacimiento_persona": "1-1-200"}, "fechaNacimiento_persona_min_size_ko"],
 
-            ["persona", "fechaNacimiento_persona", 37, 77, "ADD", {"fechaNacimiento_persona": "15/01/20000"}, "fechaNacimiento_persona_max_size_ko"],
+            ["persona", "fechaNacimiento_persona", 32, 77, "ADD", {"fechaNacimiento_persona": "15/01/20000"}, "fechaNacimiento_persona_max_size_ko"],
+            ["persona", "fechaNacimiento_persona", 32, 78, "ADD", {"fechaNacimiento_persona": "15-01-20000"}, "fechaNacimiento_persona_max_size_ko"],
 
-            ["persona", "fechaNacimiento_persona", 38, 78, "ADD", {"fechaNacimiento_persona": "2000-01-15"}, "fechaNacimiento_persona_format_ko"],
-            ["persona", "fechaNacimiento_persona", 38, 79, "ADD", {"fechaNacimiento_persona": "15-01-2000"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 33, 79, "ADD", {"fechaNacimiento_persona": "15/01-2000"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 33, 80, "ADD", {"fechaNacimiento_persona": "15.01.2000"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 33, 81, "ADD", {"fechaNacimiento_persona": "15-13-2000"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 33, 82, "ADD", {"fechaNacimiento_persona": "2000/13/15"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 33, 83, "ADD", {"fechaNacimiento_persona": "13/15/2000"}, "fechaNacimiento_persona_format_ko"],
 
-            ["persona", "fechaNacimiento_persona", 39, 80, "ADD", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 39, 81, "ADD", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 34, 84, "ADD", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 34, 85, "ADD", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 34, 86, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(1)}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 34, 87, "ADD", {"fechaNacimiento_persona": "30-02-2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 34, 88, "ADD", {"fechaNacimiento_persona": "31-04-2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 34, 89, "ADD", {"fechaNacimiento_persona": "2000-02-30"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 34, 90, "ADD", {"fechaNacimiento_persona": "02/30/2000"}, "fechaNacimiento_persona_personalized_ko"],
 
-            ["persona", "fechaNacimiento_persona", 39, 82, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(1)}, "fechaNacimiento_persona_personalized_ko"],
-
-            ["persona", "fechaNacimiento_persona", 40, 83, "ADD", {"fechaNacimiento_persona": "1/1/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 40, 84, "ADD", {"fechaNacimiento_persona": "15/01/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 40, 85, "ADD", {"fechaNacimiento_persona": "29/02/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 40, 86, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(0)}, true],
-            ["persona", "fechaNacimiento_persona", 40, 87, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(-1)}, true],
-            ["persona", "fechaNacimiento_persona", 40, 88, "ADD", {"fechaNacimiento_persona": "31/12/1999"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 91, "ADD", {"fechaNacimiento_persona": "1/1/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 92, "ADD", {"fechaNacimiento_persona": "15/01/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 93, "ADD", {"fechaNacimiento_persona": "29/02/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 94, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(0)}, true],
+            ["persona", "fechaNacimiento_persona", 35, 95, "ADD", {"fechaNacimiento_persona": fecha_hoy_mas(-1)}, true],
+            ["persona", "fechaNacimiento_persona", 35, 96, "ADD", {"fechaNacimiento_persona": "31/12/1999"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 97, "ADD", {"fechaNacimiento_persona": "1-1-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 98, "ADD", {"fechaNacimiento_persona": "15-01-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 99, "ADD", {"fechaNacimiento_persona": "29-02-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 100, "ADD", {"fechaNacimiento_persona": "2000-01-15"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 101, "ADD", {"fechaNacimiento_persona": "2000/1/5"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 102, "ADD", {"fechaNacimiento_persona": "01/15/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 35, 103, "ADD", {"fechaNacimiento_persona": "12/25/1999"}, true],
 
         //Acción: EDIT
 
-            ["persona", "fechaNacimiento_persona", 41, 89, "EDIT", {"fechaNacimiento_persona": "1/1/200"}, "fechaNacimiento_persona_min_size_ko"],
+            ["persona", "fechaNacimiento_persona", 36, 104, "EDIT", {"fechaNacimiento_persona": "1/1/200"}, "fechaNacimiento_persona_min_size_ko"],
+            ["persona", "fechaNacimiento_persona", 36, 105, "EDIT", {"fechaNacimiento_persona": "1-1-200"}, "fechaNacimiento_persona_min_size_ko"],
 
-            ["persona", "fechaNacimiento_persona", 42, 90, "EDIT", {"fechaNacimiento_persona": "15/01/20000"}, "fechaNacimiento_persona_max_size_ko"],
+            ["persona", "fechaNacimiento_persona", 37, 106, "EDIT", {"fechaNacimiento_persona": "15/01/20000"}, "fechaNacimiento_persona_max_size_ko"],
 
-            ["persona", "fechaNacimiento_persona", 43, 91, "EDIT", {"fechaNacimiento_persona": "2000-01-15"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 38, 107, "EDIT", {"fechaNacimiento_persona": "15/01-2000"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 38, 108, "EDIT", {"fechaNacimiento_persona": "2000/13/15"}, "fechaNacimiento_persona_format_ko"],
 
-            ["persona", "fechaNacimiento_persona", 44, 92, "EDIT", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 39, 109, "EDIT", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 39, 110, "EDIT", {"fechaNacimiento_persona": "01/01/2100"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 39, 111, "EDIT", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 39, 112, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(1)}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 39, 113, "EDIT", {"fechaNacimiento_persona": "30-02-2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 39, 114, "EDIT", {"fechaNacimiento_persona": "2000/02/30"}, "fechaNacimiento_persona_personalized_ko"],
 
-            ["persona", "fechaNacimiento_persona", 44, 93, "EDIT", {"fechaNacimiento_persona": "01/01/2100"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 44, 94, "EDIT", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 44, 95, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(1)}, "fechaNacimiento_persona_personalized_ko"],
-
-            ["persona", "fechaNacimiento_persona", 45, 96, "EDIT", {"fechaNacimiento_persona": "1/1/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 45, 97, "EDIT", {"fechaNacimiento_persona": "15/01/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 45, 98, "EDIT", {"fechaNacimiento_persona": "29/02/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 45, 99, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(0)}, true],
-            ["persona", "fechaNacimiento_persona", 45, 100, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(-1)}, true],
-            ["persona", "fechaNacimiento_persona", 45, 101, "EDIT", {"fechaNacimiento_persona": "31/12/1999"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 115, "EDIT", {"fechaNacimiento_persona": "1/1/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 116, "EDIT", {"fechaNacimiento_persona": "15/01/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 117, "EDIT", {"fechaNacimiento_persona": "29/02/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 118, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(0)}, true],
+            ["persona", "fechaNacimiento_persona", 40, 119, "EDIT", {"fechaNacimiento_persona": fecha_hoy_mas(-1)}, true],
+            ["persona", "fechaNacimiento_persona", 40, 120, "EDIT", {"fechaNacimiento_persona": "31/12/1999"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 121, "EDIT", {"fechaNacimiento_persona": "1-1-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 122, "EDIT", {"fechaNacimiento_persona": "15-01-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 123, "EDIT", {"fechaNacimiento_persona": "2000-01-15"}, true],
+            ["persona", "fechaNacimiento_persona", 40, 124, "EDIT", {"fechaNacimiento_persona": "01/15/2000"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "fechaNacimiento_persona", 46, 102, "SEARCH", {"fechaNacimiento_persona": "15/01/20000"}, "fechaNacimiento_persona_max_size_ko"],
+            ["persona", "fechaNacimiento_persona", 41, 125, "SEARCH", {"fechaNacimiento_persona": "15/01/20000"}, "fechaNacimiento_persona_max_size_ko"],
 
-            ["persona", "fechaNacimiento_persona", 47, 103, "SEARCH", {"fechaNacimiento_persona": "15-01-2000"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 42, 126, "SEARCH", {"fechaNacimiento_persona": "15.01.2000"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 42, 127, "SEARCH", {"fechaNacimiento_persona": "15/01/200a"}, "fechaNacimiento_persona_format_ko"],
 
-            ["persona", "fechaNacimiento_persona", 48, 104, "SEARCH", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 48, 105, "SEARCH", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 48, 106, "SEARCH", {"fechaNacimiento_persona": "32/01/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 48, 107, "SEARCH", {"fechaNacimiento_persona": "29/02/2001"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 128, "SEARCH", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 129, "SEARCH", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 130, "SEARCH", {"fechaNacimiento_persona": "32/01/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 131, "SEARCH", {"fechaNacimiento_persona": "29/02/2001"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 132, "SEARCH", {"fechaNacimiento_persona": "30-02-2000"}, "fechaNacimiento_persona_personalized_ko"],
 
-            ["persona", "fechaNacimiento_persona", 49, 108, "SEARCH", {"fechaNacimiento_persona": "15/01/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 49, 109, "SEARCH", {"fechaNacimiento_persona": "15/01"}, true],
-            ["persona", "fechaNacimiento_persona", 49, 110, "SEARCH", {"fechaNacimiento_persona": "2000"}, true],
-            ["persona", "fechaNacimiento_persona", 49, 111, "SEARCH", {"fechaNacimiento_persona": ""}, true],
+            ["persona", "fechaNacimiento_persona", 44, 133, "SEARCH", {"fechaNacimiento_persona": "15/01/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 134, "SEARCH", {"fechaNacimiento_persona": "15/01"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 135, "SEARCH", {"fechaNacimiento_persona": "2000"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 136, "SEARCH", {"fechaNacimiento_persona": ""}, true],
+            ["persona", "fechaNacimiento_persona", 44, 137, "SEARCH", {"fechaNacimiento_persona": "15-01-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 138, "SEARCH", {"fechaNacimiento_persona": "15-01"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 139, "SEARCH", {"fechaNacimiento_persona": "01-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 140, "SEARCH", {"fechaNacimiento_persona": "2000/01/15"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 141, "SEARCH", {"fechaNacimiento_persona": "01/15"}, true],
 
     //Campo: direccion_persona
 
         //Acción: ADD
 
-            ["persona", "direccion_persona", 50, 112, "ADD", {"direccion_persona": "Calle 1"}, "direccion_persona_min_size_ko"],
-            ["persona", "direccion_persona", 50, 113, "ADD", {"direccion_persona": ""}, "direccion_persona_min_size_ko"],
+            ["persona", "direccion_persona", 45, 142, "ADD", {"direccion_persona": "Calle 1"}, "direccion_persona_min_size_ko"],
+            ["persona", "direccion_persona", 45, 143, "ADD", {"direccion_persona": ""}, "direccion_persona_min_size_ko"],
 
-            ["persona", "direccion_persona", 51, 114, "ADD", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
+            ["persona", "direccion_persona", 46, 144, "ADD", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
 
-            ["persona", "direccion_persona", 52, 115, "ADD", {"direccion_persona": "Calle Mayor #5"}, "direccion_persona_format_ko"],
-            ["persona", "direccion_persona", 52, 116, "ADD", {"direccion_persona": "Calle Mayor, 5"}, "direccion_persona_format_ko"],
+            ["persona", "direccion_persona", 47, 145, "ADD", {"direccion_persona": "Calle Mayor #5"}, "direccion_persona_format_ko"],
+            ["persona", "direccion_persona", 47, 146, "ADD", {"direccion_persona": "Calle Mayor, 5"}, "direccion_persona_format_ko"],
 
-            ["persona", "direccion_persona", 53, 117, "ADD", {"direccion_persona": "Calle May."}, true],
-            ["persona", "direccion_persona", 53, 118, "ADD", {"direccion_persona": "C".repeat(200)}, true],
-            ["persona", "direccion_persona", 53, 119, "ADD", {"direccion_persona": "Rúa do Vilar 12; 3/B"}, true],
-            ["persona", "direccion_persona", 53, 120, "ADD", {"direccion_persona": "Avenida de Vigo 45/2-A"}, true],
+            ["persona", "direccion_persona", 48, 147, "ADD", {"direccion_persona": "Calle May."}, true],
+            ["persona", "direccion_persona", 48, 148, "ADD", {"direccion_persona": "C".repeat(200)}, true],
+            ["persona", "direccion_persona", 48, 149, "ADD", {"direccion_persona": "Rúa do Vilar 12; 3/B"}, true],
+            ["persona", "direccion_persona", 48, 150, "ADD", {"direccion_persona": "Avenida de Vigo 45/2-A"}, true],
 
         //Acción: EDIT
 
-            ["persona", "direccion_persona", 54, 121, "EDIT", {"direccion_persona": "Calle 1"}, "direccion_persona_min_size_ko"],
+            ["persona", "direccion_persona", 49, 151, "EDIT", {"direccion_persona": "Calle 1"}, "direccion_persona_min_size_ko"],
 
-            ["persona", "direccion_persona", 55, 122, "EDIT", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
+            ["persona", "direccion_persona", 50, 152, "EDIT", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
 
-            ["persona", "direccion_persona", 56, 123, "EDIT", {"direccion_persona": "Calle Mayor #5"}, "direccion_persona_format_ko"],
+            ["persona", "direccion_persona", 51, 153, "EDIT", {"direccion_persona": "Calle Mayor #5"}, "direccion_persona_format_ko"],
 
-            ["persona", "direccion_persona", 57, 124, "EDIT", {"direccion_persona": "Calle May."}, true],
-            ["persona", "direccion_persona", 57, 125, "EDIT", {"direccion_persona": "C".repeat(200)}, true],
-            ["persona", "direccion_persona", 57, 126, "EDIT", {"direccion_persona": "Rúa do Vilar 12; 3/B"}, true],
+            ["persona", "direccion_persona", 52, 154, "EDIT", {"direccion_persona": "Calle May."}, true],
+            ["persona", "direccion_persona", 52, 155, "EDIT", {"direccion_persona": "C".repeat(200)}, true],
+            ["persona", "direccion_persona", 52, 156, "EDIT", {"direccion_persona": "Rúa do Vilar 12; 3/B"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "direccion_persona", 58, 127, "SEARCH", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
+            ["persona", "direccion_persona", 53, 157, "SEARCH", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
 
-            ["persona", "direccion_persona", 59, 128, "SEARCH", {"direccion_persona": "Calle #5"}, "direccion_persona_format_ko"],
+            ["persona", "direccion_persona", 54, 158, "SEARCH", {"direccion_persona": "Calle #5"}, "direccion_persona_format_ko"],
 
-            ["persona", "direccion_persona", 60, 129, "SEARCH", {"direccion_persona": "C".repeat(200)}, true],
-            ["persona", "direccion_persona", 60, 130, "SEARCH", {"direccion_persona": "Rúa do Vilar"}, true],
-            ["persona", "direccion_persona", 60, 131, "SEARCH", {"direccion_persona": "Vigo"}, true],
-            ["persona", "direccion_persona", 60, 132, "SEARCH", {"direccion_persona": ""}, true],
+            ["persona", "direccion_persona", 55, 159, "SEARCH", {"direccion_persona": "C".repeat(200)}, true],
+            ["persona", "direccion_persona", 55, 160, "SEARCH", {"direccion_persona": "Rúa do Vilar"}, true],
+            ["persona", "direccion_persona", 55, 161, "SEARCH", {"direccion_persona": "Vigo"}, true],
+            ["persona", "direccion_persona", 55, 162, "SEARCH", {"direccion_persona": ""}, true],
 
     //Campo: telefono_persona
 
         //Acción: ADD
 
-            ["persona", "telefono_persona", 61, 133, "ADD", {"telefono_persona": "61234567"}, "telefono_persona_min_size_ko"],
-            ["persona", "telefono_persona", 61, 134, "ADD", {"telefono_persona": ""}, "telefono_persona_min_size_ko"],
+            ["persona", "telefono_persona", 56, 163, "ADD", {"telefono_persona": "61234567"}, "telefono_persona_min_size_ko"],
+            ["persona", "telefono_persona", 56, 164, "ADD", {"telefono_persona": ""}, "telefono_persona_min_size_ko"],
 
-            ["persona", "telefono_persona", 62, 135, "ADD", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
+            ["persona", "telefono_persona", 57, 165, "ADD", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
 
-            ["persona", "telefono_persona", 63, 136, "ADD", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
-            ["persona", "telefono_persona", 63, 137, "ADD", {"telefono_persona": "6123-5678"}, "telefono_persona_format_ko"],
+            ["persona", "telefono_persona", 58, 166, "ADD", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
+            ["persona", "telefono_persona", 58, 167, "ADD", {"telefono_persona": "6123-5678"}, "telefono_persona_format_ko"],
 
-            ["persona", "telefono_persona", 64, 138, "ADD", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
-            ["persona", "telefono_persona", 64, 139, "ADD", {"telefono_persona": "112345678"}, "telefono_persona_personalized_ko"],
-            ["persona", "telefono_persona", 64, 140, "ADD", {"telefono_persona": "012345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 59, 168, "ADD", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 59, 169, "ADD", {"telefono_persona": "112345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 59, 170, "ADD", {"telefono_persona": "012345678"}, "telefono_persona_personalized_ko"],
 
-            ["persona", "telefono_persona", 65, 141, "ADD", {"telefono_persona": "612345678"}, true],
-            ["persona", "telefono_persona", 65, 142, "ADD", {"telefono_persona": "912345678"}, true],
-            ["persona", "telefono_persona", 65, 143, "ADD", {"telefono_persona": "789123456"}, true],
-            ["persona", "telefono_persona", 65, 144, "ADD", {"telefono_persona": "812345678"}, true],
+            ["persona", "telefono_persona", 60, 171, "ADD", {"telefono_persona": "612345678"}, true],
+            ["persona", "telefono_persona", 60, 172, "ADD", {"telefono_persona": "912345678"}, true],
+            ["persona", "telefono_persona", 60, 173, "ADD", {"telefono_persona": "789123456"}, true],
+            ["persona", "telefono_persona", 60, 174, "ADD", {"telefono_persona": "812345678"}, true],
 
         //Acción: EDIT
 
-            ["persona", "telefono_persona", 66, 145, "EDIT", {"telefono_persona": "61234567"}, "telefono_persona_min_size_ko"],
+            ["persona", "telefono_persona", 61, 175, "EDIT", {"telefono_persona": "61234567"}, "telefono_persona_min_size_ko"],
 
-            ["persona", "telefono_persona", 67, 146, "EDIT", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
+            ["persona", "telefono_persona", 62, 176, "EDIT", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
 
-            ["persona", "telefono_persona", 68, 147, "EDIT", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
+            ["persona", "telefono_persona", 63, 177, "EDIT", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
 
-            ["persona", "telefono_persona", 69, 148, "EDIT", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 64, 178, "EDIT", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
 
-            ["persona", "telefono_persona", 70, 149, "EDIT", {"telefono_persona": "612345678"}, true],
-            ["persona", "telefono_persona", 70, 150, "EDIT", {"telefono_persona": "912345678"}, true],
+            ["persona", "telefono_persona", 65, 179, "EDIT", {"telefono_persona": "612345678"}, true],
+            ["persona", "telefono_persona", 65, 180, "EDIT", {"telefono_persona": "912345678"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "telefono_persona", 71, 151, "SEARCH", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
+            ["persona", "telefono_persona", 66, 181, "SEARCH", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
 
-            ["persona", "telefono_persona", 72, 152, "SEARCH", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
+            ["persona", "telefono_persona", 67, 182, "SEARCH", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
 
-            ["persona", "telefono_persona", 73, 153, "SEARCH", {"telefono_persona": "5"}, "telefono_persona_personalized_ko"],
-            ["persona", "telefono_persona", 73, 154, "SEARCH", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
-            ["persona", "telefono_persona", 73, 155, "SEARCH", {"telefono_persona": "012"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 68, 183, "SEARCH", {"telefono_persona": "5"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 68, 184, "SEARCH", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 68, 185, "SEARCH", {"telefono_persona": "012"}, "telefono_persona_personalized_ko"],
 
-            ["persona", "telefono_persona", 74, 156, "SEARCH", {"telefono_persona": "612345678"}, true],
-            ["persona", "telefono_persona", 74, 157, "SEARCH", {"telefono_persona": "612"}, true],
-            ["persona", "telefono_persona", 74, 158, "SEARCH", {"telefono_persona": ""}, true],
+            ["persona", "telefono_persona", 69, 186, "SEARCH", {"telefono_persona": "612345678"}, true],
+            ["persona", "telefono_persona", 69, 187, "SEARCH", {"telefono_persona": "612"}, true],
+            ["persona", "telefono_persona", 69, 188, "SEARCH", {"telefono_persona": ""}, true],
 
     //Campo: email_persona
 
         //Acción: ADD
-            ["persona", "email_persona", 75, 159, "ADD", {"email_persona": "a@b.e"}, "email_persona_min_size_ko"],
-            ["persona", "email_persona", 75, 160, "ADD", {"email_persona": ""}, "email_persona_min_size_ko"],
+            ["persona", "email_persona", 70, 189, "ADD", {"email_persona": "a@b.e"}, "email_persona_min_size_ko"],
+            ["persona", "email_persona", 70, 190, "ADD", {"email_persona": ""}, "email_persona_min_size_ko"],
 
+            ["persona", "email_persona", 71, 191, "ADD", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
 
-            ["persona", "email_persona", 76, 161, "ADD", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
+            ["persona", "email_persona", 72, 192, "ADD", {"email_persona": "juanmail.com"}, "email_persona_format_ko"],
+            ["persona", "email_persona", 72, 193, "ADD", {"email_persona": "juan@mail"}, "email_persona_format_ko"],
+            ["persona", "email_persona", 72, 194, "ADD", {"email_persona": "juan@@mail.com"}, "email_persona_format_ko"],
 
-            ["persona", "email_persona", 77, 162, "ADD", {"email_persona": "juanmail.com"}, "email_persona_format_ko"],
-            ["persona", "email_persona", 77, 163, "ADD", {"email_persona": "juan@mail"}, "email_persona_format_ko"],
-            ["persona", "email_persona", 77, 164, "ADD", {"email_persona": "juan@@mail.com"}, "email_persona_format_ko"],
-
-            ["persona", "email_persona", 78, 165, "ADD", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
-            ["persona", "email_persona", 78, 166, "ADD", {"email_persona": "juan.perez@mail.com"}, true],
-            ["persona", "email_persona", 78, 167, "ADD", {"email_persona": "ana_ruiz@correo.es"}, true],
-            ["persona", "email_persona", 78, 168, "ADD", {"email_persona": "a@b.es"}, true],
+            ["persona", "email_persona", 73, 195, "ADD", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
+            ["persona", "email_persona", 73, 196, "ADD", {"email_persona": "juan.perez@mail.com"}, true],
+            ["persona", "email_persona", 73, 197, "ADD", {"email_persona": "ana_ruiz@correo.es"}, true],
+            ["persona", "email_persona", 73, 198, "ADD", {"email_persona": "a@b.es"}, true],
 
         //Acción: EDIT
-            ["persona", "email_persona", 79, 169, "EDIT", {"email_persona": "a@b.e"}, "email_persona_min_size_ko"],
-            ["persona", "email_persona", 79, 170, "EDIT", {"email_persona": ""}, "email_persona_min_size_ko"],
+            ["persona", "email_persona", 74, 199, "EDIT", {"email_persona": "a@b.e"}, "email_persona_min_size_ko"],
+            ["persona", "email_persona", 74, 200, "EDIT", {"email_persona": ""}, "email_persona_min_size_ko"],
 
+            ["persona", "email_persona", 75, 201, "EDIT", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
 
-            ["persona", "email_persona", 80, 171, "EDIT", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
+            ["persona", "email_persona", 76, 202, "EDIT", {"email_persona": "juanmail.com"}, "email_persona_format_ko"],
 
-            ["persona", "email_persona", 81, 172, "EDIT", {"email_persona": "juanmail.com"}, "email_persona_format_ko"],
-
-            ["persona", "email_persona", 82, 173, "EDIT", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
-            ["persona", "email_persona", 82, 174, "EDIT", {"email_persona": "juan.perez@mail.com"}, true],
-            ["persona", "email_persona", 82, 175, "EDIT", {"email_persona": "a@b.es"}, true],
+            ["persona", "email_persona", 77, 203, "EDIT", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
+            ["persona", "email_persona", 77, 204, "EDIT", {"email_persona": "juan.perez@mail.com"}, true],
+            ["persona", "email_persona", 77, 205, "EDIT", {"email_persona": "a@b.es"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "email_persona", 83, 176, "SEARCH", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
+            ["persona", "email_persona", 78, 206, "SEARCH", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
 
-            ["persona", "email_persona", 84, 177, "SEARCH", {"email_persona": "juan#mail.com"}, "email_persona_format_ko"],
+            ["persona", "email_persona", 79, 207, "SEARCH", {"email_persona": "juan#mail.com"}, "email_persona_format_ko"],
 
-            ["persona", "email_persona", 85, 178, "SEARCH", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
-            ["persona", "email_persona", 85, 179, "SEARCH", {"email_persona": "juan@mail"}, true],
-            ["persona", "email_persona", 85, 180, "SEARCH", {"email_persona": "juan.perez@mail.com"}, true],
-            ["persona", "email_persona", 85, 181, "SEARCH", {"email_persona": ""}, true],
+            ["persona", "email_persona", 80, 208, "SEARCH", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
+            ["persona", "email_persona", 80, 209, "SEARCH", {"email_persona": "juan@mail"}, true],
+            ["persona", "email_persona", 80, 210, "SEARCH", {"email_persona": "juan.perez@mail.com"}, true],
+            ["persona", "email_persona", 80, 211, "SEARCH", {"email_persona": ""}, true],
 
     //Campo: foto_persona
 
-        //Acción: ADD
-
-            ["persona", "foto_persona", 86, 182, "ADD", {"foto_persona": "abcd"}, "foto_persona_min_size_ko"],
-            ["persona", "foto_persona", 86, 183, "ADD", {"foto_persona": ""}, "foto_persona_min_size_ko"],
-
-            ["persona", "foto_persona", 87, 184, "ADD", {"foto_persona": "a".repeat(12) + ".jpg"}, "foto_persona_max_size_ko"],
-            ["persona", "foto_persona", 87, 185, "ADD", {"foto_persona": "a".repeat(30) + ".jpg"}, "foto_persona_max_size_ko"],
-
-            ["persona", "foto_persona", 88, 186, "ADD", {"foto_persona": "mi foto.jpg"}, "foto_persona_format_ko"],
-            ["persona", "foto_persona", 88, 187, "ADD", {"foto_persona": "foto1.jpg"}, "foto_persona_format_ko"],
-            ["persona", "foto_persona", 88, 188, "ADD", {"foto_persona": "foto_a.jpg"}, "foto_persona_format_ko"],
-
-            ["persona", "foto_persona", 89, 189, "ADD", {"foto_persona": "foto.png"}, "foto_persona_personalized_ko"],
-            ["persona", "foto_persona", 89, 190, "ADD", {"foto_persona": "foto.pdf"}, "foto_persona_personalized_ko"],
-            ["persona", "foto_persona", 89, 191, "ADD", {"foto_persona": "fotojpg"}, "foto_persona_personalized_ko"],
-
-            ["persona", "foto_persona", 90, 192, "ADD", {"foto_persona": "a.jpg"}, true],
-            ["persona", "foto_persona", 90, 193, "ADD", {"foto_persona": "a".repeat(11) + ".jpg"}, true],
-            ["persona", "foto_persona", 90, 194, "ADD", {"foto_persona": "foto.jpg"}, true],
-            ["persona", "foto_persona", 90, 195, "ADD", {"foto_persona": "foto.jpeg"}, true],
-            ["persona", "foto_persona", 90, 196, "ADD", {"foto_persona": "fotoperfil.jpeg"}, true],
-
-        //Acción: EDIT
-
-            ["persona", "foto_persona", 91, 197, "EDIT", {"foto_persona": "abcd"}, "foto_persona_min_size_ko"],
-
-            ["persona", "foto_persona", 92, 198, "EDIT", {"foto_persona": "a".repeat(12) + ".jpg"}, "foto_persona_max_size_ko"],
-
-            ["persona", "foto_persona", 93, 199, "EDIT", {"foto_persona": "mi foto.jpg"}, "foto_persona_format_ko"],
-            ["persona", "foto_persona", 93, 200, "EDIT", {"foto_persona": "foto1.jpg"}, "foto_persona_format_ko"],
-
-            ["persona", "foto_persona", 94, 201, "EDIT", {"foto_persona": "foto.png"}, "foto_persona_personalized_ko"],
-            ["persona", "foto_persona", 94, 202, "EDIT", {"foto_persona": "foto.pdf"}, "foto_persona_personalized_ko"],
-
-            ["persona", "foto_persona", 95, 203, "EDIT", {"foto_persona": "a.jpg"}, true],
-            ["persona", "foto_persona", 95, 204, "EDIT", {"foto_persona": "a".repeat(11) + ".jpg"}, true],
-            ["persona", "foto_persona", 95, 205, "EDIT", {"foto_persona": "foto.jpg"}, true],
-            ["persona", "foto_persona", 95, 206, "EDIT", {"foto_persona": "foto.jpeg"}, true],
-            ["persona", "foto_persona", 95, 207, "EDIT", {"foto_persona": "fotoperfil.jpeg"}, true],
-            ["persona", "foto_persona", 95, 208, "EDIT", {"foto_persona": ""}, true],
-
         //Acción: SEARCH
 
-            ["persona", "foto_persona", 96, 209, "SEARCH", {"foto_persona": "a".repeat(12) + ".jpg"}, "foto_persona_max_size_ko"],
+            ["persona", "foto_persona", 81, 212, "SEARCH", {"foto_persona": "a".repeat(12) + ".jpg"}, "foto_persona_max_size_ko"],
 
-            ["persona", "foto_persona", 97, 210, "SEARCH", {"foto_persona": "mi foto.jpg"}, "foto_persona_format_ko"],
+            ["persona", "foto_persona", 82, 213, "SEARCH", {"foto_persona": "mi foto.jpg"}, "foto_persona_format_ko"],
 
-            ["persona", "foto_persona", 98, 211, "SEARCH", {"foto_persona": "foto.jpg"}, true],
-            ["persona", "foto_persona", 98, 212, "SEARCH", {"foto_persona": "foto"}, true],
-            ["persona", "foto_persona", 98, 213, "SEARCH", {"foto_persona": ""}, true],
-            ["persona", "foto_persona", 98, 214, "SEARCH", {"foto_persona": "a".repeat(11) + ".jpg"}, true],
+            ["persona", "foto_persona", 83, 214, "SEARCH", {"foto_persona": "foto.jpg"}, true],
+            ["persona", "foto_persona", 83, 215, "SEARCH", {"foto_persona": "foto"}, true],
+            ["persona", "foto_persona", 83, 216, "SEARCH", {"foto_persona": ""}, true],
+            ["persona", "foto_persona", 83, 217, "SEARCH", {"foto_persona": "a".repeat(11) + ".jpg"}, true],
 
     //Campo: nuevo_foto_persona
 
         //Acción: ADD
 
-            ["persona", "nuevo_foto_persona", 99, 215, "ADD", {}, "nuevo_foto_persona_exist_file_ko"],
+            ["persona", "nuevo_foto_persona", 84, 218, "ADD", {}, "nuevo_foto_persona_exist_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 100, 216, "ADD", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 100, 217, "ADD", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 219, "ADD", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 220, "ADD", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 100, 218, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(12) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 221, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(12) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 100, 219, "ADD", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 100, 220, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto1.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 222, "ADD", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 223, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto1.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 101, 221, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
-            ["persona", "nuevo_foto_persona", 101, 222, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.pdf", "type_file": "application/pdf", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 86, 224, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 86, 225, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.pdf", "type_file": "application/pdf", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 102, 223, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
-            ["persona", "nuevo_foto_persona", 102, 224, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 3000000}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 87, 226, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 87, 227, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 3000000}}, "nuevo_foto_persona_max_size_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 103, 225, "ADD", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 103, 226, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 103, 227, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 103, 228, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 103, 229, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
-            ["persona", "nuevo_foto_persona", 103, 230, "ADD", {"nuevo_foto_persona": {"format_name_file": "fotoperfil.jpeg", "type_file": "image/jpeg", "max_size_file": 500000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 228, "ADD", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 229, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 230, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 231, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 232, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
+            ["persona", "nuevo_foto_persona", 88, 233, "ADD", {"nuevo_foto_persona": {"format_name_file": "fotoperfil.jpeg", "type_file": "image/jpeg", "max_size_file": 500000}}, true],
 
         //Acción: EDIT
 
-            ["persona", "nuevo_foto_persona", 104, 231, "EDIT", {}, true],
+            ["persona", "nuevo_foto_persona", 89, 234, "EDIT", {}, true],
 
-            ["persona", "nuevo_foto_persona", 105, 232, "EDIT", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 105, 233, "EDIT", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 90, 235, "EDIT", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 90, 236, "EDIT", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 105, 234, "EDIT", {"nuevo_foto_persona": {"format_name_file":"a".repeat(12) + ".jpg", "type_file": "image/jpeg","max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 90, 237, "EDIT", {"nuevo_foto_persona": {"format_name_file":"a".repeat(12) + ".jpg", "type_file": "image/jpeg","max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 105, 235, "EDIT", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 90, 238, "EDIT", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 106, 236, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 91, 239, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 107, 237, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 92, 240, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 108, 238, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 108, 239, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 108, 240, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 108, 241, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 108, 242, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
-            ["persona", "nuevo_foto_persona", 108, 243, "EDIT", {}, true],
-        //Acción: SEARCH
-
-            ["persona", "nuevo_foto_persona", 109, 244, "SEARCH", {"nuevo_foto_persona": "a".repeat(12) + ".jpg"}, "nuevo_foto_persona_max_size_ko"],
-
-            ["persona", "nuevo_foto_persona", 110, 245, "SEARCH", {"nuevo_foto_persona": "mi foto.jpg"}, "nuevo_foto_persona_format_name_file_ko"],
-
-            ["persona", "nuevo_foto_persona", 111, 246, "SEARCH", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 111, 247, "SEARCH", {"nuevo_foto_persona": {"format_name_file": "foto", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 111, 248, "SEARCH", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 111, 249, "SEARCH", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true]
-
+            ["persona", "nuevo_foto_persona", 93, 241, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 93, 242, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 93, 243, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 93, 244, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 93, 245, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
+            ["persona", "nuevo_foto_persona", 93, 246, "EDIT", {}, true],
 
 ];

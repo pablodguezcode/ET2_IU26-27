@@ -180,26 +180,54 @@ class persona extends AbstractEntidad {
 //Atributo fechaNacimiento_persona
 
 	/**
-	 * Completa con un 0 delante el dia y el mes de una fecha d/m/aaaa escrita en el campo (1/2/2000 -> 01/02/2000),
-	 * de modo que quede siempre en el formato dd/mm/aaaa. Solo actua cuando el campo tiene una fecha completa
-	 * (1 o 2 digitos de dia, 1 o 2 de mes y 4 de anio): cualquier otro valor se deja tal cual para que lo juzgue la validacion.
+	 * Completa con un 0 delante el dia y el mes de una fecha d/m/aaaa o d-m-aaaa escrita en el campo (1/2/2000 -> 01/02/2000),
+	 * de modo que quede siempre en el formato dd/mm/aaaa (el separador "-" se sustituye por "/"). Solo actua cuando el campo tiene
+	 * una fecha completa (1 o 2 digitos de dia, 1 o 2 de mes y 4 de anio, con el mismo separador "/" o "-" en las dos posiciones):
+	 * cualquier otro valor se deja tal cual para que lo juzgue la validacion.
 	 * Tambien quita los espacios sobrantes de los extremos cuando se reconoce una fecha completa.
 	 */
 	completar_ceros_fechaNacimiento_persona(){
 
 		var campo = document.getElementById('fechaNacimiento_persona');
-		var partes = campo.value.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+		var partes = campo.value.trim().match(/^(\d{1,2})([\/-])(\d{1,2})\2(\d{4})$/);
 
 		if (partes !== null){
-			campo.value = partes[1].padStart(2,'0') + '/' + partes[2].padStart(2,'0') + '/' + partes[3];
+			campo.value = partes[1].padStart(2,'0') + '/' + partes[3].padStart(2,'0') + '/' + partes[4];
+		}
+	}
+
+	/**
+	 * Corrige una fecha completa escrita en formato anglosajon y la deja en dd/mm/aaaa. Solo en ADD y EDIT, y solo cuando el orden
+	 * se puede deducir sin ambiguedad (el separador puede ser "/" o "-", el mismo en las dos posiciones):
+	 * - aaaa/mm/dd (el anio, de 4 digitos, va primero): 2000-1-5 -> 05/01/2000
+	 * - mm/dd/aaaa cuando el segundo numero es mayor que 12 (no puede ser un mes): 01/15/2000 -> 15/01/2000
+	 * Si los dos primeros numeros son 12 o menos (03/04/1991) no hay forma de saber si es dd/mm o mm/dd y se interpreta como dd/mm/aaaa,
+	 * que es el formato del sistema. Cualquier otro valor se deja tal cual para que lo juzgue la validacion.
+	 * En SEARCH no se usa: la busqueda no reordena lo que escribe el usuario (se puede buscar por trozos, y un trozo es ambiguo).
+	 */
+	reordenar_fechaNacimiento_persona(){
+
+		var campo = document.getElementById('fechaNacimiento_persona');
+		var valor = campo.value.trim();
+
+		var anio_primero = valor.match(/^(\d{4})([\/-])(\d{1,2})\2(\d{1,2})$/);
+		if (anio_primero !== null){
+			campo.value = anio_primero[4].padStart(2,'0') + '/' + anio_primero[3].padStart(2,'0') + '/' + anio_primero[1];
+			return;
+		}
+
+		var mes_primero = valor.match(/^(\d{1,2})([\/-])(\d{1,2})\2(\d{4})$/);
+		if (mes_primero !== null && Number(mes_primero[1]) >= 1 && Number(mes_primero[1]) <= 12 && Number(mes_primero[3]) > 12){
+			campo.value = mes_primero[3].padStart(2,'0') + '/' + mes_primero[1].padStart(2,'0') + '/' + mes_primero[4];
 		}
 	}
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	ADD_fechaNacimiento_persona_validation(){
 
-		// La fecha se autocompleta a dd/mm/aaaa al salir del campo y tambien al enviar (el submit llama a esta validacion).
-		// EDIT_fechaNacimiento_persona_validation() delega en esta, asi que EDIT queda cubierto.
+		// La fecha se reordena (si viene en formato anglosajon) y se autocompleta a dd/mm/aaaa al salir del campo y tambien al enviar
+		// (el submit llama a esta validacion). EDIT_fechaNacimiento_persona_validation() delega en esta, asi que EDIT queda cubierto.
+		this.reordenar_fechaNacimiento_persona();
 		this.completar_ceros_fechaNacimiento_persona();
 
 		if (!(this.validations.min_size('fechaNacimiento_persona',8))){
@@ -210,8 +238,8 @@ class persona extends AbstractEntidad {
 			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_max_size_ko');
 			return "fechaNacimiento_persona_max_size_ko";
 		}
-		//Formatos válidos: dd/mm/yyyy, d/m/yyyy, dd/m/yyyy, d/mm/yyyy
-		if (!(this.validations.format('fechaNacimiento_persona', '^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/[0-9]{4}$'))){
+		//Formatos válidos: dd/mm/yyyy, d/m/yyyy, dd/m/yyyy, d/mm/yyyy y los mismos con "-" como separador (el mismo en las dos posiciones)
+		if (!(this.validations.format('fechaNacimiento_persona', '^(0?[1-9]|[12][0-9]|3[01])([/-])(0?[1-9]|1[012])\\2[0-9]{4}$'))){
 			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_format_ko');
 			return "fechaNacimiento_persona_format_ko";
 		}
@@ -229,7 +257,7 @@ class persona extends AbstractEntidad {
 
 		fecha = document.getElementById('fechaNacimiento_persona').value;
 
-		const [dia, mes, anio] = fecha.trim().split('/').map(Number);
+		const [dia, mes, anio] = fecha.trim().split(/[\/-]/).map(Number);
 		const fechaIntroducida = new Date(anio, mes - 1, dia);
 
 		const hoy = new Date();
@@ -326,38 +354,8 @@ class persona extends AbstractEntidad {
 
 //Atributo foto_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	ADD_foto_persona_validation(){
-
-		if (!(this.validations.min_size('foto_persona',5))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_min_size_ko');
-			return "foto_persona_min_size_ko";
-		}
-		if (!(this.validations.max_size('foto_persona',15))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_max_size_ko');
-			return "foto_persona_max_size_ko";
-		}
-		// mismo formato que el nombre del archivo: letras y puntos
-		if (!(this.validations.format('foto_persona', '^[a-zA-Z.]*$'))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_format_ko');
-			return "foto_persona_format_ko";
-		}
-		// la extension debe ser jpg o jpeg
-		if (!(this.personalize_foto_persona('foto_persona'))){
-			this.dom.mostrar_error_campo('foto_persona','foto_persona_personalized_ko');
-			return "foto_persona_personalized_ko";
-		}
-		this.dom.mostrar_exito_campo('foto_persona');
-		return true;
-	}
-
-	//Retorna true si el nombre del fichero termina en .jpg o .jpeg, si no devuelve false
-	personalize_foto_persona(foto){
-
-		foto = document.getElementById('foto_persona').value;
-
-		return /\.(jpg|jpeg)$/i.test(foto);
-	}
+	// foto_persona (nombre del fichero) no se muestra en ADD (lo pone el back al subir el fichero) ni se puede modificar en EDIT (solo lectura):
+	// solo se valida en SEARCH, donde es un input de texto editable (ver SEARCH_foto_persona_validation).
 
 //Atributo nuevo_foto_persona
 
@@ -422,10 +420,8 @@ class persona extends AbstractEntidad {
 ****************************************************************************************************************************/
 
 
-	EDIT_dni_validation(){
-
-		return this.ADD_dni_validation();
-	}
+	// dni (clave primaria) y foto_persona (nombre del fichero) van en solo lectura en EDIT: no se pueden modificar y no se validan.
+	// La foto se cambia con el input file nuevo_foto_persona, que es opcional.
 
 	EDIT_nombre_persona_validation(){
 
@@ -455,16 +451,6 @@ class persona extends AbstractEntidad {
 	EDIT_email_persona_validation(){
 
 		return this.ADD_email_persona_validation();
-	}
-
-	EDIT_foto_persona_validation(){
-
-		// en EDIT puede ir vacio (se conserva la foto actual); si trae algo, mismas restricciones que en ADD
-		if (document.getElementById('foto_persona').value.length == 0){
-			this.dom.mostrar_exito_campo('foto_persona');
-			return true;
-		}
-		return this.ADD_foto_persona_validation();
 	}
 
 	EDIT_nuevo_foto_persona_validation(){
@@ -502,14 +488,13 @@ class persona extends AbstractEntidad {
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
 		var set_result = {};
 
-		set_result.dni = this.EDIT_dni_validation();
+		// dni y foto_persona son de solo lectura en EDIT: no se validan
 		set_result.nombre_persona = this.EDIT_nombre_persona_validation();
 		set_result.apellidos_persona = this.EDIT_apellidos_persona_validation();
 		set_result.fechaNacimiento_persona = this.EDIT_fechaNacimiento_persona_validation();
 		set_result.direccion_persona = this.EDIT_direccion_persona_validation();
 		set_result.telefono_persona = this.EDIT_telefono_persona_validation();
 		set_result.email_persona = this.EDIT_email_persona_validation();
-		set_result.foto_persona = this.EDIT_foto_persona_validation();
 		set_result.nuevo_foto_persona = this.EDIT_nuevo_foto_persona_validation();
 
 		// si todos los campos son correctos devuelve true; si no, el objeto con los resultados
@@ -529,15 +514,34 @@ class persona extends AbstractEntidad {
 
 //Atributo dni
 
+	/**
+	 * En la busqueda de dni, si el campo tiene una letra seguida de uno o mas numeros (Z1234) pasa la letra al final (1234Z):
+	 * en un DNI la letra de control siempre va detras de los numeros, asi que el orden se deduce sin ambiguedad.
+	 * Cualquier otro valor se deja tal cual para que lo juzgue la validacion.
+	 */
+	corregir_letra_dni_search(){
+
+		var campo = document.getElementById('dni');
+		var partes = campo.value.trim().match(/^([A-Za-z])([0-9]+)$/);
+
+		if (partes !== null){
+			campo.value = partes[2] + partes[1];
+		}
+	}
+
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_dni_validation(){
+
+		// La letra del DNI solo puede ir al final: una busqueda escrita como letra y numeros (Z1234) se corrige a numeros y letra (1234Z)
+		this.corregir_letra_dni_search();
 
 		if (!(this.validations.max_size('dni',9))){
 			this.dom.mostrar_error_campo('dni','dni_max_size_ko');
 			return "dni_max_size_ko";
 		}
-		// vacio (sin filtro) o dni parcial/completo: solo digitos y letras. No se recalcula la letra de control (ver persona_tests.js)
-		if (!(this.validations.format('dni', '^[0-9A-Za-z]*$'))){
+		// vacio (sin filtro) o dni parcial/completo: solo digitos y, como mucho, una letra al final (dos letras o una letra en medio no
+		// pueden ser un trozo de DNI). No se recalcula la letra de control (ver persona_tests.js)
+		if (!(this.validations.format('dni', '^[0-9]*[A-Za-z]?$'))){
 			this.dom.mostrar_error_campo('dni','dni_format_ko');
 			return "dni_format_ko";
 		}
@@ -585,14 +589,18 @@ class persona extends AbstractEntidad {
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_fechaNacimiento_persona_validation(){
 
-		// En la busqueda solo se autocompleta una fecha completa: un trozo (p. ej. "1/") es un comienzo valido y no se toca.
+		// En la busqueda NO se reordena lo que escribe el usuario (se puede buscar por trozos y un trozo como 03/04 es ambiguo: la busqueda
+		// depende de lo escrito). Solo se hacen dos ajustes mecanicos: el separador "-" se sustituye por "/" (asi se guardan las fechas) y una
+		// fecha completa se autocompleta a dd/mm/aaaa. Un trozo (p. ej. "1/") es un comienzo valido y no se toca.
+		var campo = document.getElementById('fechaNacimiento_persona');
+		campo.value = campo.value.replace(/-/g, '/');
 		this.completar_ceros_fechaNacimiento_persona();
 
 		if (!(this.validations.max_size('fechaNacimiento_persona',10))){
 			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_max_size_ko');
 			return "fechaNacimiento_persona_max_size_ko";
 		}
-		// vacío, o d/m/yyyy escrito parcialmente
+		// vacío, o d/m/yyyy escrito parcialmente (los "-" ya se han sustituido por "/")
 		if (!(this.validations.format('fechaNacimiento_persona', '^[0-9/]*$'))){
 			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_format_ko');
 			return "fechaNacimiento_persona_format_ko";
@@ -717,28 +725,7 @@ class persona extends AbstractEntidad {
 
 //Atributo nuevo_foto_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	SEARCH_nuevo_foto_persona_validation(){
-
-		// Si es un input file no hay nada que validar en SEARCH (se busca por el nombre en foto_persona): siempre es valido.
-		// Su .value es "C:\fakepath\nombre", asi que no se le pueden aplicar las validaciones de texto de abajo.
-		if (document.getElementById('nuevo_foto_persona').type == 'file'){
-			this.dom.mostrar_exito_campo('nuevo_foto_persona');
-			return true;
-		}
-		// Si se mostrara como input de texto: nombre parcial del fichero
-		if (!(this.validations.max_size('nuevo_foto_persona',15))){
-			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_max_size_ko');
-			return "nuevo_foto_persona_max_size_ko";
-		}
-		// vacío o nombre parcial: letras y puntos
-		if (!(this.validations.format('nuevo_foto_persona', '^[a-zA-Z.]*$'))){
-			this.dom.mostrar_error_campo('nuevo_foto_persona','nuevo_foto_persona_format_name_file_ko');
-			return "nuevo_foto_persona_format_name_file_ko";
-		}
-		this.dom.mostrar_exito_campo('nuevo_foto_persona');
-		return true;
-	}
+	// nuevo_foto_persona (input file) no se muestra en SEARCH: se busca por el nombre del fichero (foto_persona). No tiene validaciones en SEARCH.
 
 
 

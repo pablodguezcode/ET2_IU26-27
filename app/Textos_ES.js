@@ -64,8 +64,8 @@ var textos_ES = {
 	// --- Errores de validación - DNI
 	'dni_min_size_ko': 'El DNI es demasiado corto: debe tener 9 caracteres',
 	'dni_max_size_ko': 'El DNI es demasiado largo: debe tener 9 caracteres',
-	'dni_format_ko': 'El formato del DNI no es válido: deben ser 8 dígitos seguidos de una letra (mayúscula o minúscula). En la búsqueda se admite un DNI parcial',
-	'dni_personalized_ko': 'El DNI no es válido: la letra de control no es correcta o el DNI ya está en uso',
+	'dni_format_ko': 'El formato del DNI no es válido: deben ser 8 dígitos y una letra mayúscula (en la búsqueda: solo dígitos y como mucho una letra, al final)',
+	'dni_personalized_ko': 'El DNI no es válido: la letra de control no es correcta',
 	'dni_es_nulo_ko': 'El dni no puede ser vacio',
 	'dni_EXISTE_en_persona_KO': 'Ya existe una persona con ese DNI',
 
@@ -80,9 +80,9 @@ var textos_ES = {
 	'apellidos_persona_format_ko': 'Los apellidos contienen caracteres no válidos: solo se permiten letras (incluida ñ y acentos), puntos, guiones y espacios',
 
 	// --- Errores de validación - Fecha de nacimiento
-	'fechaNacimiento_persona_min_size_ko': 'La fecha de nacimiento es demasiado corta: debe tener 8 caracteres (dd/mm/aaaa) o (d/m/aaaa)',
-	'fechaNacimiento_persona_max_size_ko': 'La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa)',
-	'fechaNacimiento_persona_format_ko': 'El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa (en la búsqueda solo se permiten dígitos y /)',
+	'fechaNacimiento_persona_min_size_ko': 'La fecha de nacimiento es demasiado corta: debe tener al menos 8 caracteres (d/m/aaaa o d-m-aaaa)',
+	'fechaNacimiento_persona_max_size_ko': 'La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)',
+	'fechaNacimiento_persona_format_ko': 'El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también aaaa/mm/dd o mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dígitos, / y -)',
 	'fechaNacimiento_persona_personalized_ko': 'La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy',
 
 	// --- Errores de validación - Dirección
@@ -99,7 +99,7 @@ var textos_ES = {
 	// --- Errores de validación - Email
 	'email_persona_min_size_ko': 'El email es demasiado corto: debe tener al menos 6 caracteres',
 	'email_persona_max_size_ko': 'El email es demasiado largo: no puede superar los 45 caracteres',
-	'email_persona_format_ko': 'El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos y guiones)',
+	'email_persona_format_ko': 'El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos, guiones y guiones bajos)',
 
 	// --- Errores de validación - Foto (metadatos)
 	'foto_persona_min_size_ko': 'El nombre del fichero es demasiado corto: debe tener al menos 5 caracteres extensión incluida',
