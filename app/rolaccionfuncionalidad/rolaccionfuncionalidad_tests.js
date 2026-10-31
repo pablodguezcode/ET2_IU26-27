@@ -6,6 +6,27 @@
 
 */ //-----------------//-----------------//-----------------//-----------------//
 
+/*
+----------------------------------------------
+PARA LA ENTIDAD rolaccionfuncionalidad:
+ - id_funcionalidad
+ - id_accion
+ - id_rol
+----------------------------------------------
+
+DECISIONES DE DISEÑO PARA LA ENTIDAD ROLACCIONFUNCIONALIDAD:
+ 1. Los tres atributos forman la clave primaria compuesta, son claves foráneas y se introducen mediante elementos select.
+    Se interpreta "numérico min 1 max 11" como número de dígitos (int(11)).
+ 2. Se definen ADD, EDIT y SEARCH para los tres atributos, tal y como se entregó en la ET1. En el front esta entidad es una matriz
+    funcionalidad x rol que se edita marcando y desmarcando casillas (no tiene formularios de ADD ni de EDIT), pero se conservan las
+    validaciones y los tests porque son los que ejecuta el botón TEST.
+ 3. En SEARCH se omite min_size: el filtro es opcional y un valor vacío significa "sin filtro".
+ 4. max_size y format, aunque un select no debería generar esos errores, se mantienen para detectar valores manipulados.
+ 5. No se incluyen tests sobre la unicidad de la tripleta ni sobre la existencia de los ids en sus tablas, al ser comprobaciones
+    de servidor y no validaciones atómicas de formato del campo.
+ 6. Los mensajes de los tests son los textos de Textos_ES.js de cada código de error (Textos_EN.js en inglés).
+----------------------------------------------
+*/
 var rolaccionfuncionalidad_def_tests = [
 
     //Acción: ADD
@@ -14,15 +35,15 @@ var rolaccionfuncionalidad_def_tests = [
     
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 1, "Comprobar el tamaño mínimo",
         "min_size", "ADD", "id_funcionalidad_min_size_ko",
-        "El tamaño de la funcionalidad es muy corto, intenta añadirle al menos 1 dígito"],
+        "El identificador de la funcionalidad es obligatorio: debe tener al menos 1 dígito"],
 
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 2, "Comprobar el tamaño máximo",
         "max_size", "ADD", "id_funcionalidad_max_size_ko",
-        "El tamaño de la funcionalidad es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador de la funcionalidad supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 3, "Comprobar si el formato es válido",
         "format", "ADD", "id_funcionalidad_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador de la funcionalidad solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 4, "Estado de Éxito",
         "valid", "ADD", true, "Caso de Éxito"],
@@ -31,15 +52,15 @@ var rolaccionfuncionalidad_def_tests = [
 
     ["rolaccionfuncionalidad", "id_accion", "select", 5, "Comprobar el tamaño mínimo",
         "min_size", "ADD", "id_accion_min_size_ko",
-        "El tamaño de la accion es muy corto, intenta añadirle al menos 1 dígito"],
+        "El identificador de la acción es obligatorio: debe tener al menos 1 dígito"],
 
     ["rolaccionfuncionalidad", "id_accion", "select", 6, "Comprobar el tamaño máximo",
         "max_size", "ADD", "id_accion_max_size_ko",
-        "El tamaño de la accion es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador de la acción supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_accion", "select", 7, "Comprobar si el formato es válido",
         "format", "ADD", "id_accion_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador de la acción solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_accion", "select", 8, "Estado de Éxito",
         "valid", "ADD", true, "Caso de Éxito"],
@@ -48,15 +69,15 @@ var rolaccionfuncionalidad_def_tests = [
 
     ["rolaccionfuncionalidad", "id_rol", "select", 9, "Comprobar el tamaño mínimo",
         "min_size", "ADD", "id_rol_min_size_ko",
-        "El tamaño del rol es muy corto, intenta añadirle al menos 1 dígito"],
+        "El identificador del rol es obligatorio: debe tener al menos 1 dígito"],
 
     ["rolaccionfuncionalidad", "id_rol", "select", 10, "Comprobar el tamaño máximo",
         "max_size", "ADD", "id_rol_max_size_ko",
-        "El tamaño del rol es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador del rol supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_rol", "select", 11, "Comprobar si el formato es válido",
         "format", "ADD", "id_rol_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador del rol solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_rol", "select", 12, "Estado de Éxito",
         "valid", "ADD", true, "Caso de Éxito"],
@@ -67,15 +88,15 @@ var rolaccionfuncionalidad_def_tests = [
     
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 13, "Comprobar el tamaño mínimo",
         "min_size", "EDIT", "id_funcionalidad_min_size_ko",
-        "El tamaño de la funcionalidad es muy corto, intenta añadirle al menos 1 dígito"],
+        "El identificador de la funcionalidad es obligatorio: debe tener al menos 1 dígito"],
 
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 14, "Comprobar el tamaño máximo",
         "max_size", "EDIT", "id_funcionalidad_max_size_ko",
-        "El tamaño de la funcionalidad es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador de la funcionalidad supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 15, "Comprobar si el formato es válido",
         "format", "EDIT", "id_funcionalidad_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador de la funcionalidad solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 16, "Estado de Éxito",
         "valid", "EDIT", true, "Caso de Éxito"],
@@ -84,15 +105,15 @@ var rolaccionfuncionalidad_def_tests = [
 
     ["rolaccionfuncionalidad", "id_accion", "select", 17, "Comprobar el tamaño mínimo",
         "min_size", "EDIT", "id_accion_min_size_ko",
-        "El tamaño de la accion es muy corto, intenta añadirle al menos 1 dígito"],
+        "El identificador de la acción es obligatorio: debe tener al menos 1 dígito"],
 
     ["rolaccionfuncionalidad", "id_accion", "select", 18, "Comprobar el tamaño máximo",
         "max_size", "EDIT", "id_accion_max_size_ko",
-        "El tamaño de la accion es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador de la acción supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_accion", "select", 19, "Comprobar si el formato es válido",
         "format", "EDIT", "id_accion_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador de la acción solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_accion", "select", 20, "Estado de Éxito",
         "valid", "EDIT", true, "Caso de Éxito"],
@@ -101,15 +122,15 @@ var rolaccionfuncionalidad_def_tests = [
 
     ["rolaccionfuncionalidad", "id_rol", "select", 21, "Comprobar el tamaño mínimo",
         "min_size", "EDIT", "id_rol_min_size_ko",
-        "El tamaño del rol es muy corto, intenta añadirle al menos 1 dígito"],
+        "El identificador del rol es obligatorio: debe tener al menos 1 dígito"],
 
     ["rolaccionfuncionalidad", "id_rol", "select", 22, "Comprobar el tamaño máximo",
         "max_size", "EDIT", "id_rol_max_size_ko",
-        "El tamaño del rol es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador del rol supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_rol", "select", 23, "Comprobar si el formato es válido",
         "format", "EDIT", "id_rol_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador del rol solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_rol", "select", 24, "Estado de Éxito",
         "valid", "EDIT", true, "Caso de Éxito"],
@@ -120,11 +141,11 @@ var rolaccionfuncionalidad_def_tests = [
     
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 25, "Comprobar el tamaño máximo",
         "max_size", "SEARCH", "id_funcionalidad_max_size_ko",
-        "El tamaño de la funcionalidad es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador de la funcionalidad supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 26, "Comprobar si el formato es válido",
         "format", "SEARCH", "id_funcionalidad_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador de la funcionalidad solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_funcionalidad", "select", 27, "Estado de Éxito",
         "valid", "SEARCH", true, "Caso de Éxito"],
@@ -133,11 +154,11 @@ var rolaccionfuncionalidad_def_tests = [
 
     ["rolaccionfuncionalidad", "id_accion", "select", 28, "Comprobar el tamaño máximo",
         "max_size", "SEARCH", "id_accion_max_size_ko",
-        "El tamaño de la accion es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador de la acción supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_accion", "select", 29, "Comprobar si el formato es válido",
         "format", "SEARCH", "id_accion_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador de la acción solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_accion", "select", 30, "Estado de Éxito",
         "valid", "SEARCH", true, "Caso de Éxito"],
@@ -146,11 +167,11 @@ var rolaccionfuncionalidad_def_tests = [
 
     ["rolaccionfuncionalidad", "id_rol", "select", 31, "Comprobar el tamaño máximo",
         "max_size", "SEARCH", "id_rol_max_size_ko",
-        "El tamaño del rol es muy largo, solo estan permitidos hasta 11 dígitos"],
+        "El identificador del rol supera los 11 dígitos numéricos permitidos"],
 
     ["rolaccionfuncionalidad", "id_rol", "select", 32, "Comprobar si el formato es válido",
         "format", "SEARCH", "id_rol_format_ko",
-        "El formato seleccionado es inválido, solo está permitido el uso de dígitos"],
+        "El identificador del rol solo puede estar formado por dígitos numéricos"],
     
     ["rolaccionfuncionalidad", "id_rol", "select", 33, "Estado de Éxito",
         "valid", "SEARCH", true, "Caso de Éxito"]

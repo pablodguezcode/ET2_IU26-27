@@ -253,6 +253,8 @@ var textos_EN = {
 	'text_contenido_titulo_form_funcionalidad_accion_SEARCH': 'Feature-Action SEARCH Form',
 	'text_contenido_titulo_form_funcionalidad_accion_SHOWCURRENT': 'Feature-Action Detail',
 	'text_contenido_titulo_form_funcionalidad_accion_DELETE': 'Feature-Action DELETE Form',
+	// the rolaccionfuncionalidad matrix only has the SEARCH form
+	'text_contenido_titulo_form_rolaccionfuncionalidad_SEARCH': 'Role-Action-Feature SEARCH Form',
 
 	// ============================================================================
 	// TABLE ACTION COLUMN HEADERS
@@ -293,6 +295,8 @@ var textos_EN = {
 	// headers of the funcionalidad_accion matrix: fixed text before "id - name" (e.g. "Feature 3 - Roles management")
 	'text_matriz_funcionalidad': 'Feature',
 	'text_matriz_accion': 'Action',
+	// headers of the rolaccionfuncionalidad matrix: rows are features (text_matriz_funcionalidad) and columns roles
+	'text_matriz_rol': 'Role',
 	'test_ventana_bloqueada_ko': 'The browser has blocked the test results window. Allow pop-ups for this page.',
 
 }

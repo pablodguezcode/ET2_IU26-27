@@ -253,6 +253,8 @@ var textos_ES = {
 	'text_contenido_titulo_form_funcionalidad_accion_SEARCH': 'Formulario Búsqueda Funcionalidad_Acción',
 	'text_contenido_titulo_form_funcionalidad_accion_SHOWCURRENT': 'Detalle de Funcionalidad_Acción',
 	'text_contenido_titulo_form_funcionalidad_accion_DELETE': 'Formulario Baja Funcionalidad_Acción',
+	// la matriz de rolaccionfuncionalidad solo tiene formulario de SEARCH
+	'text_contenido_titulo_form_rolaccionfuncionalidad_SEARCH': 'Formulario Búsqueda Rol_Acción_Funcionalidad',
 
 	// ============================================================================
 	// CABECERAS DE LAS COLUMNAS DE ACCION DE LA TABLA
@@ -293,6 +295,8 @@ var textos_ES = {
 	// cabeceras de la matriz de funcionalidad_accion: texto fijo delante de "id - nombre" (p.e. "Funcionalidad 3 - Gestion roles")
 	'text_matriz_funcionalidad': 'Funcionalidad',
 	'text_matriz_accion': 'Acción',
+	// cabeceras de la matriz de rolaccionfuncionalidad: las filas son funcionalidades (text_matriz_funcionalidad) y las columnas roles
+	'text_matriz_rol': 'Rol',
 	'test_ventana_bloqueada_ko': 'El navegador ha bloqueado la ventana de resultados de las pruebas. Permita las ventanas emergentes para esta página.',
 
 }
