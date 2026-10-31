@@ -78,6 +78,23 @@ class entity_dom_fields extends dom_fields{
     }
 
     /**
+     * Refactorizacion de mostrar_error_campo(): mantiene la definicion. La definicion original solo AÑADE el codigo de error como class
+     * del mensaje y nunca quita el anterior, y setLang() traduce todas las clases que encuentra (gana la ultima en el orden de Textos),
+     * de modo que si un campo cambiaba de un error a otro (p.e. de dni_min_size_ko a dni_format_ko) seguia mostrando el primer mensaje.
+     * Antes de mostrar el nuevo error se quitan los codigos de error anteriores del mensaje.
+     *
+     * @param {string} id id del campo del formulario al que se muestra el error
+     * @param {string} codigoerror codigo del error a mostrar para ese campo
+     */
+    mostrar_error_campo(id, codigoerror){
+        var mensaje = document.getElementById('error_'+id);
+        if (mensaje != null){
+            mensaje.removeAttribute('class');
+        }
+        super.mostrar_error_campo(id, codigoerror);
+    }
+
+    /**
      * Refactorizacion de abrirModalError(): mantiene la definicion. Coloca el codigo de error como class del mensaje
      * para que setLang() lo sustituya por su texto traducido. Si el codigo no tiene traduccion en el idioma activo no se
      * muestra solo el codigo en crudo: se muestra un texto generico traducido (text_error_back_generico) seguido del codigo

@@ -65,9 +65,7 @@ var textos_ES = {
 	'dni_min_size_ko': 'El DNI es demasiado corto: debe tener 9 caracteres',
 	'dni_max_size_ko': 'El DNI es demasiado largo: debe tener 9 caracteres',
 	'dni_format_ko': 'El formato del DNI no es válido: deben ser 8 dígitos y una letra mayúscula (en la búsqueda: solo dígitos y como mucho una letra, al final)',
-	'dni_personalized_ko': 'El DNI no es válido: la letra de control no es correcta',
-	'dni_es_nulo_ko': 'El dni no puede ser vacio',
-	'dni_EXISTE_en_persona_KO': 'Ya existe una persona con ese DNI',
+	'dni_personalized_ko': 'El DNI no es válido: la letra de control no es correcta o el DNI ya está en uso',
 
 	// --- Errores de validación - Nombre
 	'nombre_persona_min_size_ko': 'El nombre es demasiado corto: debe tener al menos 2 caracteres',
@@ -149,9 +147,6 @@ var textos_ES = {
 	'id_rol_min_size_ko': 'El identificador del rol es obligatorio: debe tener al menos 1 dígito',
 	'id_rol_max_size_ko': 'El identificador del rol supera los 11 dígitos numéricos permitidos',
 	'id_rol_format_ko': 'El identificador del rol solo puede estar formado por dígitos numéricos',
-
-	// --- Errores de acciones específicas
-	'admin_no_se_puede_modificar_ko': 'El admin no se puede modificar',
 
 	// ============================================================================
 	// ENTIDAD: ROL

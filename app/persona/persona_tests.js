@@ -28,7 +28,7 @@ var persona_def_tests = [
         "dni_format_ko", "El formato del DNI no es válido: deben ser 8 dígitos y una letra mayúscula (en la búsqueda: solo dígitos y como mucho una letra, al final)"],
 
             ["persona", "dni", "select", 4, "Validar que la letra del dni es correcta en ADD ", "personalized", "ADD",
-        "dni_personalized_ko", "El DNI no es válido: la letra de control no es correcta"],
+        "dni_personalized_ko", "El DNI no es válido: la letra de control no es correcta o el DNI ya está en uso"],
 
             ["persona", "dni", "select", 5, "Validar dni correcto en ADD", "valid", "ADD",
         true, "DNI correcto"],

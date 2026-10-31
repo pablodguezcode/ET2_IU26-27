@@ -65,7 +65,7 @@ class usuario extends AbstractEntidad {
 			<label class="label_id_rol">Rol</label>
 			<select id='id_rol' name='id_rol'>
 				<!-- la primera opcion vacia permite que min_size falle si no se elige rol (y es "sin filtro" en SEARCH).
-				     Las demas opciones (value = id_rol, texto = id_rol) las rellena cargar_roles() desde el back. -->
+				     Las demas opciones (value = id_rol, texto = "id_rol - rol_name") las rellena cargar_roles() desde el back. -->
 				<option value=""></option>
 			</select>
 			<span id="span_error_id_rol"><a id="error_id_rol"></a></span>
@@ -95,14 +95,8 @@ class usuario extends AbstractEntidad {
 	}
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//En ADD el dni ademas debe ser unico (personalized)
+	//En ADD el dni ademas debe ser unico (personalized). En EDIT el dni va en solo lectura (es la clave que identifica la tupla), por lo que no se valida.
 	ADD_dni_validation(){
-
-		return this.validar_dni(true);
-	}
-
-	//Validacion del dni compartida por ADD y EDIT. En EDIT el dni es el de la propia tupla (solo lectura), por lo que no se comprueba la unicidad.
-	validar_dni(comprobar_unicidad){
 
 		if (!(this.validations.min_size('dni',9))){
 			this.dom.mostrar_error_campo('dni','dni_min_size_ko');
@@ -117,25 +111,24 @@ class usuario extends AbstractEntidad {
 			this.dom.mostrar_error_campo('dni','dni_format_ko');
 			return "dni_format_ko";
 		}
-		//personalized: letra de control (modulo 23) y, en ADD, que no exista ya un usuario con ese dni. La funcion recibe el valor, no lee del DOM
-		if (!(this.personalize_dni(document.getElementById('dni').value, comprobar_unicidad))){
+		//personalized: letra de control (modulo 23) y que no exista ya un usuario con ese dni. La funcion recibe el valor, no lee del DOM
+		if (!(this.personalize_dni(document.getElementById('dni').value))){
 			this.dom.mostrar_error_campo('dni','dni_personalized_ko');
 			return "dni_personalized_ko";
 		}
 		this.dom.mostrar_exito_campo('dni');
 		return true;
-
 	}
 
-	//Retorna true si la letra de control (numero mod 23) coincide con la del DNI y, si se pide, no existe ya un usuario con ese DNI.
+	//Retorna true si la letra de control (numero mod 23) coincide con la del DNI y no existe ya un usuario con ese DNI.
 	//Si no, devuelve false. Recibe el valor por parametro (no lee del DOM). Se llama despues de comprobar el formato (8 digitos + letra).
-	personalize_dni(dni, comprobar_unicidad=false){
+	personalize_dni(dni){
 
 		var dni_letters = "TRWAGMYFPDXBNJZSQVHLCKE";
 		if (dni_letters.charAt(parseInt(dni.substring(0, 8), 10) % 23) != dni.charAt(8)){
 			return false;
 		}
-		if (comprobar_unicidad && this.usuarios_existentes.some(existente => existente.dni == dni)){
+		if (this.usuarios_existentes.some(existente => existente.dni == dni)){
 			return false;
 		}
 		return true;
@@ -261,13 +254,8 @@ class usuario extends AbstractEntidad {
 ****************************************************************************************************************************/
 
 //En usuario los codigos de error y las restricciones de EDIT son los mismos que los de ADD (ver usuario_tests.js).
-//El dni va en solo lectura en EDIT (identifica la tupla en el back), pero lleva las mismas restricciones que en ADD por si el valor se manipula.
-//Lo unico que cambia es la unicidad: el dni de la propia tupla no cuenta como repetido y el usuario solo se compara con el resto de tuplas.
-
-	EDIT_dni_validation(){
-
-		return this.validar_dni(false);
-	}
+//El dni va en solo lectura en EDIT (identifica la tupla en el back): no se puede modificar, por lo que no tiene validacion ni test en EDIT.
+//Lo unico que cambia respecto a ADD es la unicidad del usuario: la propia tupla no cuenta como repetida y se compara solo con el resto de tuplas.
 
 	EDIT_usuario_validation(){
 
@@ -297,7 +285,6 @@ class usuario extends AbstractEntidad {
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
 		var set_result = {};
 
-		set_result.dni = this.EDIT_dni_validation();
 		set_result.usuario = this.EDIT_usuario_validation();
 		set_result.contrasena = this.EDIT_contrasena_validation();
 		set_result.id_rol = this.EDIT_id_rol_validation();
@@ -319,15 +306,29 @@ class usuario extends AbstractEntidad {
 
 //Atributo dni
 
+	//Si el dni empieza por una letra seguida de numeros (Z1234) se pasa la letra al final (1234Z): la letra de un DNI va siempre al final,
+	//asi que en una busqueda parcial se corrige en el propio campo. Dos letras o una letra entre numeros no se corrigen y dan error de formato.
+	//La letra llega en mayuscula (el formulario la pasa a mayuscula antes de validar, ver dni_a_mayusculas).
+	corregir_letra_dni_search(){
+
+		var campo = document.getElementById('dni');
+		if (campo == null){ return; }
+		var partes = campo.value.trim().match(/^([A-Z])([0-9]+)$/);
+		if (partes !== null){
+			campo.value = partes[2] + partes[1];
+		}
+	}
+
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	SEARCH_dni_validation(){
 
+		this.corregir_letra_dni_search();
 		if (!(this.validations.max_size('dni',9))){
 			this.dom.mostrar_error_campo('dni','dni_max_size_ko');
 			return "dni_max_size_ko";
 		}
-		//busqueda parcial: vacio (sin filtro), o hasta 8 digitos y opcionalmente la letra al final (cualquier trozo de un DNI).
-		//La letra va en mayuscula (el formulario la pasa a mayuscula antes de validar, ver dni_a_mayusculas). No se recalcula la letra (ver usuario_tests.js)
+		//busqueda parcial: vacio (sin filtro), o hasta 8 digitos y opcionalmente UNA letra al final (cualquier trozo de un DNI); dos letras, o una letra
+		//entre numeros, dan error. La letra va en mayuscula (el formulario la pasa a mayuscula antes de validar, ver dni_a_mayusculas). No se recalcula la letra (ver usuario_tests.js)
 		if (!(this.validations.format('dni', '^[0-9]{0,8}[A-Z]?$'))){
 			this.dom.mostrar_error_campo('dni','dni_format_ko');
 			return "dni_format_ko";
@@ -765,7 +766,8 @@ class usuario extends AbstractEntidad {
 
 	/**
 	 * pide al back el listado de la entidad rol y rellena el select id_rol del formulario actual
-	 * (value = id_rol, texto = id_rol). La primera opcion vacia viene de manual_form_creation().
+	 * (value = id_rol, texto = "id_rol - rol_name": el usuario elige el rol por su nombre pero se valida y se envia al back el id_rol).
+	 * La primera opcion vacia viene de manual_form_creation().
 	 * Se envia un FormData vacio ('') para que los campos del formulario de usuario no lleguen a rol como filtro.
 	 */
 	async cargar_roles(){
@@ -786,7 +788,7 @@ class usuario extends AbstractEntidad {
 				for (let fila of respuesta['resource']){
 					var opcion = document.createElement('option');
 					opcion.value = fila['id_rol'];
-					opcion.text = fila['id_rol'];
+					opcion.text = fila['id_rol'] + ' - ' + fila['rol_name'];
 					select.append(opcion);
 				}
 				select.value = valoractual;

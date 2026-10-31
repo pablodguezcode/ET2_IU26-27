@@ -65,9 +65,7 @@ var textos_EN = {
 	'dni_min_size_ko': 'The ID number is too short: it must have 9 characters',
 	'dni_max_size_ko': 'The ID number is too long: it must have 9 characters',
 	'dni_format_ko': 'The ID number format is not valid: it must be 8 digits and an uppercase letter (in searches: only digits and at most one letter, at the end)',
-	'dni_personalized_ko': 'The ID number is not valid: the control letter is not correct',
-	'dni_es_nulo_ko': 'DNI can not be empty',
-	'dni_EXISTE_en_persona_KO': 'A person with that ID number already exists',
+	'dni_personalized_ko': 'The ID number is not valid: the control letter is not correct or the ID number is already in use',
 
 	// --- Validation errors - Name
 	'nombre_persona_min_size_ko': 'The name is too short: it must have at least 2 characters',
@@ -149,9 +147,6 @@ var textos_EN = {
 	'id_rol_min_size_ko': 'The role identifier is required: it must have at least 1 digit',
 	'id_rol_max_size_ko': 'The role identifier exceeds the 11 numeric digits allowed',
 	'id_rol_format_ko': 'The role identifier can only consist of numeric digits',
-
-	// --- Specific action errors
-	'admin_no_se_puede_modificar_ko': 'The admin cannot be modified',
 
 	// ============================================================================
 	// ENTITY: ROLE
