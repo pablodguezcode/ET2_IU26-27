@@ -290,8 +290,9 @@ var textos_ES = {
 	// Data_Test busca la traduccion con window.traduccion[resultadoprueba]; cuando la validacion devuelve true la clave es 'true'.
 	// Sin esta clave la columna del mensaje mostraba 'sintraduccion' en todas las pruebas de exito.
 	'true': 'Valor válido: cumple todas las comprobaciones',
-	'text_matriz_id_funcionalidad': 'id funcionalidad',
-	'text_matriz_id_accion': 'id acción',
+	// cabeceras de la matriz de funcionalidad_accion: texto fijo delante de "id - nombre" (p.e. "Funcionalidad 3 - Gestion roles")
+	'text_matriz_funcionalidad': 'Funcionalidad',
+	'text_matriz_accion': 'Acción',
 	'test_ventana_bloqueada_ko': 'El navegador ha bloqueado la ventana de resultados de las pruebas. Permita las ventanas emergentes para esta página.',
 
 }

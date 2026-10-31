@@ -37,7 +37,9 @@
       espacio), para que el resultado esperado no tenga dos causas posibles.
    6. Tests y pruebas de id_* en ADD: se mantienen aunque el id sea autoincremental
       porque la entrega los exige.
-   7. Los valores "a".repeat(n) comprueban los límites exactos de tamaño.
+   7. id_rol no se edita (es autoincremental): no hay tests ni pruebas de EDIT para
+      id_rol. En SEARCH sí es criterio de búsqueda y tiene sus tests.
+   8. Los valores "a".repeat(n) comprueban los límites exactos de tamaño.
 ----------------------------------------------------------------------------- */
  
 var rol_def_tests = [
@@ -72,51 +74,43 @@ var rol_def_tests = [
  
 //Acción: EDIT
  
-    ["rol", "id_rol", "input", 13, "Comprobar tamaño mínimo", "min_size", "EDIT", "id_rol_min_size_ko", "El identificador del rol es obligatorio: debe tener al menos 1 dígito"],
+    ["rol", "rol_name", "input", 13, "Comprobar tamaño mínimo", "min_size", "EDIT", "rol_name_min_size_ko", "El nombre del rol es corto, introduzca por lo menos 5 caracteres"],
  
-    ["rol", "id_rol", "input", 14, "Comprobar tamaño máximo", "max_size", "EDIT", "id_rol_max_size_ko", "El identificador del rol supera los 11 dígitos numéricos permitidos"],
+    ["rol", "rol_name", "input", 14, "Comprobar tamaño máximo", "max_size", "EDIT", "rol_name_max_size_ko", "El nombre del rol es demasiado largo, introduzca hasta 48 caracteres"],
  
-    ["rol", "id_rol", "input", 15, "Comprobar si el formato del identificador es correcto", "format", "EDIT", "id_rol_format_ko", "El identificador del rol solo puede estar formado por dígitos numéricos"],
+    ["rol", "rol_name", "input", 15, "Comprobar si el formato del nombre del rol es correcto", "format", "EDIT", "rol_name_format_ko", "El formato del nombre del rol es incorrecto. Solo se admiten caracteres alfabéticos (con la ñ y acentos incluidos), sin espacios, números ni signos"],
  
-    ["rol", "id_rol", "input", 16, "Valor correcto", "valid", "EDIT", true, "Éxito"],
+    ["rol", "rol_name", "input", 16, "Valor correcto", "valid", "EDIT", true, "Éxito"],
  
-    ["rol", "rol_name", "input", 17, "Comprobar tamaño mínimo", "min_size", "EDIT", "rol_name_min_size_ko", "El nombre del rol es corto, introduzca por lo menos 5 caracteres"],
+    ["rol", "rol_description", "textarea", 17, "Comprobar tamaño mínimo", "min_size", "EDIT", "rol_description_min_size_ko", "La descripción del rol es corta, introduzca por lo menos 5 caracteres"],
  
-    ["rol", "rol_name", "input", 18, "Comprobar tamaño máximo", "max_size", "EDIT", "rol_name_max_size_ko", "El nombre del rol es demasiado largo, introduzca hasta 48 caracteres"],
+    ["rol", "rol_description", "textarea", 18, "Comprobar tamaño máximo", "max_size", "EDIT", "rol_description_max_size_ko", "La descripción del rol es demasiado larga, introduzca hasta 200 caracteres"],
  
-    ["rol", "rol_name", "input", 19, "Comprobar si el formato del nombre del rol es correcto", "format", "EDIT", "rol_name_format_ko", "El formato del nombre del rol es incorrecto. Solo se admiten caracteres alfabéticos (con la ñ y acentos incluidos), sin espacios, números ni signos"],
+    ["rol", "rol_description", "textarea", 19, "Comprobar si el formato de la descripción es correcto", "format", "EDIT", "rol_description_format_ko", "El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números"],
  
-    ["rol", "rol_name", "input", 20, "Valor correcto", "valid", "EDIT", true, "Éxito"],
- 
-    ["rol", "rol_description", "textarea", 21, "Comprobar tamaño mínimo", "min_size", "EDIT", "rol_description_min_size_ko", "La descripción del rol es corta, introduzca por lo menos 5 caracteres"],
- 
-    ["rol", "rol_description", "textarea", 22, "Comprobar tamaño máximo", "max_size", "EDIT", "rol_description_max_size_ko", "La descripción del rol es demasiado larga, introduzca hasta 200 caracteres"],
- 
-    ["rol", "rol_description", "textarea", 23, "Comprobar si el formato de la descripción es correcto", "format", "EDIT", "rol_description_format_ko", "El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números"],
- 
-    ["rol", "rol_description", "textarea", 24, "Valor correcto", "valid", "EDIT", true, "Éxito"],
+    ["rol", "rol_description", "textarea", 20, "Valor correcto", "valid", "EDIT", true, "Éxito"],
  
  
  
 //Acción: SEARCH
  
-    ["rol", "id_rol", "input", 25, "Comprobar tamaño máximo", "max_size", "SEARCH", "id_rol_max_size_ko", "El identificador del rol supera los 11 dígitos numéricos permitidos"],
+    ["rol", "id_rol", "input", 21, "Comprobar tamaño máximo", "max_size", "SEARCH", "id_rol_max_size_ko", "El identificador del rol supera los 11 dígitos numéricos permitidos"],
  
-    ["rol", "id_rol", "input", 26, "Comprobar si el formato del identificador es correcto", "format", "SEARCH", "id_rol_format_ko", "El identificador del rol solo puede estar formado por dígitos numéricos"],
+    ["rol", "id_rol", "input", 22, "Comprobar si el formato del identificador es correcto", "format", "SEARCH", "id_rol_format_ko", "El identificador del rol solo puede estar formado por dígitos numéricos"],
  
-    ["rol", "id_rol", "input", 27, "Valor correcto", "valid", "SEARCH", true, "Éxito"],
+    ["rol", "id_rol", "input", 23, "Valor correcto", "valid", "SEARCH", true, "Éxito"],
  
-    ["rol", "rol_name", "input", 28, "Comprobar tamaño máximo", "max_size", "SEARCH", "rol_name_max_size_ko", "El nombre del rol es demasiado largo, introduzca hasta 48 caracteres"],
+    ["rol", "rol_name", "input", 24, "Comprobar tamaño máximo", "max_size", "SEARCH", "rol_name_max_size_ko", "El nombre del rol es demasiado largo, introduzca hasta 48 caracteres"],
  
-    ["rol", "rol_name", "input", 29, "Comprobar si el formato del nombre del rol es correcto", "format", "SEARCH", "rol_name_format_ko", "El formato del nombre del rol es incorrecto. Solo se admiten caracteres alfabéticos (con la ñ y acentos incluidos), sin espacios, números ni signos"],
+    ["rol", "rol_name", "input", 25, "Comprobar si el formato del nombre del rol es correcto", "format", "SEARCH", "rol_name_format_ko", "El formato del nombre del rol es incorrecto. Solo se admiten caracteres alfabéticos (con la ñ y acentos incluidos), sin espacios, números ni signos"],
  
-    ["rol", "rol_name", "input", 30, "Valor correcto", "valid", "SEARCH", true, "Éxito"],
+    ["rol", "rol_name", "input", 26, "Valor correcto", "valid", "SEARCH", true, "Éxito"],
  
-    ["rol", "rol_description", "textarea", 31, "Comprobar tamaño máximo", "max_size", "SEARCH", "rol_description_max_size_ko", "La descripción del rol es demasiado larga, introduzca hasta 200 caracteres"],
+    ["rol", "rol_description", "textarea", 27, "Comprobar tamaño máximo", "max_size", "SEARCH", "rol_description_max_size_ko", "La descripción del rol es demasiado larga, introduzca hasta 200 caracteres"],
  
-    ["rol", "rol_description", "textarea", 32, "Comprobar si el formato de la descripción es correcto", "format", "SEARCH", "rol_description_format_ko", "El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números"],
+    ["rol", "rol_description", "textarea", 28, "Comprobar si el formato de la descripción es correcto", "format", "SEARCH", "rol_description_format_ko", "El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números"],
  
-    ["rol", "rol_description", "textarea", 33, "Valor correcto", "valid", "SEARCH", true, "Éxito"],
+    ["rol", "rol_description", "textarea", 29, "Valor correcto", "valid", "SEARCH", true, "Éxito"],
  
  
 ];
@@ -195,114 +189,98 @@ var rol_pruebas = [
  
 //Acción: EDIT
  
-    ["rol", "id_rol", 13, 30, "EDIT", {"id_rol": ""}, "id_rol_min_size_ko"],
+    ["rol", "rol_name", 13, 30, "EDIT", {"rol_name": "Jefe"}, "rol_name_min_size_ko"],
  
-    ["rol", "id_rol", 14, 31, "EDIT", {"id_rol": "123456789012"}, "id_rol_max_size_ko"],
+    ["rol", "rol_name", 14, 31, "EDIT", {"rol_name": "a".repeat(49)}, "rol_name_max_size_ko"],
  
-    ["rol", "id_rol", 15, 32, "EDIT", {"id_rol": "1a"}, "id_rol_format_ko"],
+    ["rol", "rol_name", 15, 32, "EDIT", {"rol_name": "admin1"}, "rol_name_format_ko"],
  
-    ["rol", "id_rol", 15, 33, "EDIT", {"id_rol": "-3"}, "id_rol_format_ko"],
+    ["rol", "rol_name", 15, 33, "EDIT", {"rol_name": "admin-istrador"}, "rol_name_format_ko"],
  
-    ["rol", "id_rol", 15, 34, "EDIT", {"id_rol": "1.5"}, "id_rol_format_ko"],
+    ["rol", "rol_name", 15, 34, "EDIT", {"rol_name": "edición1"}, "rol_name_format_ko"],
  
-    ["rol", "id_rol", 15, 35, "EDIT", {"id_rol": "1 2"}, "id_rol_format_ko"],
+    ["rol", "rol_name", 16, 35, "EDIT", {"rol_name": "Editor"}, true],
  
-    ["rol", "id_rol", 16, 36, "EDIT", {"id_rol": "7"}, true],
+    ["rol", "rol_name", 16, 36, "EDIT", {"rol_name": "Admin"}, true],
  
-    ["rol", "id_rol", 16, 37, "EDIT", {"id_rol": "12345678901"}, true],
+    ["rol", "rol_name", 16, 37, "EDIT", {"rol_name": "a".repeat(48)}, true],
  
-    ["rol", "rol_name", 17, 38, "EDIT", {"rol_name": "Jefe"}, "rol_name_min_size_ko"],
+    ["rol", "rol_name", 16, 38, "EDIT", {"rol_name": "Edición"}, true], // criterio propio: ñ/acentos admitidos (el enunciado solo dice "Alfabético")
  
-    ["rol", "rol_name", 18, 39, "EDIT", {"rol_name": "a".repeat(49)}, "rol_name_max_size_ko"],
+    ["rol", "rol_name", 16, 39, "EDIT", {"rol_name": "Diseñador"}, true], // criterio propio: ñ/acentos admitidos (el enunciado solo dice "Alfabético")
  
-    ["rol", "rol_name", 19, 40, "EDIT", {"rol_name": "admin1"}, "rol_name_format_ko"],
+    ["rol", "rol_description", 17, 40, "EDIT", {"rol_description": "Role"}, "rol_description_min_size_ko"],
  
-    ["rol", "rol_name", 19, 41, "EDIT", {"rol_name": "admin-istrador"}, "rol_name_format_ko"],
+    ["rol", "rol_description", 18, 41, "EDIT", {"rol_description": "a".repeat(201)}, "rol_description_max_size_ko"],
  
-    ["rol", "rol_name", 19, 42, "EDIT", {"rol_name": "edición1"}, "rol_name_format_ko"],
+    ["rol", "rol_description", 19, 42, "EDIT", {"rol_description": "Rol de edición nivel 2"}, "rol_description_format_ko"],
  
-    ["rol", "rol_name", 20, 43, "EDIT", {"rol_name": "Editor"}, true],
+    ["rol", "rol_description", 19, 43, "EDIT", {"rol_description": "Rol de edición @limitada"}, "rol_description_format_ko"], // símbolo fuera de la puntuación española admitida
  
-    ["rol", "rol_name", 20, 44, "EDIT", {"rol_name": "Admin"}, true],
+    ["rol", "rol_description", 19, 44, "EDIT", {"rol_description": "Rol de edición $limitada"}, "rol_description_format_ko"], // símbolo fuera de la puntuación española admitida
  
-    ["rol", "rol_name", 20, 45, "EDIT", {"rol_name": "a".repeat(48)}, true],
+    ["rol", "rol_description", 20, 45, "EDIT", {"rol_description": "Rol con permisos de edición de contenidos; no permite borrado."}, true],
  
-    ["rol", "rol_name", 20, 46, "EDIT", {"rol_name": "Edición"}, true], // criterio propio: ñ/acentos admitidos (el enunciado solo dice "Alfabético")
+    ["rol", "rol_description", 20, 46, "EDIT", {"rol_description": "Roles"}, true],
  
-    ["rol", "rol_name", 20, 47, "EDIT", {"rol_name": "Diseñador"}, true], // criterio propio: ñ/acentos admitidos (el enunciado solo dice "Alfabético")
+    ["rol", "rol_description", 20, 47, "EDIT", {"rol_description": "Rol de diseño y gestión"}, true],
  
-    ["rol", "rol_description", 21, 48, "EDIT", {"rol_description": "Role"}, "rol_description_min_size_ko"],
- 
-    ["rol", "rol_description", 22, 49, "EDIT", {"rol_description": "a".repeat(201)}, "rol_description_max_size_ko"],
- 
-    ["rol", "rol_description", 23, 50, "EDIT", {"rol_description": "Rol de edición nivel 2"}, "rol_description_format_ko"],
- 
-    ["rol", "rol_description", 23, 51, "EDIT", {"rol_description": "Rol de edición @limitada"}, "rol_description_format_ko"], // símbolo fuera de la puntuación española admitida
- 
-    ["rol", "rol_description", 23, 52, "EDIT", {"rol_description": "Rol de edición $limitada"}, "rol_description_format_ko"], // símbolo fuera de la puntuación española admitida
- 
-    ["rol", "rol_description", 24, 53, "EDIT", {"rol_description": "Rol con permisos de edición de contenidos; no permite borrado."}, true],
- 
-    ["rol", "rol_description", 24, 54, "EDIT", {"rol_description": "Roles"}, true],
- 
-    ["rol", "rol_description", 24, 55, "EDIT", {"rol_description": "Rol de diseño y gestión"}, true],
- 
-    ["rol", "rol_description", 24, 56, "EDIT", {"rol_description": "a".repeat(200)}, true],
+    ["rol", "rol_description", 20, 48, "EDIT", {"rol_description": "a".repeat(200)}, true],
  
  
  
 //Acción: SEARCH
  
-    ["rol", "id_rol", 25, 57, "SEARCH", {"id_rol": "123456789012"}, "id_rol_max_size_ko"],
+    ["rol", "id_rol", 21, 49, "SEARCH", {"id_rol": "123456789012"}, "id_rol_max_size_ko"],
  
-    ["rol", "id_rol", 26, 58, "SEARCH", {"id_rol": "3b"}, "id_rol_format_ko"],
+    ["rol", "id_rol", 22, 50, "SEARCH", {"id_rol": "3b"}, "id_rol_format_ko"],
  
-    ["rol", "id_rol", 26, 59, "SEARCH", {"id_rol": "+3"}, "id_rol_format_ko"],
+    ["rol", "id_rol", 22, 51, "SEARCH", {"id_rol": "+3"}, "id_rol_format_ko"],
  
-    ["rol", "id_rol", 26, 60, "SEARCH", {"id_rol": "1 2"}, "id_rol_format_ko"],
+    ["rol", "id_rol", 22, 52, "SEARCH", {"id_rol": "1 2"}, "id_rol_format_ko"],
  
-    ["rol", "id_rol", 27, 61, "SEARCH", {"id_rol": "12"}, true],
+    ["rol", "id_rol", 23, 53, "SEARCH", {"id_rol": "12"}, true],
  
-    ["rol", "id_rol", 27, 62, "SEARCH", {"id_rol": ""}, true],
+    ["rol", "id_rol", 23, 54, "SEARCH", {"id_rol": ""}, true],
  
-    ["rol", "id_rol", 27, 63, "SEARCH", {"id_rol": "12345678901"}, true],
+    ["rol", "id_rol", 23, 55, "SEARCH", {"id_rol": "12345678901"}, true],
  
-    ["rol", "rol_name", 28, 64, "SEARCH", {"rol_name": "a".repeat(49)}, "rol_name_max_size_ko"],
+    ["rol", "rol_name", 24, 56, "SEARCH", {"rol_name": "a".repeat(49)}, "rol_name_max_size_ko"],
  
-    ["rol", "rol_name", 29, 65, "SEARCH", {"rol_name": "admin2"}, "rol_name_format_ko"],
+    ["rol", "rol_name", 25, 57, "SEARCH", {"rol_name": "admin2"}, "rol_name_format_ko"],
  
-    ["rol", "rol_name", 29, 66, "SEARCH", {"rol_name": "admin."}, "rol_name_format_ko"],
+    ["rol", "rol_name", 25, 58, "SEARCH", {"rol_name": "admin."}, "rol_name_format_ko"],
  
-    ["rol", "rol_name", 29, 67, "SEARCH", {"rol_name": "gestión1"}, "rol_name_format_ko"],
+    ["rol", "rol_name", 25, 59, "SEARCH", {"rol_name": "gestión1"}, "rol_name_format_ko"],
  
-    ["rol", "rol_name", 30, 68, "SEARCH", {"rol_name": "Invitado"}, true],
+    ["rol", "rol_name", 26, 60, "SEARCH", {"rol_name": "Invitado"}, true],
  
-    ["rol", "rol_name", 30, 69, "SEARCH", {"rol_name": "adm"}, true],
+    ["rol", "rol_name", 26, 61, "SEARCH", {"rol_name": "adm"}, true],
  
-    ["rol", "rol_name", 30, 70, "SEARCH", {"rol_name": ""}, true],
+    ["rol", "rol_name", 26, 62, "SEARCH", {"rol_name": ""}, true],
  
-    ["rol", "rol_name", 30, 71, "SEARCH", {"rol_name": "a".repeat(48)}, true],
+    ["rol", "rol_name", 26, 63, "SEARCH", {"rol_name": "a".repeat(48)}, true],
  
-    ["rol", "rol_name", 30, 72, "SEARCH", {"rol_name": "Gestión"}, true], // criterio propio: ñ/acentos admitidos (el enunciado solo dice "Alfabético")
+    ["rol", "rol_name", 26, 64, "SEARCH", {"rol_name": "Gestión"}, true], // criterio propio: ñ/acentos admitidos (el enunciado solo dice "Alfabético")
  
-    ["rol", "rol_name", 30, 73, "SEARCH", {"rol_name": "Dueño"}, true], // criterio propio: ñ/acentos admitidos (el enunciado solo dice "Alfabético")
+    ["rol", "rol_name", 26, 65, "SEARCH", {"rol_name": "Dueño"}, true], // criterio propio: ñ/acentos admitidos (el enunciado solo dice "Alfabético")
  
-    ["rol", "rol_description", 31, 74, "SEARCH", {"rol_description": "a".repeat(201)}, "rol_description_max_size_ko"],
+    ["rol", "rol_description", 27, 66, "SEARCH", {"rol_description": "a".repeat(201)}, "rol_description_max_size_ko"],
  
-    ["rol", "rol_description", 32, 75, "SEARCH", {"rol_description": "Rol de nivel 3"}, "rol_description_format_ko"],
+    ["rol", "rol_description", 28, 67, "SEARCH", {"rol_description": "Rol de nivel 3"}, "rol_description_format_ko"],
  
-    ["rol", "rol_description", 32, 76, "SEARCH", {"rol_description": "Rol #admin"}, "rol_description_format_ko"], // símbolo fuera de la puntuación española admitida
+    ["rol", "rol_description", 28, 68, "SEARCH", {"rol_description": "Rol #admin"}, "rol_description_format_ko"], // símbolo fuera de la puntuación española admitida
  
-    ["rol", "rol_description", 32, 77, "SEARCH", {"rol_description": "Rol de gestión $"}, "rol_description_format_ko"], // símbolo fuera de la puntuación española admitida
+    ["rol", "rol_description", 28, 69, "SEARCH", {"rol_description": "Rol de gestión $"}, "rol_description_format_ko"], // símbolo fuera de la puntuación española admitida
  
-    ["rol", "rol_description", 33, 78, "SEARCH", {"rol_description": "Rol con permisos de lectura"}, true],
+    ["rol", "rol_description", 29, 70, "SEARCH", {"rol_description": "Rol con permisos de lectura"}, true],
  
-    ["rol", "rol_description", 33, 79, "SEARCH", {"rol_description": "Rol de ad"}, true],
+    ["rol", "rol_description", 29, 71, "SEARCH", {"rol_description": "Rol de ad"}, true],
  
-    ["rol", "rol_description", 33, 80, "SEARCH", {"rol_description": "Rol de diseño"}, true],
+    ["rol", "rol_description", 29, 72, "SEARCH", {"rol_description": "Rol de diseño"}, true],
  
-    ["rol", "rol_description", 33, 81, "SEARCH", {"rol_description": "Rol de lectura, solo consulta."}, true],
+    ["rol", "rol_description", 29, 73, "SEARCH", {"rol_description": "Rol de lectura, solo consulta."}, true],
  
-    ["rol", "rol_description", 33, 82, "SEARCH", {"rol_description": ""}, true],
+    ["rol", "rol_description", 29, 74, "SEARCH", {"rol_description": ""}, true],
  
 ];

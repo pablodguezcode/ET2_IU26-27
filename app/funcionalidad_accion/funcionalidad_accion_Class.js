@@ -288,26 +288,32 @@ class funcionalidad_accion extends AbstractEntidad {
 		var filtroaccion = (form != null && form.elements['id_accion']) ? form.elements['id_accion'].value : '';
 
 		// las tres peticiones son independientes y se lanzan a la vez. Funcionalidades y acciones se piden sin filtro (formulario '')
-		// y la de funcionalidad_accion con el formulario, que lleva los filtros
-		var respuestas = await Promise.all([
-			this.access_functions.peticionBackGeneral('', 'funcionalidad', 'SEARCH'),
-			this.access_functions.peticionBackGeneral('', 'accion', 'SEARCH'),
-			this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'SEARCH')
+		// y la de funcionalidad_accion con el formulario, que lleva los filtros. El back pagina sus listados (ver pedir_todo()),
+		// asi que cada peticion trae todas las paginas
+		var resultados = await Promise.all([
+			this.pedir_todo('', 'funcionalidad'),
+			this.pedir_todo('', 'accion'),
+			this.pedir_todo('form_iu', this.nombreentidad)
 		]);
 
 		// ocultar y limpiar el formulario
 		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
 		this.dom.hide_element('Div_IU_form');
 
-		var funcionalidades = this.filasdelback(respuestas[0]);
-		var acciones = this.filasdelback(respuestas[1]);
-		var parejas = this.filasdelback(respuestas[2]);
+		var funcionalidades = resultados[0].filas;
+		var acciones = resultados[1].filas;
+		var parejas = resultados[2].filas;
 
 		// aplicar los filtros y ordenar por id
 		funcionalidades = funcionalidades.filter(fila => filtrofuncionalidad == '' || fila['id_funcionalidad'] == filtrofuncionalidad)
 			.sort((a, b) => Number(a['id_funcionalidad']) - Number(b['id_funcionalidad']));
 		acciones = acciones.filter(fila => filtroaccion == '' || fila['id_accion'] == filtroaccion)
 			.sort((a, b) => Number(a['id_accion']) - Number(b['id_accion']));
+
+		// si el back no ha dejado pedir las paginas siguientes de las parejas, se piden las de cada funcionalidad que se va a mostrar
+		if (!resultados[2].completo){
+			parejas = await this.parejas_por_funcionalidad(funcionalidades);
+		}
 
 		// parejas existentes como "idfuncionalidad_idaccion" (el back puede devolver cada clave como objeto o como valor simple)
 		var existentes = new Set(parejas.map(fila =>
@@ -333,6 +339,55 @@ class funcionalidad_accion extends AbstractEntidad {
 	}
 
 	/**
+	 * El back pagina las respuestas de SEARCH: devuelve una pagina de filas (resource) y, junto a ella, total (filas que cumplen la busqueda),
+	 * empieza (posicion de la primera fila de la pagina) y filas (cuantas trae esta pagina). Con la primera pagina solo se veria una parte de
+	 * las tuplas (las mas recientes, como las parejas que se acaban de marcar, quedaban fuera y la matriz no las mostraba al recargar), asi que
+	 * se van pidiendo las siguientes (empieza = filas ya recibidas) hasta tener total filas.
+	 * Si el back no respeta empieza (devuelve otra vez desde el principio) o deja de devolver filas se para para no repetirlas, y se indica
+	 * en completo = false que faltan filas.
+	 *
+	 * @param {string} formulario id del formulario cuyos campos se envian como criterios de busqueda ('' = sin criterios)
+	 * @param {string} controlador entidad del back que se consulta
+	 * @returns {Promise<{filas: Array, completo: boolean}>} las filas de todas las paginas y si estan todas
+	 */
+	async pedir_todo(formulario, controlador){
+
+		var respuesta = await this.access_functions.peticionBackGeneral(formulario, controlador, 'SEARCH');
+		var filas = this.filasdelback(respuesta).slice();
+		var total = Number(respuesta['total']);
+
+		while (!isNaN(total) && filas.length < total){
+
+			var siguiente = await this.access_functions.peticionBackGeneral(formulario, controlador, 'SEARCH',
+				{empieza: filas.length, filas: total - filas.length});
+			var nuevas = this.filasdelback(siguiente);
+
+			if (nuevas.length == 0 || Number(siguiente['empieza']) != filas.length){
+				break;
+			}
+			filas = filas.concat(nuevas);
+		}
+
+		return {filas: filas, completo: isNaN(total) || filas.length >= total};
+	}
+
+	/**
+	 * Alternativa a pedir_todo() para las parejas si el back no deja pedir las paginas siguientes: se piden las parejas de cada
+	 * funcionalidad mostrada (el criterio id_funcionalidad si lo respeta el back) y se juntan.
+	 *
+	 * @param {Array} funcionalidades funcionalidades que se muestran en la matriz
+	 * @returns {Promise<Array>} parejas de esas funcionalidades
+	 */
+	async parejas_por_funcionalidad(funcionalidades){
+
+		var grupos = await Promise.all(funcionalidades.map(fila =>
+			this.access_functions.peticionBackGeneral('', this.nombreentidad, 'SEARCH', {id_funcionalidad: fila['id_funcionalidad']})
+			.then(respuesta => this.filasdelback(respuesta))));
+
+		return grupos.flat();
+	}
+
+	/**
 	 * devuelve las filas de una respuesta del back, o un array vacio si no hay datos
 	 *
 	 * @param {Object} respuesta respuesta del back a un SEARCH
@@ -346,7 +401,7 @@ class funcionalidad_accion extends AbstractEntidad {
 	/**
 	 * Construye la tabla de la matriz: una fila por funcionalidad, una columna por accion y una casilla marcada si la pareja existe.
 	 * La matriz es editable de forma permanente: marcar una casilla crea la pareja (ADD) y desmarcarla la borra (DELETE), ver cambiar_pareja().
-	 * Las cabeceras muestran el id (con el nombre como texto al pasar el raton).
+	 * Las cabeceras muestran el texto traducido de la entidad, el id y el nombre (p.e. "Funcionalidad 3 - Gestion roles", "Acción 2 - modificar").
 	 *
 	 * @param {Array} funcionalidades filas de funcionalidad, ya filtradas y ordenadas
 	 * @param {Array} acciones filas de accion, ya filtradas y ordenadas
@@ -368,16 +423,14 @@ class funcionalidad_accion extends AbstractEntidad {
 			return elemento;
 		};
 
-		// cabecera de una fila o de una columna: texto traducido (clave de idioma como class) + id; el nombre va en el title
+		// cabecera de una fila o de una columna: texto traducido (clave de idioma como class: setLang() lo sustituye por "Funcionalidad" / "Acción"
+		// o "Feature" / "Action") seguido de "id - nombre"
 		const cabecera = (clavetexto, id, nombre) => {
 			var th = celda('th');
 			var texto = document.createElement('span');
 			texto.className = clavetexto;
 			th.append(texto);
-			th.append(' ' + id);
-			if (nombre !== undefined && nombre !== null){
-				th.title = nombre;
-			}
+			th.append(' ' + id + ((nombre !== undefined && nombre !== null) ? ' - ' + nombre : ''));
 			return th;
 		};
 
@@ -385,7 +438,7 @@ class funcionalidad_accion extends AbstractEntidad {
 		var trcabecera = document.createElement('tr');
 		trcabecera.append(celda('th'));
 		for (var accion of acciones){
-			trcabecera.append(cabecera('text_matriz_id_accion', accion['id_accion'], accion['nombre_accion']));
+			trcabecera.append(cabecera('text_matriz_accion', accion['id_accion'], accion['nombre_accion']));
 		}
 		var thead = document.createElement('thead');
 		thead.append(trcabecera);
@@ -395,7 +448,7 @@ class funcionalidad_accion extends AbstractEntidad {
 		var tbody = document.createElement('tbody');
 		for (const funcionalidad of funcionalidades){
 			var tr = document.createElement('tr');
-			tr.append(cabecera('text_matriz_id_funcionalidad', funcionalidad['id_funcionalidad'], funcionalidad['nombre_funcionalidad']));
+			tr.append(cabecera('text_matriz_funcionalidad', funcionalidad['id_funcionalidad'], funcionalidad['nombre_funcionalidad']));
 			for (const accion of acciones){
 				var td = celda('td');
 				// const (y no var): el listener de cada casilla debe referirse a SU casilla y no a la ultima creada
@@ -417,9 +470,13 @@ class funcionalidad_accion extends AbstractEntidad {
 
 	/**
 	 * Se ejecuta al marcar o desmarcar una casilla de la matriz: marcar crea la pareja (ADD) y desmarcar la borra (DELETE).
-	 * La casilla queda deshabilitada mientras llega la respuesta del back. Si el back responde error, la casilla vuelve al estado que
+	 * La casilla queda deshabilitada mientras llega la respuesta del back. El back permite parejas repetidas, por lo que antes de crear una
+	 * pareja se comprueba que no exista ya. Si el back responde error, la casilla vuelve al estado que
 	 * tenia y se muestra el modal de error (el usuario confirma que lo ha recibido y la matriz sigue como antes de la peticion).
-	 * Si responde ok no se repinta la matriz: la casilla ya muestra el nuevo estado y asi se conservan los filtros de SEARCH.
+	 * Si responde ok, antes de dar el cambio por bueno se vuelve a consultar al back (ver existe_pareja()): la casilla debe mostrar lo que
+	 * hay guardado, asi que si el back dice ok pero la pareja no queda guardada (o sigue existiendo tras borrarla) la casilla vuelve a su
+	 * estado anterior y se muestra el modal de error con el codigo pareja_no_guardada_ko / pareja_no_borrada_ko.
+	 * Con todo correcto no se repinta la matriz: la casilla ya muestra el nuevo estado y asi se conservan los filtros de SEARCH.
 	 *
 	 * @param {HTMLInputElement} casilla casilla que ha cambiado
 	 * @param {*} idfuncionalidad id de la funcionalidad (fila) de la casilla
@@ -430,8 +487,19 @@ class funcionalidad_accion extends AbstractEntidad {
 		var marcada = casilla.checked;
 		casilla.disabled = true;
 
+		// el back permite parejas repetidas: si se marca una pareja que ya existe no se vuelve a crear
+		if (marcada && (await this.existe_pareja(idfuncionalidad, idaccion))){
+			casilla.disabled = false;
+			return;
+		}
+
 		var respuesta = await this.access_functions.peticionBackGeneral('', this.nombreentidad, marcada ? 'ADD' : 'DELETE',
 			{id_funcionalidad: idfuncionalidad, id_accion: idaccion});
+
+		// el back dice que ok: se comprueba que la pareja haya quedado como pide la casilla (existe si se marco, no existe si se desmarco)
+		if (respuesta['ok'] && (await this.existe_pareja(idfuncionalidad, idaccion)) !== marcada){
+			respuesta = {ok: false, code: marcada ? 'pareja_no_guardada_ko' : 'pareja_no_borrada_ko'};
+		}
 
 		if (!respuesta['ok']){
 			casilla.checked = !marcada;
@@ -439,6 +507,25 @@ class funcionalidad_accion extends AbstractEntidad {
 		}
 
 		casilla.disabled = false;
+	}
+
+	/**
+	 * Pregunta al back si existe la pareja (id_funcionalidad, id_accion) en funcionalidad_accion. Se piden las parejas de esa funcionalidad
+	 * y esa accion y se comprueban las claves de las filas devueltas (el back puede devolver cada clave como objeto o como valor simple),
+	 * por si el back no aplicara el filtro.
+	 *
+	 * @param {*} idfuncionalidad id de la funcionalidad
+	 * @param {*} idaccion id de la accion
+	 * @returns {Promise<boolean>} true si la pareja existe en el back
+	 */
+	async existe_pareja(idfuncionalidad, idaccion){
+
+		var respuesta = await this.access_functions.peticionBackGeneral('', this.nombreentidad, 'SEARCH',
+			{id_funcionalidad: idfuncionalidad, id_accion: idaccion});
+
+		return this.filasdelback(respuesta).some(fila =>
+			this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad') == idfuncionalidad
+			&& this.valorclave(fila['id_accion'], 'id_accion') == idaccion);
 	}
 
 
@@ -491,28 +578,27 @@ class funcionalidad_accion extends AbstractEntidad {
 	 */
 	async cargar_select(idselect, controlador, campovalor){
 
-		await this.access_functions.peticionBackGeneral('', controlador, 'SEARCH')
-		.then((respuesta) => {
+		// todas las paginas del listado (el back pagina las respuestas, ver pedir_todo())
+		var filas = (await this.pedir_todo('', controlador)).filas;
 
-			var select = document.getElementById(idselect);
-			//el formulario puede haberse repintado o no existir mientras llegaba la respuesta
-			if (select == null){ return; }
+		var select = document.getElementById(idselect);
+		//el formulario puede haberse repintado o no existir mientras llegaba la respuesta
+		if (select == null){ return; }
 
-			if (respuesta['code'] == 'RECORDSET_DATOS'){
-				var valoractual = select.value;
-				//dejo solo la opcion vacia para no duplicar opciones si se llama mas de una vez
-				while (select.options.length > 1){
-					select.remove(1);
-				}
-				for (let fila of respuesta['resource']){
-					var opcion = document.createElement('option');
-					opcion.value = fila[campovalor];
-					opcion.text = fila[campovalor];
-					select.append(opcion);
-				}
-				select.value = valoractual;
+		if (filas.length > 0){
+			var valoractual = select.value;
+			//dejo solo la opcion vacia para no duplicar opciones si se llama mas de una vez
+			while (select.options.length > 1){
+				select.remove(1);
 			}
-		});
+			for (let fila of filas){
+				var opcion = document.createElement('option');
+				opcion.value = fila[campovalor];
+				opcion.text = fila[campovalor];
+				select.append(opcion);
+			}
+			select.value = valoractual;
+		}
 
 	}
 

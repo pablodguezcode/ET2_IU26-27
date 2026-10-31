@@ -290,8 +290,9 @@ var textos_EN = {
 	// Data_Test busca la traduccion con window.traduccion[resultadoprueba]; cuando la validacion devuelve true la clave es 'true'.
 	// Sin esta clave la columna del mensaje mostraba 'sintraduccion' en todas las pruebas de exito.
 	'true': 'Valid value: it passes all the checks',
-	'text_matriz_id_funcionalidad': 'Feature ID',
-	'text_matriz_id_accion': 'Action ID',
+	// headers of the funcionalidad_accion matrix: fixed text before "id - name" (e.g. "Feature 3 - Roles management")
+	'text_matriz_funcionalidad': 'Feature',
+	'text_matriz_accion': 'Action',
 	'test_ventana_bloqueada_ko': 'The browser has blocked the test results window. Allow pop-ups for this page.',
 
 }

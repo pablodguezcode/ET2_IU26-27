@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
    Entidad: rol
-   Campos : id_rol (input, PK autoincremental: oculto en los formularios), rol_name (input), rol_description (textarea)
+   Campos : id_rol (input, PK autoincremental: oculto en ADD, EDIT y DELETE; visible en SEARCH y SHOWCURRENT), rol_name (input), rol_description (textarea)
 ----------------------------------------------------------------------------- */
 class rol extends AbstractEntidad {
 
@@ -36,7 +36,7 @@ class rol extends AbstractEntidad {
 	 * devuelve el html del formulario de la entidad
 	 * id_rol va como type='text' (no 'number'): el navegador vacia el value de un
 	 * input number con "1a" y Validations.min_size lo daria por vacio.
-	 * id_rol es autoincremental: su bloque (div_id_rol) se oculta en ADD, EDIT y SEARCH (ver ocultar_id_rol()).
+	 * id_rol es autoincremental: su bloque (div_id_rol) se oculta en ADD, EDIT y DELETE (ver ocultar_id_rol()); en SEARCH y SHOWCURRENT se muestra.
 	 * @returns {string}
 	 */
 	manual_form_creation(){
@@ -73,9 +73,11 @@ class rol extends AbstractEntidad {
 
 //Atributo id_rol
 
-//id_rol es autoincremental: el usuario no lo introduce ni lo conoce, asi que no esta en los formularios ADD, EDIT ni SEARCH
-//y tampoco se valida en los submits. Se mantienen sus validaciones ADD_, EDIT_ y SEARCH_id_rol_validation() porque las pruebas
-//de rol_tests.js (entrega ET1) las ejecutan.
+//id_rol es autoincremental: el usuario no lo introduce en ADD ni lo modifica en EDIT, asi que en esos formularios va oculto y
+//no se valida en sus submits. Si es criterio de busqueda: SEARCH lo muestra y SEARCH_submit_rol() valida SEARCH_id_rol_validation().
+//Las pruebas de rol_tests.js ejecutan ADD_id_rol_validation() y SEARCH_id_rol_validation(). No hay tests de EDIT para id_rol porque
+//no se edita; EDIT_id_rol_validation() se conserva solo por coherencia con colocarvalidaciones('form_iu','EDIT'), que asigna una
+//validacion a cada campo del formulario, aunque el campo va oculto y nunca llega a validarse.
 
 	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
 	ADD_id_rol_validation(){
@@ -293,7 +295,8 @@ class rol extends AbstractEntidad {
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
 		var set_result = {};
 
-		// id_rol (autoincremental) no esta en el formulario: no se valida en el submit
+		// id_rol es criterio de busqueda (parcial, vacio = sin filtro): se valida en el submit
+		set_result.id_rol = this.SEARCH_id_rol_validation();
 		set_result.rol_name = this.SEARCH_rol_name_validation();
 		set_result.rol_description = this.SEARCH_rol_description_validation();
 
@@ -342,9 +345,9 @@ class rol extends AbstractEntidad {
 	}
 
 	/**
-	 * id_rol es autoincremental: el usuario no lo introduce ni lo conoce, asi que no se muestra en ADD, EDIT ni SEARCH
-	 * (se oculta el bloque completo: label, campo y mensaje de error).
-	 * - deshabilitar = true (ADD y SEARCH): el campo no se envia al back (en ADD lo genera el back; en SEARCH no se filtra por el).
+	 * id_rol es autoincremental: el usuario no lo introduce ni lo modifica, asi que no se muestra en ADD, EDIT ni DELETE
+	 * (se oculta el bloque completo: label, campo y mensaje de error). En SEARCH si se muestra, como criterio de busqueda.
+	 * - deshabilitar = true (ADD): el campo no se envia al back (lo genera el back).
 	 * - deshabilitar = false (EDIT): el campo oculto se queda habilitado y relleno con el id de la fila, porque es lo que usa
 	 *   el back para identificar la tupla que se modifica.
 	 *
@@ -489,7 +492,7 @@ class rol extends AbstractEntidad {
 	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
 	 * - La busqueda es parcial: todos los campos son opcionales, vacio significa "sin filtro" y basta con escribir un trozo
 	 *   del valor (ver SEARCH_<campo>_validation: sin minimo, solo maximo y formato).
-	 * - id_rol es autoincremental y el usuario no lo conoce: no se muestra ni se envia como criterio de busqueda.
+	 * - id_rol (numerico) tambien es criterio de busqueda: se muestra, se valida y se envia al back como el resto de campos.
 	 * - Si el back responde, AbstractEntidad.SEARCH() oculta el formulario y muestra en la tabla las tuplas que coinciden.
 	 */
 	createForm_SEARCH(){
@@ -505,10 +508,7 @@ class rol extends AbstractEntidad {
 		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
 		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.SEARCH();');
 
-		// el id no es criterio de busqueda
-		this.ocultar_id_rol(true);
-
-		// poner las validaciones
+		// poner las validaciones (id_rol visible y habilitado: es criterio de busqueda)
 		this.dom.colocarvalidaciones('form_iu','SEARCH');
 
 		// colocar boton de submit
