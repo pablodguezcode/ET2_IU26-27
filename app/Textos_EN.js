@@ -157,11 +157,6 @@ var textos_EN = {
 	'text_contenido_titulo_form_rol_SEARCH': 'Role SEARCH Form',
 	'text_contenido_titulo_form_rol_SHOWCURRENT': 'Role Detail',
 	'text_contenido_titulo_form_rol_DELETE': 'Role DELETE Form',
-	'text_contenido_titulo_form_funcionalidad_ADD': 'Feature ADD Form',
-	'text_contenido_titulo_form_funcionalidad_EDIT': 'Feature EDIT Form',
-	'text_contenido_titulo_form_funcionalidad_SEARCH': 'Feature SEARCH Form',
-	'text_contenido_titulo_form_funcionalidad_SHOWCURRENT': 'Feature Detail',
-	'text_contenido_titulo_form_funcionalidad_DELETE': 'Feature DELETE Form',
 
 	// --- Attributes (table headers)
 	'rol_name': 'Role name',
@@ -219,6 +214,13 @@ var textos_EN = {
 	// ============================================================================
 	// ENTITY: FEATURE
 	// ============================================================================
+	// --- Form titles
+	'text_contenido_titulo_form_funcionalidad_ADD': 'Feature ADD Form',
+	'text_contenido_titulo_form_funcionalidad_EDIT': 'Feature EDIT Form',
+	'text_contenido_titulo_form_funcionalidad_SEARCH': 'Feature SEARCH Form',
+	'text_contenido_titulo_form_funcionalidad_SHOWCURRENT': 'Feature Detail',
+	'text_contenido_titulo_form_funcionalidad_DELETE': 'Feature DELETE Form',
+
 	// --- Attributes (table headers)
 	'id_funcionalidad': 'Feature ID',
 	'nombre_funcionalidad': 'Feature name',

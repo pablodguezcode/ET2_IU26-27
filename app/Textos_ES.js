@@ -157,11 +157,6 @@ var textos_ES = {
 	'text_contenido_titulo_form_rol_SEARCH': 'Formulario Búsqueda Rol',
 	'text_contenido_titulo_form_rol_SHOWCURRENT': 'Detalle de Rol',
 	'text_contenido_titulo_form_rol_DELETE': 'Formulario Baja Rol',
-	'text_contenido_titulo_form_funcionalidad_ADD': 'Formulario Alta Funcionalidad',
-	'text_contenido_titulo_form_funcionalidad_EDIT': 'Formulario Modificación Funcionalidad',
-	'text_contenido_titulo_form_funcionalidad_SEARCH': 'Formulario Búsqueda Funcionalidad',
-	'text_contenido_titulo_form_funcionalidad_SHOWCURRENT': 'Detalle de Funcionalidad',
-	'text_contenido_titulo_form_funcionalidad_DELETE': 'Formulario Baja Funcionalidad',
 
 	// --- Atributos (cabeceras de tabla)
 	'rol_name': 'Nombre del rol',
@@ -180,6 +175,7 @@ var textos_ES = {
 	'rol_description_min_size_ko': 'La descripción del rol es corta, introduzca por lo menos 5 caracteres',
 	'rol_description_max_size_ko': 'La descripción del rol es demasiado larga, introduzca hasta 200 caracteres',
 	'rol_description_format_ko': 'El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números',
+
 
 	// ============================================================================
 	// ENTIDAD: ACCION
@@ -219,6 +215,13 @@ var textos_ES = {
 	// ============================================================================
 	// ENTIDAD: FUNCIONALIDAD
 	// ============================================================================
+	// --- Títulos de formularios
+	'text_contenido_titulo_form_funcionalidad_ADD': 'Formulario Alta Funcionalidad',
+	'text_contenido_titulo_form_funcionalidad_EDIT': 'Formulario Modificación Funcionalidad',
+	'text_contenido_titulo_form_funcionalidad_SEARCH': 'Formulario Búsqueda Funcionalidad',
+	'text_contenido_titulo_form_funcionalidad_SHOWCURRENT': 'Detalle de Funcionalidad',
+	'text_contenido_titulo_form_funcionalidad_DELETE': 'Formulario Baja Funcionalidad',
+
 	// --- Atributos (cabeceras de tabla)
 	'id_funcionalidad': 'Id. de funcionalidad',
 	'nombre_funcionalidad': 'Nombre de la funcionalidad',
