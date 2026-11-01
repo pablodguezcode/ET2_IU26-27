@@ -248,14 +248,11 @@ var textos_ES = {
 	'descrip_funcionalidad_format_ko': 'El formato de la descripción es incorrecto. Los caracteres admitidos son el alfabeto (con la ñ y acentos incluidos), espacios y signos de puntuación, sin números',
 
 	// ============================================================================
-	// ENTIDAD: FUNCIONALIDAD_ACCION (Relación)
+	// ENTIDAD: FUNCIONALIDAD_ACCION y ROL_ACCION_FUNCIONALIDAD (Relaciones)
 	// ============================================================================
 	// --- Títulos de formularios
-	'text_contenido_titulo_form_funcionalidad_accion_ADD': 'Formulario Alta Funcionalidad_Acción',
-	'text_contenido_titulo_form_funcionalidad_accion_EDIT': 'Formulario Modificación Funcionalidad_Acción',
 	'text_contenido_titulo_form_funcionalidad_accion_SEARCH': 'Formulario Búsqueda Funcionalidad_Acción',
-	'text_contenido_titulo_form_funcionalidad_accion_SHOWCURRENT': 'Detalle de Funcionalidad_Acción',
-	'text_contenido_titulo_form_funcionalidad_accion_DELETE': 'Formulario Baja Funcionalidad_Acción',
+
 	// la matriz de rolaccionfuncionalidad solo tiene formulario de SEARCH
 	'text_contenido_titulo_form_rolaccionfuncionalidad_SEARCH': 'Formulario Búsqueda Rol_Acción_Funcionalidad',
 

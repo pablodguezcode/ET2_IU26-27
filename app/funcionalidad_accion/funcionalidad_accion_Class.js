@@ -496,10 +496,11 @@ class funcionalidad_accion extends AbstractEntidad {
 		var respuesta = await this.access_functions.peticionBackGeneral('', this.nombreentidad, marcada ? 'ADD' : 'DELETE',
 			{id_funcionalidad: idfuncionalidad, id_accion: idaccion});
 
-		// el back dice que ok: se comprueba que la pareja haya quedado como pide la casilla (existe si se marco, no existe si se desmarco)
+		/* el back dice que ok: se comprueba que la pareja haya quedado como pide la casilla (existe si se marco, no existe si se desmarco)
 		if (respuesta['ok'] && (await this.existe_pareja(idfuncionalidad, idaccion)) !== marcada){
 			respuesta = {ok: false, code: marcada ? 'pareja_no_guardada_ko' : 'pareja_no_borrada_ko'};
 		}
+		*/
 
 		if (!respuesta['ok']){
 			casilla.checked = !marcada;

@@ -247,14 +247,11 @@ var textos_EN = {
 	'descrip_funcionalidad_format_ko': 'The description format is incorrect. Allowed characters are the alphabet (including ñ and accents), spaces and punctuation marks, without numbers',
 
 	// ============================================================================
-	// ENTITY: FEATURE-ACTION (Relationship)
+	// ENTITY: FEATURE-ACTION and ROLE-ACTION-FEATURE (Relationships)
 	// ============================================================================
 	// --- Form titles
-	'text_contenido_titulo_form_funcionalidad_accion_ADD': 'Feature-Action ADD Form',
-	'text_contenido_titulo_form_funcionalidad_accion_EDIT': 'Feature-Action EDIT Form',
 	'text_contenido_titulo_form_funcionalidad_accion_SEARCH': 'Feature-Action SEARCH Form',
-	'text_contenido_titulo_form_funcionalidad_accion_SHOWCURRENT': 'Feature-Action Detail',
-	'text_contenido_titulo_form_funcionalidad_accion_DELETE': 'Feature-Action DELETE Form',
+
 	// the rolaccionfuncionalidad matrix only has the SEARCH form
 	'text_contenido_titulo_form_rolaccionfuncionalidad_SEARCH': 'Role-Action-Feature SEARCH Form',
 
