@@ -637,10 +637,11 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 		var asignadas = acciones.filter(accion => despues.has(String(accion))).length;
 		this.pintar_casilla(casilla, asignadas, acciones.length);
 
-		// el back dijo ok pero la asignacion no ha quedado como se pedia
+		/* el back dijo ok pero la asignacion no ha quedado como se pedia
 		if (error === null && ((marcada && asignadas != acciones.length) || (!marcada && asignadas != 0))){
 			error = marcada ? 'asignacion_no_guardada_ko' : 'asignacion_no_borrada_ko';
 		}
+		*/
 
 		if (error !== null){
 			this.dom.abrirModalError(error);
