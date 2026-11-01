@@ -1,19 +1,19 @@
 datosgenerales =
 {
     Lider:
-        ["Queso",
+        ["MiQueso",
         2,
-        10],
+        26],
     Participante1:
-        ["Parmesano",
+        ["PaParmesano",
         2,
-        11],
+        "lim x-> infinito (1 + 1/x)^x = eeeeh pos no se"],
     Participante2:
-        ["Azul",
+        ["RaAzul",
         2,
-        10],
+        24],
     Participante3:
-        ["Manchego",
+        ["FeManchego",
         2,
-        9.20],
+        24],
 }
