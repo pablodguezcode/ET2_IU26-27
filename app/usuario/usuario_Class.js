@@ -478,6 +478,7 @@ class usuario extends AbstractEntidad {
 
 		// poner las validaciones
 		this.dom.colocarvalidaciones('form_iu','EDIT');
+		document.getElementById('dni').removeAttribute('onblur');
 
 		// colocar boton de submit
 		this.dom.colocarboton('EDIT');
