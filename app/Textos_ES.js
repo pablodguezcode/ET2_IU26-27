@@ -98,20 +98,20 @@ var textos_ES = {
 	'email_persona_min_size_ko': 'El email es demasiado corto: debe tener al menos 6 caracteres',
 	'email_persona_max_size_ko': 'El email es demasiado largo: no puede superar los 45 caracteres',
 	'email_persona_format_ko': 'El formato del email no es válido: debe ser del tipo usuario@dominio.ext (en la búsqueda se admite un trozo, con letras, números, @, puntos, guiones y guiones bajos)',
-
+	
 	// --- Errores de validación - Foto (metadatos)
 	'foto_persona_min_size_ko': 'El nombre del fichero es demasiado corto: debe tener al menos 5 caracteres extensión incluida',
 	'foto_persona_max_size_ko': 'El nombre del fichero es demasiado largo: no puede superar los 15 caracteres extensión incluida',
-	'foto_persona_format_ko': 'El nombre del fichero no es válido: solo se permiten letras y punto',
+	'foto_persona_format_ko': 'El nombre del fichero no es válido: solo se permiten letras y punto.',
 	'foto_persona_personalized_ko': 'El tipo de fichero no está permitido: solo se admite jpg o jpeg',
 
 	// --- Errores de validación - Foto (carga)
 	'nuevo_foto_persona_exist_file_ko': 'No se ha seleccionado ningún fichero: debe subir una foto',
 	'nuevo_foto_persona_max_size_file_ko': 'El fichero es demasiado grande: no puede superar los 2 MB',
 	'nuevo_foto_persona_type_file_ko': 'El tipo de fichero no está permitido: solo se admite jpg o jpeg',
-	'nuevo_foto_persona_format_name_file_ko': 'El nombre del fichero no es válido: solo se permiten letras y punto',
+	'nuevo_foto_persona_format_name_file_ko': 'El nombre del fichero no es válido: solo se permiten letras y punto, y debe tener entre 5 y 15 caracteres extensión incluida',
 	'nuevo_foto_persona_max_size_ko': 'El nombre del fichero es demasiado largo: no puede superar los 15 caracteres extensión incluida',
-
+	
 	// ============================================================================
 	// ENTIDAD: USUARIO
 	// ============================================================================

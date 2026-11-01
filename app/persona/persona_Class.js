@@ -900,6 +900,10 @@ class persona extends AbstractEntidad {
 
 		// poner las validaciones
 		this.dom.colocarvalidaciones('form_iu','EDIT');
+		// foto_persona (solo lectura) y dni (clave) no tienen validacion de EDIT
+		document.getElementById('foto_persona').removeAttribute('onblur');
+		document.getElementById('dni').removeAttribute('onchange');
+
 
 		// colocar boton de submit
 		this.dom.colocarboton('EDIT');

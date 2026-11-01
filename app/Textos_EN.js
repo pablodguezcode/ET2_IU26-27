@@ -102,14 +102,14 @@ var textos_EN = {
 	// --- Validation errors - Photo (metadata)
 	'foto_persona_min_size_ko': 'The file name is too short: it must have at least 5 characters including the extension',
 	'foto_persona_max_size_ko': 'The file name is too long: it cannot exceed 15 characters including the extension',
-	'foto_persona_format_ko': 'The file name is not valid: only letters and periods are allowed',
+	'foto_persona_format_ko': 'The file name is not valid: only letters and periods',
 	'foto_persona_personalized_ko': 'The file type is not allowed: only jpg or jpeg is accepted',
 
 	// --- Validation errors - Photo (upload)
 	'nuevo_foto_persona_exist_file_ko': 'No file selected: a photo must be uploaded',
 	'nuevo_foto_persona_max_size_file_ko': 'The file is too large: it cannot exceed 2 MB',
 	'nuevo_foto_persona_type_file_ko': 'The file type is not allowed: only jpg or jpeg is accepted',
-	'nuevo_foto_persona_format_name_file_ko': 'The file name is not valid: only letters and periods are allowed',
+	'nuevo_foto_persona_format_name_file_ko': 'The file name is not valid: only letters and periods are allowed, and it must be between 5 and 15 characters long including the extension',
 	'nuevo_foto_persona_max_size_ko': 'The file name is too long: it cannot exceed 15 characters including the extension',
 
 	// ============================================================================
