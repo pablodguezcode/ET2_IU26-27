@@ -600,8 +600,10 @@ class persona extends AbstractEntidad {
 			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_max_size_ko');
 			return "fechaNacimiento_persona_max_size_ko";
 		}
-		// vacío, o d/m/yyyy escrito parcialmente (los "-" ya se han sustituido por "/")
-		if (!(this.validations.format('fechaNacimiento_persona', '^[0-9/]*$'))){
+		// vacío, o dd/mm/aaaa escrito completo o parcialmente (los "-" ya se han sustituido por "/"): d, dd, aaaa, dd/, dd/mm, dd/mm/, dd/mm/aaaa
+		// o mm/aaaa. El formato anglosajon (aaaa/mm/dd, aaaa/mm, aaaa/) no es un trozo valido de dd/mm/aaaa y da error de formato; la busqueda
+		// no lo reordena (un "aaaa" suelto si se admite: es el anio)
+		if (!(this.validations.format('fechaNacimiento_persona', '^([0-9]{1,4}|[0-9]{1,2}/([0-9]{1,2}(/[0-9]{0,4})?|[0-9]{4})?)?$'))){
 			this.dom.mostrar_error_campo('fechaNacimiento_persona','fechaNacimiento_persona_format_ko');
 			return "fechaNacimiento_persona_format_ko";
 		}

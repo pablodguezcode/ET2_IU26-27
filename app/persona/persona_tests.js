@@ -137,7 +137,7 @@ var persona_def_tests = [
         "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
             ["persona", "fechaNacimiento_persona", "input", 33, "Validar formato dd/mm/aaaa o dd-mm-aaaa (mismo separador) de la fecha de nacimiento en ADD; el formato anglosajón se reordena antes de validar", "format", "ADD",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también aaaa/mm/dd o mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dígitos, / y -)"],
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también se admiten aaaa/mm/dd y mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dd/mm/aaaa, completo o parcial: el formato aaaa/mm/dd no es válido)"],
 
             ["persona", "fechaNacimiento_persona", "input", 34, "Validar que la fecha de nacimiento existe en el calendario y no es posterior a la fecha actual en ADD", "personalized", "ADD",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],
@@ -154,7 +154,7 @@ var persona_def_tests = [
         "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
             ["persona", "fechaNacimiento_persona", "input", 38, "Validar formato dd/mm/aaaa o dd-mm-aaaa (mismo separador) de la fecha de nacimiento en EDIT; el formato anglosajón se reordena antes de validar", "format", "EDIT",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también aaaa/mm/dd o mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dígitos, / y -)"],
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también se admiten aaaa/mm/dd y mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dd/mm/aaaa, completo o parcial: el formato aaaa/mm/dd no es válido)"],
 
             ["persona", "fechaNacimiento_persona", "input", 39, "Validar que la fecha de nacimiento existe en el calendario y no es posterior a la fecha actual en EDIT", "personalized", "EDIT",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],
@@ -167,8 +167,8 @@ var persona_def_tests = [
             ["persona", "fechaNacimiento_persona", "input", 41, "Validar tamaño máximo (10 caracteres) de la fecha de nacimiento en SEARCH", "max_size", "SEARCH",
         "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
-            ["persona", "fechaNacimiento_persona", "input", 42, "Validar formato (solo dígitos, / y -) de la fecha de nacimiento en SEARCH; no se reordena nada", "format", "SEARCH",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también aaaa/mm/dd o mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dígitos, / y -)"],
+            ["persona", "fechaNacimiento_persona", "input", 42, "Validar formato dd/mm/aaaa (completo o parcial, con / o -) de la fecha de nacimiento en SEARCH; el formato anglosajón (aaaa/...) es un error de formato y no se reordena nada", "format", "SEARCH",
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también se admiten aaaa/mm/dd y mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dd/mm/aaaa, completo o parcial: el formato aaaa/mm/dd no es válido)"],
 
             ["persona", "fechaNacimiento_persona", "input", 43, "Validar que la fecha de nacimiento, cuando está completa (d/m/aaaa), existe en el calendario en SEARCH", "personalized", "SEARCH",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],
@@ -314,7 +314,7 @@ var persona_def_tests = [
         "foto_persona_max_size_ko", "El nombre del fichero es demasiado largo: no puede superar los 15 caracteres extensión incluida"],
 
             ["persona", "foto_persona", "input", 82, "Validar formato del nombre del fichero (alfabético y punto) en SEARCH", "format", "SEARCH",
-        "foto_persona_format_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
+        "foto_persona_format_ko", "El nombre del fichero no es válido: solo se permiten letras y punto."],
 
             ["persona", "foto_persona", "input", 83, "Validar foto correcta en SEARCH", "valid", "SEARCH",
         true, "Foto correcta"],
@@ -327,7 +327,7 @@ var persona_def_tests = [
         "nuevo_foto_persona_exist_file_ko", "No se ha seleccionado ningún fichero: debe subir una foto"],
 
             ["persona", "nuevo_foto_persona", "file", 85, "Validar formato del nombre del fichero (alfabético y punto) a la vez de validar su tamaño maximo(15) y minimo(5) incluidas las extensiones en ADD", "format_name_file", "ADD",
-        "nuevo_foto_persona_format_name_file_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
+        "nuevo_foto_persona_format_name_file_ko", "El nombre del fichero no es válido: solo se permiten letras y punto, y debe tener entre 5 y 15 caracteres extensión incluida"],
 
             ["persona", "nuevo_foto_persona", "file", 86, "Validar tipo de fichero (jpg o jpeg) en ADD", "type_file", "ADD",
         "nuevo_foto_persona_type_file_ko", "El tipo de fichero no está permitido: solo se admite jpg o jpeg"],
@@ -344,7 +344,7 @@ var persona_def_tests = [
         true, "Fichero no obligatorio en EDIT"],
 
             ["persona", "nuevo_foto_persona", "file", 90, "Validar formato del nombre del fichero (alfabético y punto) a la vez de validar su tamaño maximo(15) y minimo(5) incluidas las extensiones en EDIT", "format_name_file", "EDIT",
-        "nuevo_foto_persona_format_name_file_ko", "El nombre del fichero no es válido: solo se permiten letras y punto"],
+        "nuevo_foto_persona_format_name_file_ko", "El nombre del fichero no es válido: solo se permiten letras y punto, y debe tener entre 5 y 15 caracteres extensión incluida"],
 
             ["persona", "nuevo_foto_persona", "file", 91, "Validar tipo de fichero (jpg o jpeg) en EDIT", "type_file", "EDIT",
         "nuevo_foto_persona_type_file_ko", "El tipo de fichero no está permitido: solo se admite jpg o jpeg"],
@@ -564,211 +564,219 @@ var persona_pruebas = [
 
             ["persona", "fechaNacimiento_persona", 42, 126, "SEARCH", {"fechaNacimiento_persona": "15.01.2000"}, "fechaNacimiento_persona_format_ko"],
             ["persona", "fechaNacimiento_persona", 42, 127, "SEARCH", {"fechaNacimiento_persona": "15/01/200a"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 42, 128, "SEARCH", {"fechaNacimiento_persona": "2000/01/15"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 42, 129, "SEARCH", {"fechaNacimiento_persona": "2000-01-15"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 42, 130, "SEARCH", {"fechaNacimiento_persona": "2000/01"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 42, 131, "SEARCH", {"fechaNacimiento_persona": "2000/"}, "fechaNacimiento_persona_format_ko"],
+            ["persona", "fechaNacimiento_persona", 42, 132, "SEARCH", {"fechaNacimiento_persona": "15//01"}, "fechaNacimiento_persona_format_ko"],
 
-            ["persona", "fechaNacimiento_persona", 43, 128, "SEARCH", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 43, 129, "SEARCH", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 43, 130, "SEARCH", {"fechaNacimiento_persona": "32/01/2000"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 43, 131, "SEARCH", {"fechaNacimiento_persona": "29/02/2001"}, "fechaNacimiento_persona_personalized_ko"],
-            ["persona", "fechaNacimiento_persona", 43, 132, "SEARCH", {"fechaNacimiento_persona": "30-02-2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 133, "SEARCH", {"fechaNacimiento_persona": "30/02/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 134, "SEARCH", {"fechaNacimiento_persona": "31/04/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 135, "SEARCH", {"fechaNacimiento_persona": "32/01/2000"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 136, "SEARCH", {"fechaNacimiento_persona": "29/02/2001"}, "fechaNacimiento_persona_personalized_ko"],
+            ["persona", "fechaNacimiento_persona", 43, 137, "SEARCH", {"fechaNacimiento_persona": "30-02-2000"}, "fechaNacimiento_persona_personalized_ko"],
 
-            ["persona", "fechaNacimiento_persona", 44, 133, "SEARCH", {"fechaNacimiento_persona": "15/01/2000"}, true],
-            ["persona", "fechaNacimiento_persona", 44, 134, "SEARCH", {"fechaNacimiento_persona": "15/01"}, true],
-            ["persona", "fechaNacimiento_persona", 44, 135, "SEARCH", {"fechaNacimiento_persona": "2000"}, true],
-            ["persona", "fechaNacimiento_persona", 44, 136, "SEARCH", {"fechaNacimiento_persona": ""}, true],
-            ["persona", "fechaNacimiento_persona", 44, 137, "SEARCH", {"fechaNacimiento_persona": "15-01-2000"}, true],
-            ["persona", "fechaNacimiento_persona", 44, 138, "SEARCH", {"fechaNacimiento_persona": "15-01"}, true],
-            ["persona", "fechaNacimiento_persona", 44, 139, "SEARCH", {"fechaNacimiento_persona": "01-2000"}, true],
-            ["persona", "fechaNacimiento_persona", 44, 140, "SEARCH", {"fechaNacimiento_persona": "2000/01/15"}, true],
-            ["persona", "fechaNacimiento_persona", 44, 141, "SEARCH", {"fechaNacimiento_persona": "01/15"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 138, "SEARCH", {"fechaNacimiento_persona": "15/01/2000"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 139, "SEARCH", {"fechaNacimiento_persona": "15/01"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 140, "SEARCH", {"fechaNacimiento_persona": "2000"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 141, "SEARCH", {"fechaNacimiento_persona": ""}, true],
+            ["persona", "fechaNacimiento_persona", 44, 142, "SEARCH", {"fechaNacimiento_persona": "15-01-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 143, "SEARCH", {"fechaNacimiento_persona": "15-01"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 144, "SEARCH", {"fechaNacimiento_persona": "01-2000"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 145, "SEARCH", {"fechaNacimiento_persona": "01/15"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 146, "SEARCH", {"fechaNacimiento_persona": "15/"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 147, "SEARCH", {"fechaNacimiento_persona": "15/01/"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 148, "SEARCH", {"fechaNacimiento_persona": "15/01/2"}, true],
+            ["persona", "fechaNacimiento_persona", 44, 149, "SEARCH", {"fechaNacimiento_persona": "1"}, true],
 
     //Campo: direccion_persona
 
         //Acción: ADD
 
-            ["persona", "direccion_persona", 45, 142, "ADD", {"direccion_persona": "Calle 1"}, "direccion_persona_min_size_ko"],
-            ["persona", "direccion_persona", 45, 143, "ADD", {"direccion_persona": ""}, "direccion_persona_min_size_ko"],
+            ["persona", "direccion_persona", 45, 150, "ADD", {"direccion_persona": "Calle 1"}, "direccion_persona_min_size_ko"],
+            ["persona", "direccion_persona", 45, 151, "ADD", {"direccion_persona": ""}, "direccion_persona_min_size_ko"],
 
-            ["persona", "direccion_persona", 46, 144, "ADD", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
+            ["persona", "direccion_persona", 46, 152, "ADD", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
 
-            ["persona", "direccion_persona", 47, 145, "ADD", {"direccion_persona": "Calle Mayor #5"}, "direccion_persona_format_ko"],
-            ["persona", "direccion_persona", 47, 146, "ADD", {"direccion_persona": "Calle Mayor, 5"}, "direccion_persona_format_ko"],
+            ["persona", "direccion_persona", 47, 153, "ADD", {"direccion_persona": "Calle Mayor #5"}, "direccion_persona_format_ko"],
+            ["persona", "direccion_persona", 47, 154, "ADD", {"direccion_persona": "Calle Mayor, 5"}, "direccion_persona_format_ko"],
 
-            ["persona", "direccion_persona", 48, 147, "ADD", {"direccion_persona": "Calle May."}, true],
-            ["persona", "direccion_persona", 48, 148, "ADD", {"direccion_persona": "C".repeat(200)}, true],
-            ["persona", "direccion_persona", 48, 149, "ADD", {"direccion_persona": "Rúa do Vilar 12; 3/B"}, true],
-            ["persona", "direccion_persona", 48, 150, "ADD", {"direccion_persona": "Avenida de Vigo 45/2-A"}, true],
+            ["persona", "direccion_persona", 48, 155, "ADD", {"direccion_persona": "Calle May."}, true],
+            ["persona", "direccion_persona", 48, 156, "ADD", {"direccion_persona": "C".repeat(200)}, true],
+            ["persona", "direccion_persona", 48, 157, "ADD", {"direccion_persona": "Rúa do Vilar 12; 3/B"}, true],
+            ["persona", "direccion_persona", 48, 158, "ADD", {"direccion_persona": "Avenida de Vigo 45/2-A"}, true],
 
         //Acción: EDIT
 
-            ["persona", "direccion_persona", 49, 151, "EDIT", {"direccion_persona": "Calle 1"}, "direccion_persona_min_size_ko"],
+            ["persona", "direccion_persona", 49, 159, "EDIT", {"direccion_persona": "Calle 1"}, "direccion_persona_min_size_ko"],
 
-            ["persona", "direccion_persona", 50, 152, "EDIT", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
+            ["persona", "direccion_persona", 50, 160, "EDIT", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
 
-            ["persona", "direccion_persona", 51, 153, "EDIT", {"direccion_persona": "Calle Mayor #5"}, "direccion_persona_format_ko"],
+            ["persona", "direccion_persona", 51, 161, "EDIT", {"direccion_persona": "Calle Mayor #5"}, "direccion_persona_format_ko"],
 
-            ["persona", "direccion_persona", 52, 154, "EDIT", {"direccion_persona": "Calle May."}, true],
-            ["persona", "direccion_persona", 52, 155, "EDIT", {"direccion_persona": "C".repeat(200)}, true],
-            ["persona", "direccion_persona", 52, 156, "EDIT", {"direccion_persona": "Rúa do Vilar 12; 3/B"}, true],
+            ["persona", "direccion_persona", 52, 162, "EDIT", {"direccion_persona": "Calle May."}, true],
+            ["persona", "direccion_persona", 52, 163, "EDIT", {"direccion_persona": "C".repeat(200)}, true],
+            ["persona", "direccion_persona", 52, 164, "EDIT", {"direccion_persona": "Rúa do Vilar 12; 3/B"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "direccion_persona", 53, 157, "SEARCH", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
+            ["persona", "direccion_persona", 53, 165, "SEARCH", {"direccion_persona": "C".repeat(201)}, "direccion_persona_max_size_ko"],
 
-            ["persona", "direccion_persona", 54, 158, "SEARCH", {"direccion_persona": "Calle #5"}, "direccion_persona_format_ko"],
+            ["persona", "direccion_persona", 54, 166, "SEARCH", {"direccion_persona": "Calle #5"}, "direccion_persona_format_ko"],
 
-            ["persona", "direccion_persona", 55, 159, "SEARCH", {"direccion_persona": "C".repeat(200)}, true],
-            ["persona", "direccion_persona", 55, 160, "SEARCH", {"direccion_persona": "Rúa do Vilar"}, true],
-            ["persona", "direccion_persona", 55, 161, "SEARCH", {"direccion_persona": "Vigo"}, true],
-            ["persona", "direccion_persona", 55, 162, "SEARCH", {"direccion_persona": ""}, true],
+            ["persona", "direccion_persona", 55, 167, "SEARCH", {"direccion_persona": "C".repeat(200)}, true],
+            ["persona", "direccion_persona", 55, 168, "SEARCH", {"direccion_persona": "Rúa do Vilar"}, true],
+            ["persona", "direccion_persona", 55, 169, "SEARCH", {"direccion_persona": "Vigo"}, true],
+            ["persona", "direccion_persona", 55, 170, "SEARCH", {"direccion_persona": ""}, true],
 
     //Campo: telefono_persona
 
         //Acción: ADD
 
-            ["persona", "telefono_persona", 56, 163, "ADD", {"telefono_persona": "61234567"}, "telefono_persona_min_size_ko"],
-            ["persona", "telefono_persona", 56, 164, "ADD", {"telefono_persona": ""}, "telefono_persona_min_size_ko"],
+            ["persona", "telefono_persona", 56, 171, "ADD", {"telefono_persona": "61234567"}, "telefono_persona_min_size_ko"],
+            ["persona", "telefono_persona", 56, 172, "ADD", {"telefono_persona": ""}, "telefono_persona_min_size_ko"],
 
-            ["persona", "telefono_persona", 57, 165, "ADD", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
+            ["persona", "telefono_persona", 57, 173, "ADD", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
 
-            ["persona", "telefono_persona", 58, 166, "ADD", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
-            ["persona", "telefono_persona", 58, 167, "ADD", {"telefono_persona": "6123-5678"}, "telefono_persona_format_ko"],
+            ["persona", "telefono_persona", 58, 174, "ADD", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
+            ["persona", "telefono_persona", 58, 175, "ADD", {"telefono_persona": "6123-5678"}, "telefono_persona_format_ko"],
 
-            ["persona", "telefono_persona", 59, 168, "ADD", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
-            ["persona", "telefono_persona", 59, 169, "ADD", {"telefono_persona": "112345678"}, "telefono_persona_personalized_ko"],
-            ["persona", "telefono_persona", 59, 170, "ADD", {"telefono_persona": "012345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 59, 176, "ADD", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 59, 177, "ADD", {"telefono_persona": "112345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 59, 178, "ADD", {"telefono_persona": "012345678"}, "telefono_persona_personalized_ko"],
 
-            ["persona", "telefono_persona", 60, 171, "ADD", {"telefono_persona": "612345678"}, true],
-            ["persona", "telefono_persona", 60, 172, "ADD", {"telefono_persona": "912345678"}, true],
-            ["persona", "telefono_persona", 60, 173, "ADD", {"telefono_persona": "789123456"}, true],
-            ["persona", "telefono_persona", 60, 174, "ADD", {"telefono_persona": "812345678"}, true],
+            ["persona", "telefono_persona", 60, 179, "ADD", {"telefono_persona": "612345678"}, true],
+            ["persona", "telefono_persona", 60, 180, "ADD", {"telefono_persona": "912345678"}, true],
+            ["persona", "telefono_persona", 60, 181, "ADD", {"telefono_persona": "789123456"}, true],
+            ["persona", "telefono_persona", 60, 182, "ADD", {"telefono_persona": "812345678"}, true],
 
         //Acción: EDIT
 
-            ["persona", "telefono_persona", 61, 175, "EDIT", {"telefono_persona": "61234567"}, "telefono_persona_min_size_ko"],
+            ["persona", "telefono_persona", 61, 183, "EDIT", {"telefono_persona": "61234567"}, "telefono_persona_min_size_ko"],
 
-            ["persona", "telefono_persona", 62, 176, "EDIT", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
+            ["persona", "telefono_persona", 62, 184, "EDIT", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
 
-            ["persona", "telefono_persona", 63, 177, "EDIT", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
+            ["persona", "telefono_persona", 63, 185, "EDIT", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
 
-            ["persona", "telefono_persona", 64, 178, "EDIT", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 64, 186, "EDIT", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
 
-            ["persona", "telefono_persona", 65, 179, "EDIT", {"telefono_persona": "612345678"}, true],
-            ["persona", "telefono_persona", 65, 180, "EDIT", {"telefono_persona": "912345678"}, true],
+            ["persona", "telefono_persona", 65, 187, "EDIT", {"telefono_persona": "612345678"}, true],
+            ["persona", "telefono_persona", 65, 188, "EDIT", {"telefono_persona": "912345678"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "telefono_persona", 66, 181, "SEARCH", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
+            ["persona", "telefono_persona", 66, 189, "SEARCH", {"telefono_persona": "6123456789"}, "telefono_persona_max_size_ko"],
 
-            ["persona", "telefono_persona", 67, 182, "SEARCH", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
+            ["persona", "telefono_persona", 67, 190, "SEARCH", {"telefono_persona": "61234567A"}, "telefono_persona_format_ko"],
 
-            ["persona", "telefono_persona", 68, 183, "SEARCH", {"telefono_persona": "5"}, "telefono_persona_personalized_ko"],
-            ["persona", "telefono_persona", 68, 184, "SEARCH", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
-            ["persona", "telefono_persona", 68, 185, "SEARCH", {"telefono_persona": "012"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 68, 191, "SEARCH", {"telefono_persona": "5"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 68, 192, "SEARCH", {"telefono_persona": "512345678"}, "telefono_persona_personalized_ko"],
+            ["persona", "telefono_persona", 68, 193, "SEARCH", {"telefono_persona": "012"}, "telefono_persona_personalized_ko"],
 
-            ["persona", "telefono_persona", 69, 186, "SEARCH", {"telefono_persona": "612345678"}, true],
-            ["persona", "telefono_persona", 69, 187, "SEARCH", {"telefono_persona": "612"}, true],
-            ["persona", "telefono_persona", 69, 188, "SEARCH", {"telefono_persona": ""}, true],
+            ["persona", "telefono_persona", 69, 194, "SEARCH", {"telefono_persona": "612345678"}, true],
+            ["persona", "telefono_persona", 69, 195, "SEARCH", {"telefono_persona": "612"}, true],
+            ["persona", "telefono_persona", 69, 196, "SEARCH", {"telefono_persona": ""}, true],
 
     //Campo: email_persona
 
         //Acción: ADD
-            ["persona", "email_persona", 70, 189, "ADD", {"email_persona": "a@b.e"}, "email_persona_min_size_ko"],
-            ["persona", "email_persona", 70, 190, "ADD", {"email_persona": ""}, "email_persona_min_size_ko"],
+            ["persona", "email_persona", 70, 197, "ADD", {"email_persona": "a@b.e"}, "email_persona_min_size_ko"],
+            ["persona", "email_persona", 70, 198, "ADD", {"email_persona": ""}, "email_persona_min_size_ko"],
 
-            ["persona", "email_persona", 71, 191, "ADD", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
+            ["persona", "email_persona", 71, 199, "ADD", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
 
-            ["persona", "email_persona", 72, 192, "ADD", {"email_persona": "juanmail.com"}, "email_persona_format_ko"],
-            ["persona", "email_persona", 72, 193, "ADD", {"email_persona": "juan@mail"}, "email_persona_format_ko"],
-            ["persona", "email_persona", 72, 194, "ADD", {"email_persona": "juan@@mail.com"}, "email_persona_format_ko"],
+            ["persona", "email_persona", 72, 200, "ADD", {"email_persona": "juanmail.com"}, "email_persona_format_ko"],
+            ["persona", "email_persona", 72, 201, "ADD", {"email_persona": "juan@mail"}, "email_persona_format_ko"],
+            ["persona", "email_persona", 72, 202, "ADD", {"email_persona": "juan@@mail.com"}, "email_persona_format_ko"],
 
-            ["persona", "email_persona", 73, 195, "ADD", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
-            ["persona", "email_persona", 73, 196, "ADD", {"email_persona": "juan.perez@mail.com"}, true],
-            ["persona", "email_persona", 73, 197, "ADD", {"email_persona": "ana_ruiz@correo.es"}, true],
-            ["persona", "email_persona", 73, 198, "ADD", {"email_persona": "a@b.es"}, true],
+            ["persona", "email_persona", 73, 203, "ADD", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
+            ["persona", "email_persona", 73, 204, "ADD", {"email_persona": "juan.perez@mail.com"}, true],
+            ["persona", "email_persona", 73, 205, "ADD", {"email_persona": "ana_ruiz@correo.es"}, true],
+            ["persona", "email_persona", 73, 206, "ADD", {"email_persona": "a@b.es"}, true],
 
         //Acción: EDIT
-            ["persona", "email_persona", 74, 199, "EDIT", {"email_persona": "a@b.e"}, "email_persona_min_size_ko"],
-            ["persona", "email_persona", 74, 200, "EDIT", {"email_persona": ""}, "email_persona_min_size_ko"],
+            ["persona", "email_persona", 74, 207, "EDIT", {"email_persona": "a@b.e"}, "email_persona_min_size_ko"],
+            ["persona", "email_persona", 74, 208, "EDIT", {"email_persona": ""}, "email_persona_min_size_ko"],
 
-            ["persona", "email_persona", 75, 201, "EDIT", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
+            ["persona", "email_persona", 75, 209, "EDIT", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
 
-            ["persona", "email_persona", 76, 202, "EDIT", {"email_persona": "juanmail.com"}, "email_persona_format_ko"],
+            ["persona", "email_persona", 76, 210, "EDIT", {"email_persona": "juanmail.com"}, "email_persona_format_ko"],
 
-            ["persona", "email_persona", 77, 203, "EDIT", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
-            ["persona", "email_persona", 77, 204, "EDIT", {"email_persona": "juan.perez@mail.com"}, true],
-            ["persona", "email_persona", 77, 205, "EDIT", {"email_persona": "a@b.es"}, true],
+            ["persona", "email_persona", 77, 211, "EDIT", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
+            ["persona", "email_persona", 77, 212, "EDIT", {"email_persona": "juan.perez@mail.com"}, true],
+            ["persona", "email_persona", 77, 213, "EDIT", {"email_persona": "a@b.es"}, true],
 
         //Acción: SEARCH
 
-            ["persona", "email_persona", 78, 206, "SEARCH", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
+            ["persona", "email_persona", 78, 214, "SEARCH", {"email_persona": "a".repeat(37) + "@mail.com"}, "email_persona_max_size_ko"],
 
-            ["persona", "email_persona", 79, 207, "SEARCH", {"email_persona": "juan#mail.com"}, "email_persona_format_ko"],
+            ["persona", "email_persona", 79, 215, "SEARCH", {"email_persona": "juan#mail.com"}, "email_persona_format_ko"],
 
-            ["persona", "email_persona", 80, 208, "SEARCH", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
-            ["persona", "email_persona", 80, 209, "SEARCH", {"email_persona": "juan@mail"}, true],
-            ["persona", "email_persona", 80, 210, "SEARCH", {"email_persona": "juan.perez@mail.com"}, true],
-            ["persona", "email_persona", 80, 211, "SEARCH", {"email_persona": ""}, true],
+            ["persona", "email_persona", 80, 216, "SEARCH", {"email_persona": "a".repeat(36) + "@mail.com"}, true],
+            ["persona", "email_persona", 80, 217, "SEARCH", {"email_persona": "juan@mail"}, true],
+            ["persona", "email_persona", 80, 218, "SEARCH", {"email_persona": "juan.perez@mail.com"}, true],
+            ["persona", "email_persona", 80, 219, "SEARCH", {"email_persona": ""}, true],
 
     //Campo: foto_persona
 
         //Acción: SEARCH
 
-            ["persona", "foto_persona", 81, 212, "SEARCH", {"foto_persona": "a".repeat(12) + ".jpg"}, "foto_persona_max_size_ko"],
+            ["persona", "foto_persona", 81, 220, "SEARCH", {"foto_persona": "a".repeat(12) + ".jpg"}, "foto_persona_max_size_ko"],
 
-            ["persona", "foto_persona", 82, 213, "SEARCH", {"foto_persona": "mi foto.jpg"}, "foto_persona_format_ko"],
+            ["persona", "foto_persona", 82, 221, "SEARCH", {"foto_persona": "mi foto.jpg"}, "foto_persona_format_ko"],
 
-            ["persona", "foto_persona", 83, 214, "SEARCH", {"foto_persona": "foto.jpg"}, true],
-            ["persona", "foto_persona", 83, 215, "SEARCH", {"foto_persona": "foto"}, true],
-            ["persona", "foto_persona", 83, 216, "SEARCH", {"foto_persona": ""}, true],
-            ["persona", "foto_persona", 83, 217, "SEARCH", {"foto_persona": "a".repeat(11) + ".jpg"}, true],
+            ["persona", "foto_persona", 83, 222, "SEARCH", {"foto_persona": "foto.jpg"}, true],
+            ["persona", "foto_persona", 83, 223, "SEARCH", {"foto_persona": "foto"}, true],
+            ["persona", "foto_persona", 83, 224, "SEARCH", {"foto_persona": ""}, true],
+            ["persona", "foto_persona", 83, 225, "SEARCH", {"foto_persona": "a".repeat(11) + ".jpg"}, true],
 
     //Campo: nuevo_foto_persona
 
         //Acción: ADD
 
-            ["persona", "nuevo_foto_persona", 84, 218, "ADD", {}, "nuevo_foto_persona_exist_file_ko"],
+            ["persona", "nuevo_foto_persona", 84, 226, "ADD", {}, "nuevo_foto_persona_exist_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 85, 219, "ADD", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 85, 220, "ADD", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 227, "ADD", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 228, "ADD", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 85, 221, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(12) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 229, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(12) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 85, 222, "ADD", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 85, 223, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto1.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 230, "ADD", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 85, 231, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto1.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 86, 224, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
-            ["persona", "nuevo_foto_persona", 86, 225, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.pdf", "type_file": "application/pdf", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 86, 232, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 86, 233, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.pdf", "type_file": "application/pdf", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 87, 226, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
-            ["persona", "nuevo_foto_persona", 87, 227, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 3000000}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 87, 234, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 87, 235, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 3000000}}, "nuevo_foto_persona_max_size_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 88, 228, "ADD", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 88, 229, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 88, 230, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 88, 231, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 88, 232, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
-            ["persona", "nuevo_foto_persona", 88, 233, "ADD", {"nuevo_foto_persona": {"format_name_file": "fotoperfil.jpeg", "type_file": "image/jpeg", "max_size_file": 500000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 236, "ADD", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 237, "ADD", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 238, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 239, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 88, 240, "ADD", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
+            ["persona", "nuevo_foto_persona", 88, 241, "ADD", {"nuevo_foto_persona": {"format_name_file": "fotoperfil.jpeg", "type_file": "image/jpeg", "max_size_file": 500000}}, true],
 
         //Acción: EDIT
 
-            ["persona", "nuevo_foto_persona", 89, 234, "EDIT", {}, true],
+            ["persona", "nuevo_foto_persona", 89, 242, "EDIT", {}, true],
 
-            ["persona", "nuevo_foto_persona", 90, 235, "EDIT", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
-            ["persona", "nuevo_foto_persona", 90, 236, "EDIT", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 90, 243, "EDIT", {"nuevo_foto_persona": {"format_name_file": "", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 90, 244, "EDIT", {"nuevo_foto_persona": {"format_name_file": "abcd", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 90, 237, "EDIT", {"nuevo_foto_persona": {"format_name_file":"a".repeat(12) + ".jpg", "type_file": "image/jpeg","max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 90, 245, "EDIT", {"nuevo_foto_persona": {"format_name_file":"a".repeat(12) + ".jpg", "type_file": "image/jpeg","max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 90, 238, "EDIT", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
+            ["persona", "nuevo_foto_persona", 90, 246, "EDIT", {"nuevo_foto_persona": {"format_name_file": "mi foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, "nuevo_foto_persona_format_name_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 91, 239, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
+            ["persona", "nuevo_foto_persona", 91, 247, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.png", "type_file": "image/png", "max_size_file": 100000}}, "nuevo_foto_persona_type_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 92, 240, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
+            ["persona", "nuevo_foto_persona", 92, 248, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097153}}, "nuevo_foto_persona_max_size_file_ko"],
 
-            ["persona", "nuevo_foto_persona", 93, 241, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 93, 242, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 93, 243, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 93, 244, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
-            ["persona", "nuevo_foto_persona", 93, 245, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
-            ["persona", "nuevo_foto_persona", 93, 246, "EDIT", {}, true],
+            ["persona", "nuevo_foto_persona", 93, 249, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 93, 250, "EDIT", {"nuevo_foto_persona": {"format_name_file": "a".repeat(11) + ".jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 93, 251, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 93, 252, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpeg", "type_file": "image/jpeg", "max_size_file": 100000}}, true],
+            ["persona", "nuevo_foto_persona", 93, 253, "EDIT", {"nuevo_foto_persona": {"format_name_file": "foto.jpg", "type_file": "image/jpeg", "max_size_file": 2097152}}, true],
+            ["persona", "nuevo_foto_persona", 93, 254, "EDIT", {}, true],
 
 ];

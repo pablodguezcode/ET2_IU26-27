@@ -80,7 +80,7 @@ var textos_ES = {
 	// --- Errores de validación - Fecha de nacimiento
 	'fechaNacimiento_persona_min_size_ko': 'La fecha de nacimiento es demasiado corta: debe tener al menos 8 caracteres (d/m/aaaa o d-m-aaaa)',
 	'fechaNacimiento_persona_max_size_ko': 'La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)',
-	'fechaNacimiento_persona_format_ko': 'El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también aaaa/mm/dd o mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dígitos, / y -)',
+	'fechaNacimiento_persona_format_ko': 'El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa',
 	'fechaNacimiento_persona_personalized_ko': 'La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy',
 
 	// --- Errores de validación - Dirección
