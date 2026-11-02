@@ -930,6 +930,10 @@ class persona extends AbstractEntidad {
 			this.dom.assign_property_value('link_foto_persona','href','http://193.147.87.202/ET2/filesuploaded/files_foto_persona/'+foto);
 		}
 
+		// la clave primaria no se puede cambiar: el select dni se muestra deshabilitado (readonly no afecta a un select). Un campo deshabilitado
+		// no se envia, asi que EDIT() lo habilita solo mientras envia la peticion al back (ver EDIT())
+		document.getElementById('dni').disabled = true;
+
 		setLang();
 	}
 
@@ -946,6 +950,45 @@ class persona extends AbstractEntidad {
 	DELETE_submit_persona(){
 
 		return true;
+	}
+
+	/**
+	 * Refactoriza AbstractEntidad.EDIT() (misma definicion). El select dni del formulario de EDIT va deshabilitado porque la clave no se puede
+	 * cambiar, pero un campo deshabilitado no se envia y el back necesita el dni para saber que tupla modificar: se habilita solo mientras
+	 * se envia la peticion. Si el back responde ok el formulario se vacia y se oculta; si responde error el formulario continua y
+	 * el dni vuelve a quedar deshabilitado.
+	 */
+	async EDIT(){
+
+		document.getElementById('dni').disabled = false;
+		await super.EDIT();
+		this.deshabilitar_dni('javascript:entidad.EDIT();');
+	}
+
+	/**
+	 * Refactoriza AbstractEntidad.DELETE() (misma definicion). Igual que EDIT(): el dni va deshabilitado y solo se habilita mientras se
+	 * envia la peticion al back, que lo necesita para saber que tupla borrar.
+	 */
+	async DELETE(){
+
+		document.getElementById('dni').disabled = false;
+		await super.DELETE();
+		this.deshabilitar_dni('javascript:entidad.DELETE();');
+	}
+
+	/**
+	 * Vuelve a deshabilitar el select dni despues de enviar EDIT o DELETE, si el formulario sigue siendo el de esa accion (si el back
+	 * respondio ok el formulario se ha vaciado y ya no hay nada que deshabilitar).
+	 *
+	 * @param {string} action valor del action del formulario de la accion
+	 */
+	deshabilitar_dni(action){
+
+		var form = document.getElementById('form_iu');
+		var dni = document.getElementById('dni');
+		if (form != null && dni != null && form.getAttribute('action') == action){
+			dni.disabled = true;
+		}
 	}
 
 	/**
@@ -973,6 +1016,10 @@ class persona extends AbstractEntidad {
 
 		// datos de la fila en solo lectura, sin input file y con el enlace al fichero
 		this.preparar_form_solo_lectura(fila);
+
+		// el dni es un select: readonly no le afecta, asi que se deshabilita. Un campo deshabilitado no se envia, y el back necesita el dni
+		// para saber que tupla borrar, por lo que DELETE() lo habilita solo mientras envia la peticion al back (ver DELETE())
+		document.getElementById('dni').disabled = true;
 
 		// colocar boton de submit
 		this.dom.colocarboton('DELETE');
