@@ -268,8 +268,8 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	 * Construye el formulario de SEARCH de rolaccionfuncionalidad y lo muestra en el div modal (Div_IU_form).
 	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
 	 * - Los tres campos son opcionales: la opcion vacia de cada select significa "sin filtro" (ver SEARCH_<campo>_validation).
-	 * - Filtro de funcionalidad: solo esa fila. Filtro de rol: solo esa columna. Filtro de accion: solo las funcionalidades que
-	 *   tienen asignada esa accion (en funcionalidad_accion) y cada casilla pasa a ser la asignacion de esa accion concreta al rol.
+	 * - Filtro de funcionalidad: solo el bloque de filas de esa funcionalidad. Filtro de rol: solo esa columna. Filtro de accion: solo
+	 *   las funcionalidades que tienen asignada esa accion (en funcionalidad_accion) y solo la fila de esa accion en cada una.
 	 * - Si el back responde, SEARCH() oculta el formulario y muestra la matriz filtrada.
 	 */
 	createForm_SEARCH(){
@@ -320,16 +320,17 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	/**
 	 * rolaccionfuncionalidad es una entidad especial: no permite ADD, EDIT ni DELETE de tuplas sueltas y no se muestra como una tabla,
 	 * sino como una matriz que se construye con los datos de las otras tablas:
-	 *  - filas: las funcionalidades, ordenadas por id_funcionalidad
-	 *  - columnas: los roles, ordenados por id_rol
-	 *  - casilla (funcionalidad F, rol R): una funcionalidad ya lleva dentro sus acciones (funcionalidad_accion), asi que asignar F a R es
-	 *    asignarle todas las acciones de F. Casilla marcada: el rol tiene asignadas todas las acciones de F (tripletas F-accion-R);
-	 *    desmarcada: no las tiene todas (ninguna, o solo algunas: la casilla solo tiene dos estados y al marcarla se crean las que faltan).
-	 *    Si la funcionalidad no tiene acciones no hay nada que asignar y la casilla queda deshabilitada.
-	 *  - con filtro de accion A: solo salen las funcionalidades que tienen A y la casilla es la asignacion de esa accion concreta (F, A, R).
+	 *  - filas: cada funcionalidad ocupa un bloque de filas, una por cada accion que tiene asignada (funcionalidad_accion). La celda de la
+	 *    funcionalidad ("Funcionalidad id - nombre") abarca todas las filas de su bloque y la celda de cada fila es la accion ("Accion id - nombre").
+	 *    Las funcionalidades van ordenadas por id_funcionalidad y las acciones de cada una por id_accion
+	 *  - columnas: todos los roles ("Rol id - nombre"), ordenados por id_rol
+	 *  - casilla (funcionalidad F, accion A, rol R): es una tripleta de rolaccionfuncionalidad. Marcada: el rol R tiene asignada la accion A
+	 *    de la funcionalidad F; desmarcada: no la tiene. Cada casilla se marca y se desmarca por separado
+	 *  - una funcionalidad sin acciones no tiene nada que asignar: ocupa una sola fila con el texto "sin acciones" y sin casillas
 	 *
 	 * Refactoriza AbstractEntidad.SEARCH() (misma definicion): los filtros del formulario de busqueda (vacio = sin filtro)
-	 * limitan las filas y columnas que se muestran.
+	 * limitan las filas y columnas que se muestran: funcionalidad (solo su bloque), accion (solo esa accion, y solo las funcionalidades
+	 * que la tienen) y rol (solo su columna).
 	 */
 	async SEARCH(){
 
@@ -340,11 +341,12 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 		var filtroaccion = filtro('id_accion');
 		var filtrorol = filtro('id_rol');
 
-		// las cuatro peticiones son independientes y se lanzan a la vez. Funcionalidades, roles y funcionalidad_accion se piden sin filtro
-		// (formulario '') y las asignaciones con el formulario, que lleva los filtros. El back pagina sus listados (ver pedir_todo()),
+		// las cinco peticiones son independientes y se lanzan a la vez. Funcionalidades, acciones, roles y funcionalidad_accion se piden sin
+		// filtro (formulario '') y las asignaciones con el formulario, que lleva los filtros. El back pagina sus listados (ver pedir_todo()),
 		// asi que cada peticion trae todas las paginas
 		var resultados = await Promise.all([
 			this.pedir_todo('', 'funcionalidad'),
+			this.pedir_todo('', 'accion'),
 			this.pedir_todo('', 'rol'),
 			this.pedir_todo('', 'funcionalidad_accion'),
 			this.pedir_todo('form_iu', this.nombreentidad)
@@ -355,19 +357,20 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 		this.dom.hide_element('Div_IU_form');
 
 		var funcionalidades = resultados[0].filas;
-		var roles = resultados[1].filas;
-		var parejas = resultados[2].filas;
-		var asignaciones = resultados[3].filas;
+		var acciones = resultados[1].filas;
+		var roles = resultados[2].filas;
+		var parejas = resultados[3].filas;
+		var asignaciones = resultados[4].filas;
 
 		// si el back no ha dejado pedir las paginas siguientes, se piden las filas de cada funcionalidad
-		if (!resultados[2].completo){
+		if (!resultados[3].completo){
 			parejas = await this.filas_por_funcionalidad('funcionalidad_accion', funcionalidades);
 		}
-		if (!resultados[3].completo){
+		if (!resultados[4].completo){
 			asignaciones = await this.filas_por_funcionalidad(this.nombreentidad, funcionalidades);
 		}
 
-		// acciones de cada funcionalidad (funcionalidad_accion): id_funcionalidad -> ids de accion
+		// acciones de cada funcionalidad (funcionalidad_accion): id_funcionalidad -> ids de accion, ordenados por id
 		var accionesde = {};
 		for (var pareja of parejas){
 			var f = this.valorclave(pareja['id_funcionalidad'], 'id_funcionalidad');
@@ -375,13 +378,27 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 			if (!(f in accionesde)){ accionesde[f] = []; }
 			if (!accionesde[f].includes(a)){ accionesde[f].push(a); }
 		}
+		for (var idf in accionesde){
+			accionesde[idf].sort((x, y) => Number(x) - Number(y));
+		}
 
-		// aplicar los filtros y ordenar por id. Con filtro de accion solo las funcionalidades que la tienen
+		// aplicar los filtros y ordenar por id. Con filtro de accion solo las funcionalidades que la tienen y solo esa accion en cada una
 		funcionalidades = funcionalidades.filter(fila => (filtrofuncionalidad == '' || fila['id_funcionalidad'] == filtrofuncionalidad)
 				&& (filtroaccion == '' || (accionesde[fila['id_funcionalidad']] || []).includes(filtroaccion)))
-			.sort((a, b) => Number(a['id_funcionalidad']) - Number(b['id_funcionalidad']));
+			.sort((x, y) => Number(x['id_funcionalidad']) - Number(y['id_funcionalidad']));
 		roles = roles.filter(fila => filtrorol == '' || fila['id_rol'] == filtrorol)
-			.sort((a, b) => Number(a['id_rol']) - Number(b['id_rol']));
+			.sort((x, y) => Number(x['id_rol']) - Number(y['id_rol']));
+		if (filtroaccion != ''){
+			for (var idfiltrado in accionesde){
+				accionesde[idfiltrado] = [filtroaccion];
+			}
+		}
+
+		// nombre de cada accion: id_accion -> fila de accion (para la cabecera "id - nombre" de cada fila)
+		var accionesporid = {};
+		for (var accion of acciones){
+			accionesporid[accion['id_accion']] = accion;
+		}
 
 		// asignaciones existentes como "idfuncionalidad_idaccion_idrol" (el back puede devolver cada clave como objeto o como valor simple)
 		var existentes = new Set(asignaciones.map(fila => this.clave_asignacion(
@@ -402,7 +419,7 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 			// sin la clase del mensaje de vacio, para que setLang() no sustituya la matriz por el texto
 			contenedor.className = '';
 			contenedor.innerHTML = '';
-			contenedor.append(this.crearMatriz(funcionalidades, roles, accionesde, filtroaccion, existentes));
+			contenedor.append(this.crearMatriz(funcionalidades, roles, accionesde, accionesporid, existentes));
 		}
 
 		setLang();
@@ -477,19 +494,19 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	}
 
 	/**
-	 * Construye la tabla de la matriz: una fila por funcionalidad, una columna por rol y una casilla por cruce (ver SEARCH()).
-	 * La matriz es editable de forma permanente: marcar una casilla asigna el rol a la funcionalidad (ADD) y desmarcarla quita la asignacion
-	 * (DELETE), ver cambiar_asignacion(). Las cabeceras muestran el texto traducido de la entidad, el id y el nombre
-	 * (p.e. "Funcionalidad 3 - Gestion roles", "Rol 2 - gestor").
+	 * Construye la tabla de la matriz (ver SEARCH()): cada funcionalidad es un bloque de filas, una por accion, y cada rol una columna.
+	 * La matriz es editable de forma permanente: marcar una casilla asigna la accion de la funcionalidad al rol (ADD de la tripleta) y
+	 * desmarcarla quita la asignacion (DELETE), ver cambiar_asignacion(). Las cabeceras muestran el texto traducido de la entidad, el id y el
+	 * nombre (p.e. "Funcionalidad 3 - Gestion roles", "Accion 2 - modificar", "Rol 2 - gestor").
 	 *
 	 * @param {Array} funcionalidades filas de funcionalidad, ya filtradas y ordenadas
 	 * @param {Array} roles filas de rol, ya filtradas y ordenadas
-	 * @param {Object} accionesde acciones de cada funcionalidad: id_funcionalidad -> ids de accion
-	 * @param {string} filtroaccion id de la accion por la que se filtra ('' = sin filtro: todas las acciones de la funcionalidad)
+	 * @param {Object} accionesde acciones que se muestran de cada funcionalidad: id_funcionalidad -> ids de accion, ordenados
+	 * @param {Object} accionesporid filas de accion por id_accion (para el nombre de cada fila)
 	 * @param {Set} existentes asignaciones existentes, como "idfuncionalidad_idaccion_idrol"
 	 * @returns {HTMLTableElement} tabla
 	 */
-	crearMatriz(funcionalidades, roles, accionesde, filtroaccion, existentes){
+	crearMatriz(funcionalidades, roles, accionesde, accionesporid, existentes){
 
 		var tabla = document.createElement('table');
 		tabla.id = 'tabla_matriz_rolaccionfuncionalidad';
@@ -515,9 +532,15 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 			return th;
 		};
 
-		// fila de cabecera: celda vacia en la esquina y una cabecera por rol
+		// fila de cabecera: Funcionalidad, Accion y una cabecera "Rol id - nombre" por rol
 		var trcabecera = document.createElement('tr');
-		trcabecera.append(celda('th'));
+		for (var clave of ['text_matriz_funcionalidad', 'text_matriz_accion']){
+			var thfija = celda('th');
+			var textofijo = document.createElement('span');
+			textofijo.className = clave;
+			thfija.append(textofijo);
+			trcabecera.append(thfija);
+		}
 		for (var rol of roles){
 			trcabecera.append(cabecera('text_matriz_rol', rol['id_rol'], rol['rol_name']));
 		}
@@ -525,35 +548,66 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 		thead.append(trcabecera);
 		tabla.append(thead);
 
-		// una fila por funcionalidad con una casilla por rol
+		// un bloque de filas por funcionalidad: una fila por accion con una casilla por rol
 		var tbody = document.createElement('tbody');
 		for (const funcionalidad of funcionalidades){
-			var tr = document.createElement('tr');
-			tr.append(cabecera('text_matriz_funcionalidad', funcionalidad['id_funcionalidad'], funcionalidad['nombre_funcionalidad']));
 
-			// acciones que representa la casilla: la del filtro o todas las de la funcionalidad
-			const acciones = (filtroaccion != '') ? [filtroaccion] : (accionesde[funcionalidad['id_funcionalidad']] || []);
+			const idfuncionalidad = funcionalidad['id_funcionalidad'];
+			const acciones = accionesde[idfuncionalidad] || [];
 
-			for (const rol of roles){
-				var td = celda('td');
-				// const (y no var): el listener de cada casilla debe referirse a SU casilla y no a la ultima creada
-				const casilla = document.createElement('input');
-				casilla.type = 'checkbox';
-				casilla.id = 'casilla_' + funcionalidad['id_funcionalidad'] + '_' + rol['id_rol'];
+			// la celda de la funcionalidad abarca todas las filas de su bloque
+			var thfuncionalidad = cabecera('text_matriz_funcionalidad', idfuncionalidad, funcionalidad['nombre_funcionalidad']);
+			thfuncionalidad.rowSpan = Math.max(acciones.length, 1);
+			thfuncionalidad.style.verticalAlign = 'middle';
 
-				var asignadas = acciones.filter(accion =>
-					existentes.has(this.clave_asignacion(funcionalidad['id_funcionalidad'], accion, rol['id_rol']))).length;
-				this.pintar_casilla(casilla, asignadas, acciones.length);
+			var filas = [];
 
-				// una funcionalidad sin acciones no tiene nada que asignar
-				casilla.disabled = (acciones.length == 0);
-
-				// cada cambio de la casilla se envia al back (marcar = ADD, desmarcar = DELETE)
-				casilla.addEventListener('change', () => this.cambiar_asignacion(casilla, funcionalidad['id_funcionalidad'], rol['id_rol'], acciones));
-				td.append(casilla);
-				tr.append(td);
+			if (acciones.length == 0){
+				// una funcionalidad sin acciones no tiene nada que asignar: una fila con el aviso y sin casillas
+				var trvacia = document.createElement('tr');
+				trvacia.append(thfuncionalidad);
+				var thsinacciones = celda('th');
+				var textosinacciones = document.createElement('span');
+				textosinacciones.className = 'text_matriz_sin_acciones';
+				thsinacciones.append(textosinacciones);
+				trvacia.append(thsinacciones);
+				for (var vacio of roles){
+					trvacia.append(celda('td'));
+				}
+				filas.push(trvacia);
 			}
-			tbody.append(tr);
+
+			for (const idaccion of acciones){
+				var tr = document.createElement('tr');
+				if (filas.length == 0){
+					tr.append(thfuncionalidad);
+				}
+				var accion = accionesporid[idaccion];
+				tr.append(cabecera('text_matriz_accion', idaccion, accion ? accion['nombre_accion'] : null));
+
+				for (const rol of roles){
+					var td = celda('td');
+					// const (y no var): el listener de cada casilla debe referirse a SU casilla y no a la ultima creada
+					const casilla = document.createElement('input');
+					casilla.type = 'checkbox';
+					casilla.id = 'casilla_' + idfuncionalidad + '_' + idaccion + '_' + rol['id_rol'];
+					casilla.checked = existentes.has(this.clave_asignacion(idfuncionalidad, idaccion, rol['id_rol']));
+
+					// cada cambio de la casilla se envia al back (marcar = ADD, desmarcar = DELETE)
+					casilla.addEventListener('change', () => this.cambiar_asignacion(casilla, idfuncionalidad, idaccion, rol['id_rol']));
+					td.append(casilla);
+					tr.append(td);
+				}
+				filas.push(tr);
+			}
+
+			// linea mas gruesa sobre la primera fila de cada funcionalidad para separar los bloques
+			for (var celdainicial of filas[0].children){
+				celdainicial.style.borderTop = '3px solid black';
+			}
+			for (var fila of filas){
+				tbody.append(fila);
+			}
 		}
 		tabla.append(tbody);
 
@@ -561,90 +615,54 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	}
 
 	/**
-	 * Pone la casilla en el estado que corresponde. Solo tiene dos estados (marcada y desmarcada): marcada si estan asignadas todas las
-	 * acciones y desmarcada en cualquier otro caso (ninguna o solo algunas; al marcarla se crean las que faltan).
-	 *
-	 * @param {HTMLInputElement} casilla casilla a pintar
-	 * @param {number} asignadas acciones de la casilla que tienen la asignacion en el back
-	 * @param {number} total acciones que representa la casilla
-	 */
-	pintar_casilla(casilla, asignadas, total){
-
-		casilla.checked = (total > 0 && asignadas == total);
-		// sin el tercer estado del navegador (casilla "intermedia")
-		casilla.indeterminate = false;
-	}
-
-	/**
-	 * Pregunta al back que acciones tiene asignadas el rol en la funcionalidad. Se piden las asignaciones de esa funcionalidad y ese rol y se
-	 * comprueban las claves de las filas devueltas (el back puede devolver cada clave como objeto o como valor simple), por si el back no aplicara el filtro.
+	 * Pregunta al back si el rol tiene asignada la accion de la funcionalidad. Se piden las asignaciones con esos tres criterios y se
+	 * comprueban las claves de las filas devueltas (el back puede devolver cada clave como objeto o como valor simple), por si el back no
+	 * aplicara el filtro.
 	 *
 	 * @param {*} idfuncionalidad id de la funcionalidad
+	 * @param {*} idaccion id de la accion
 	 * @param {*} idrol id del rol
-	 * @returns {Promise<Set>} ids de accion (texto) asignados
+	 * @returns {Promise<boolean>} true si la asignacion existe en el back
 	 */
-	async acciones_asignadas(idfuncionalidad, idrol){
+	async existe_asignacion(idfuncionalidad, idaccion, idrol){
 
-		var resultado = await this.pedir_todo('', this.nombreentidad, {id_funcionalidad: idfuncionalidad, id_rol: idrol});
+		var resultado = await this.pedir_todo('', this.nombreentidad, {id_funcionalidad: idfuncionalidad, id_accion: idaccion, id_rol: idrol});
 
-		var acciones = new Set();
-		for (var fila of resultado.filas){
-			if (this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad') == idfuncionalidad
-				&& this.valorclave(fila['id_rol'], 'id_rol') == idrol){
-				acciones.add(String(this.valorclave(fila['id_accion'], 'id_accion')));
-			}
-		}
-		return acciones;
+		return resultado.filas.some(fila =>
+			this.valorclave(fila['id_funcionalidad'], 'id_funcionalidad') == idfuncionalidad
+			&& this.valorclave(fila['id_accion'], 'id_accion') == idaccion
+			&& this.valorclave(fila['id_rol'], 'id_rol') == idrol);
 	}
 
 	/**
-	 * Se ejecuta al marcar o desmarcar una casilla de la matriz: marcar asigna el rol a la funcionalidad (ADD de una tripleta por cada accion
-	 * que aun no tenga) y desmarcar quita la asignacion (DELETE de las tripletas que tenga). La casilla queda deshabilitada mientras llegan
-	 * las respuestas del back. El back permite tripletas repetidas, por lo que antes de crear se pregunta que acciones tiene ya asignadas.
-	 * Al terminar se vuelve a consultar al back y la casilla muestra lo que hay guardado (marcada si estan todas las acciones, desmarcada si no). Si el back
-	 * responde error, o responde ok pero la asignacion no queda como pide la casilla, se muestra el modal de error (el usuario confirma que lo
-	 * ha recibido) con el codigo del back o asignacion_no_guardada_ko / asignacion_no_borrada_ko.
-	 * No se repinta la matriz: la casilla ya muestra el nuevo estado y asi se conservan los filtros de SEARCH.
+	 * Se ejecuta al marcar o desmarcar una casilla de la matriz: marcar crea la tripleta (ADD) y desmarcar la borra (DELETE).
+	 * La casilla queda deshabilitada mientras llega la respuesta del back. El back permite tripletas repetidas, por lo que antes de crear
+	 * una se comprueba que no exista ya. Si el back responde error, la casilla vuelve al estado que tenia y se muestra el modal de error
+	 * (el usuario confirma que lo ha recibido y la matriz sigue como antes de la peticion). Si responde ok, la casilla se queda con el nuevo
+	 * estado. No se repinta la matriz: asi se conservan los filtros de SEARCH.
 	 *
 	 * @param {HTMLInputElement} casilla casilla que ha cambiado
-	 * @param {*} idfuncionalidad id de la funcionalidad (fila) de la casilla
+	 * @param {*} idfuncionalidad id de la funcionalidad (bloque de filas) de la casilla
+	 * @param {*} idaccion id de la accion (fila) de la casilla
 	 * @param {*} idrol id del rol (columna) de la casilla
-	 * @param {Array} acciones ids de las acciones que representa la casilla
 	 */
-	async cambiar_asignacion(casilla, idfuncionalidad, idrol, acciones){
+	async cambiar_asignacion(casilla, idfuncionalidad, idaccion, idrol){
 
 		var marcada = casilla.checked;
 		casilla.disabled = true;
 
-		var error = null;
-		var actuales = await this.acciones_asignadas(idfuncionalidad, idrol);
-
-		// marcar: ADD de las que faltan; desmarcar: DELETE de las que hay. Una a una, parando en el primer error
-		for (var accion of acciones){
-			if (marcada == actuales.has(String(accion))){
-				continue;
-			}
-			var respuesta = await this.access_functions.peticionBackGeneral('', this.nombreentidad, marcada ? 'ADD' : 'DELETE',
-				{id_funcionalidad: idfuncionalidad, id_accion: accion, id_rol: idrol});
-			if (!respuesta['ok']){
-				error = respuesta['code'];
-				break;
-			}
+		// el back permite tripletas repetidas: si se marca una asignacion que ya existe no se vuelve a crear
+		if (marcada && (await this.existe_asignacion(idfuncionalidad, idaccion, idrol))){
+			casilla.disabled = false;
+			return;
 		}
 
-		// lo que hay guardado en el back es lo que muestra la casilla
-		var despues = await this.acciones_asignadas(idfuncionalidad, idrol);
-		var asignadas = acciones.filter(accion => despues.has(String(accion))).length;
-		this.pintar_casilla(casilla, asignadas, acciones.length);
+		var respuesta = await this.access_functions.peticionBackGeneral('', this.nombreentidad, marcada ? 'ADD' : 'DELETE',
+			{id_funcionalidad: idfuncionalidad, id_accion: idaccion, id_rol: idrol});
 
-		/* el back dijo ok pero la asignacion no ha quedado como se pedia
-		if (error === null && ((marcada && asignadas != acciones.length) || (!marcada && asignadas != 0))){
-			error = marcada ? 'asignacion_no_guardada_ko' : 'asignacion_no_borrada_ko';
-		}
-		*/
-
-		if (error !== null){
-			this.dom.abrirModalError(error);
+		if (!respuesta['ok']){
+			casilla.checked = !marcada;
+			this.dom.abrirModalError(respuesta['code']);
 		}
 
 		casilla.disabled = false;

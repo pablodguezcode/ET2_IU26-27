@@ -294,8 +294,10 @@ var textos_EN = {
 	// headers of the funcionalidad_accion matrix: fixed text before "id - name" (e.g. "Feature 3 - Roles management")
 	'text_matriz_funcionalidad': 'Feature',
 	'text_matriz_accion': 'Action',
-	// headers of the rolaccionfuncionalidad matrix: rows are features (text_matriz_funcionalidad) and columns roles
+	// rolaccionfuncionalidad matrix: each feature (text_matriz_funcionalidad) takes a block of rows, one per action
+	// (text_matriz_accion), and the columns are the roles (text_matriz_rol). A feature without actions shows text_matriz_sin_acciones
 	'text_matriz_rol': 'Role',
+	'text_matriz_sin_acciones': 'No actions assigned',
 	'test_ventana_bloqueada_ko': 'The browser has blocked the test results window. Allow pop-ups for this page.',
 
 }

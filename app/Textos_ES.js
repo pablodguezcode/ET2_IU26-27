@@ -295,8 +295,10 @@ var textos_ES = {
 	// cabeceras de la matriz de funcionalidad_accion: texto fijo delante de "id - nombre" (p.e. "Funcionalidad 3 - Gestion roles")
 	'text_matriz_funcionalidad': 'Funcionalidad',
 	'text_matriz_accion': 'Acción',
-	// cabeceras de la matriz de rolaccionfuncionalidad: las filas son funcionalidades (text_matriz_funcionalidad) y las columnas roles
+	// matriz de rolaccionfuncionalidad: cada funcionalidad (text_matriz_funcionalidad) ocupa un bloque de filas, una por accion
+	// (text_matriz_accion), y las columnas son los roles (text_matriz_rol). Una funcionalidad sin acciones muestra text_matriz_sin_acciones
 	'text_matriz_rol': 'Rol',
+	'text_matriz_sin_acciones': 'Sin acciones asignadas',
 	'test_ventana_bloqueada_ko': 'El navegador ha bloqueado la ventana de resultados de las pruebas. Permita las ventanas emergentes para esta página.',
 
 }
