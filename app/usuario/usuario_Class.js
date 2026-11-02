@@ -407,6 +407,45 @@ class usuario extends AbstractEntidad {
 		return set_result;
 	}
 
+	/**
+	 * Refactoriza AbstractEntidad.SEARCH() (misma definicion). El filtro de rol es un select: elige UN rol concreto, y no un trozo de
+	 * identificador, pero el back busca los campos por trozos (con el rol 1 devolveria tambien los usuarios de los roles 10, 11, 21...).
+	 * Por eso, si se ha elegido un rol, aqui se descartan las tuplas cuyo id_rol no sea exactamente el elegido. Sin rol elegido (opcion
+	 * vacia) funciona igual que la de AbstractEntidad.
+	 */
+	async SEARCH(){
+
+		// el rol elegido se lee antes de la peticion: la respuesta limpia el formulario
+		var form = document.getElementById('form_iu');
+		var idrol = (form != null && form.elements['id_rol']) ? form.elements['id_rol'].value : '';
+
+		var respuesta = await this.access_functions.peticionBackGeneral('form_iu', this.nombreentidad, 'SEARCH');
+
+		//ocultar y limpiar el formulario
+		document.getElementById('contenedor_IU_form').innerHTML = this.manual_form_creation();
+		this.dom.hide_element('Div_IU_form');
+
+		var filas = (respuesta['code'] == 'RECORDSET_DATOS') ? respuesta['resource'] : [];
+		if (idrol != ''){
+			filas = filas.filter(fila => this.valorclave(fila['id_rol'], 'id_rol') == idrol);
+		}
+
+		if (filas.length > 0){
+			this.datos = filas;
+			this.atributos = Object.keys(this.datos[0]);
+			this.dom.show_element('IU_manage_entity');
+			//crear la tabla de datos de la entidad del back
+			this.crearTablaDatos(this.datos, this.mostrarespecial);
+		}
+		else{
+			document.getElementById('IU_manage_table').style.display = 'block';
+			document.getElementById('IU_manage_table').innerHTML = 'No se han encontrado elementos que coincidan con la búsqueda';
+			document.getElementById('IU_manage_table').className = 'RECORDSET_VACIO';
+		}
+
+		setLang();
+	}
+
 /***************************************************************************************************************************
                                                      FORMULARIOS
 ****************************************************************************************************************************/
@@ -515,7 +554,8 @@ class usuario extends AbstractEntidad {
 	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
 	 * - Todos los campos son opcionales: vacio significa "sin filtro" (ver SEARCH_<campo>_validation).
 	 * - contrasena es un dato sensible y no se usa como criterio de busqueda: se oculta con su label y se deshabilita para que no se envie al back.
-	 * - Si el back responde, AbstractEntidad.SEARCH() oculta el formulario y muestra en la tabla las tuplas que coinciden.
+	 * - id_rol es un select: busca ese rol en concreto, no por trozos (ver SEARCH()).
+	 * - Si el back responde, SEARCH() oculta el formulario y muestra en la tabla las tuplas que coinciden.
 	 */
 	createForm_SEARCH(){
 
