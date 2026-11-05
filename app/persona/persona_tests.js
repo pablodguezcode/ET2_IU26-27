@@ -137,7 +137,7 @@ var persona_def_tests = [
         "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
             ["persona", "fechaNacimiento_persona", "input", 33, "Validar formato dd/mm/aaaa o dd-mm-aaaa (mismo separador) de la fecha de nacimiento en ADD; el formato anglosajón se reordena antes de validar", "format", "ADD",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también se admiten aaaa/mm/dd y mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dd/mm/aaaa, completo o parcial: el formato aaaa/mm/dd no es válido)"],
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT se admite formato inglés)"],
 
             ["persona", "fechaNacimiento_persona", "input", 34, "Validar que la fecha de nacimiento existe en el calendario y no es posterior a la fecha actual en ADD", "personalized", "ADD",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],
@@ -154,7 +154,7 @@ var persona_def_tests = [
         "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
             ["persona", "fechaNacimiento_persona", "input", 38, "Validar formato dd/mm/aaaa o dd-mm-aaaa (mismo separador) de la fecha de nacimiento en EDIT; el formato anglosajón se reordena antes de validar", "format", "EDIT",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también se admiten aaaa/mm/dd y mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dd/mm/aaaa, completo o parcial: el formato aaaa/mm/dd no es válido)"],
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT se admite formato inglés)"],
 
             ["persona", "fechaNacimiento_persona", "input", 39, "Validar que la fecha de nacimiento existe en el calendario y no es posterior a la fecha actual en EDIT", "personalized", "EDIT",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],
@@ -168,7 +168,7 @@ var persona_def_tests = [
         "fechaNacimiento_persona_max_size_ko", "La fecha de nacimiento es demasiado larga: no puede superar los 10 caracteres (dd/mm/aaaa o dd-mm-aaaa)"],
 
             ["persona", "fechaNacimiento_persona", "input", 42, "Validar formato dd/mm/aaaa (completo o parcial, con / o -) de la fecha de nacimiento en SEARCH; el formato anglosajón (aaaa/...) es un error de formato y no se reordena nada", "format", "SEARCH",
-        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT también se admiten aaaa/mm/dd y mm/dd/aaaa con día mayor que 12, que se reordenan; en la búsqueda solo dd/mm/aaaa, completo o parcial: el formato aaaa/mm/dd no es válido)"],
+        "fechaNacimiento_persona_format_ko", "El formato de la fecha de nacimiento no es válido: debe ser dd/mm/aaaa o dd-mm-aaaa (en ADD y EDIT se admite formato inglés)"],
 
             ["persona", "fechaNacimiento_persona", "input", 43, "Validar que la fecha de nacimiento, cuando está completa (d/m/aaaa), existe en el calendario en SEARCH", "personalized", "SEARCH",
         "fechaNacimiento_persona_personalized_ko", "La fecha de nacimiento no es válida: debe existir en el calendario y no ser posterior a hoy"],

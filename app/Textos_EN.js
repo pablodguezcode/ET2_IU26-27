@@ -80,7 +80,7 @@ var textos_EN = {
 	// --- Validation errors - Date of birth
 	'fechaNacimiento_persona_min_size_ko': 'The date of birth is too short: it must have at least 8 characters (d/m/yyyy or d-m-yyyy)',
 	'fechaNacimiento_persona_max_size_ko': 'The date of birth is too long: it cannot exceed 10 characters (dd/mm/yyyy or dd-mm-yyyy)',
-	'fechaNacimiento_persona_format_ko': 'The date of birth format is not valid: it must be dd/mm/yyyy or dd-mm-yyyy',
+	'fechaNacimiento_persona_format_ko': 'The date of birth format is not valid: it must be dd/mm/yyyy or dd-mm-yyyy(in ADD and EDIT, the English format is accepted)',
 	'fechaNacimiento_persona_personalized_ko': 'The date of birth is not valid: it must exist in the calendar and cannot be later than today',
 
 	// --- Validation errors - Address
@@ -266,7 +266,7 @@ var textos_EN = {
 	// ============================================================================
 	// GENERAL ERROR MESSAGES
 	// ============================================================================
-	'RECORDSET_VACIO': 'There are not results for your search',
+	'RECORDSET_VACIO': 'There are no results for your search',
 	// Text shown before the code when the back returns an error code that has no translation (see abrirModalError)
 	'text_error_back_generico': 'An error occurred while performing the operation',
 
