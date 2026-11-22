@@ -1,5 +1,31 @@
+/**
+ * @file Lógica de la interfaz de la entidad `funcionalidad_accion`: formularios, validaciones y envío al back.
+ */
+
+/**
+ * Entidad `funcionalidad_accion`: asignación de acciones a funcionalidades, con clave primaria compuesta por `id_funcionalidad` e `id_accion`.
+ *
+ * No tiene formulario de ADD: se muestra como una matriz de casillas (funcionalidades en las filas, acciones en las columnas) y marcar o desmarcar una casilla crea o borra la pareja en el back (ver {@link funcionalidad_accion#cambiar_pareja}).
+ *
+ * @extends AbstractEntidad
+ * @property {string[]} columnasamostrar columnas que se muestran en la tabla de resultados
+ * @property {string[]} mostrarespecial atributos que se muestran con un formato especial en la tabla (ver `cambiarmostrarespecial()`)
+ * @property {string} nombreentidad nombre de la entidad: es el que identifica sus formularios, sus textos y sus peticiones al back
+ * @property {entity_dom_fields} dom acceso al DOM (formularios, mensajes de error, tabla)
+ * @property {entity_validations} validations validaciones de los campos del formulario
+ * @property {ExternalAccess} access_functions acceso al back
+ */
 class funcionalidad_accion extends AbstractEntidad {
 
+	/**
+	 * Crea la entidad `funcionalidad_accion` e inicializa las columnas que se muestran en la tabla, los atributos con formato especial, el nombre de la entidad y los objetos de apoyo (`dom`, `validations` y `access_functions`).
+	 *
+	 * En modo normal muestra la sección de la tabla y los botones, pone el título de la página, crea el formulario vacío con `manual_form_creation()` y lanza `SEARCH()` con el formulario vacío para cargar los datos del back. Con `esTest = 'test'` solo se inicializan los atributos y no se toca el DOM.
+	 *
+	 * Al ser una matriz, oculta el selector de columnas visibles y el icono ADD de index.html (`dom.sin_boton_add`): los únicos iconos son SEARCH y TEST.
+	 *
+	 * @param {?string} [esTest=null] pasar `'test'` para crear la entidad sin tocar el DOM (modo pruebas); con `null` se inicializa la interfaz de la entidad
+	 */
 	constructor(esTest=null){
 
 		super();
@@ -40,8 +66,9 @@ class funcionalidad_accion extends AbstractEntidad {
 	}
 
 	/**
-	 * devuelve el html del formulario de la entidad
-	 * @returns {string}
+	 * Devuelve el html del formulario de la entidad
+	 *
+	 * @returns {string} código HTML del formulario de la entidad
 	 */
 	manual_form_creation(){
 		var form_content = `
@@ -80,8 +107,20 @@ class funcionalidad_accion extends AbstractEntidad {
 
 //Atributo id_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//min_size falla si se deja la opcion vacia
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_funcionalidad_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_funcionalidad_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * Nota: min_size falla si se deja la opcion vacia
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_funcionalidad_validation(){
 
 		if (!(this.validations.min_size('id_funcionalidad',1))){
@@ -103,8 +142,20 @@ class funcionalidad_accion extends AbstractEntidad {
 
 //Atributo id_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//min_size falla si se deja la opcion vacia
+	/**
+	 * Valida el atributo `id_accion` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_accion_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_accion_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * Nota: min_size falla si se deja la opcion vacia
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_accion_validation(){
 
 		if (!(this.validations.min_size('id_accion',1))){
@@ -133,11 +184,21 @@ class funcionalidad_accion extends AbstractEntidad {
 //EDIT para sus dos atributos (ver funcionalidad_accion_tests.js) y Data_Test invoca EDIT_<campo>_validation(). Las restricciones de
 //EDIT son las mismas que las de ADD, por lo que se reutilizan.
 
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link funcionalidad_accion#ADD_id_funcionalidad_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link funcionalidad_accion#ADD_id_funcionalidad_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_funcionalidad_validation(){
 
 		return this.ADD_id_funcionalidad_validation();
 	}
 
+	/**
+	 * Valida el atributo `id_accion` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link funcionalidad_accion#ADD_id_accion_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link funcionalidad_accion#ADD_id_accion_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_accion_validation(){
 
 		return this.ADD_id_accion_validation();
@@ -153,7 +214,17 @@ class funcionalidad_accion extends AbstractEntidad {
 
 //Atributo id_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_funcionalidad_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_funcionalidad_validation(){
 
 		if (!(this.validations.max_size('id_funcionalidad',11))){
@@ -170,7 +241,17 @@ class funcionalidad_accion extends AbstractEntidad {
 
 //Atributo id_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_accion` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_accion_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_accion_validation(){
 
 		if (!(this.validations.max_size('id_accion',11))){
@@ -191,9 +272,13 @@ class funcionalidad_accion extends AbstractEntidad {
                                  			SUMMIT SEARCH formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de SEARCH de `funcionalidad_accion`: `id_funcionalidad`, `id_accion`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	SEARCH_submit_funcionalidad_accion(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -279,6 +364,9 @@ class funcionalidad_accion extends AbstractEntidad {
 	 *
 	 * Refactoriza AbstractEntidad.SEARCH() (misma definicion): los filtros del formulario de busqueda (vacio = sin filtro)
 	 * limitan las filas y columnas que se muestran.
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async SEARCH(){
 
@@ -346,6 +434,7 @@ class funcionalidad_accion extends AbstractEntidad {
 	 * Si el back no respeta empieza (devuelve otra vez desde el principio) o deja de devolver filas se para para no repetirlas, y se indica
 	 * en completo = false que faltan filas.
 	 *
+	 * @async
 	 * @param {string} formulario id del formulario cuyos campos se envian como criterios de busqueda ('' = sin criterios)
 	 * @param {string} controlador entidad del back que se consulta
 	 * @returns {Promise<{filas: Array, completo: boolean}>} las filas de todas las paginas y si estan todas
@@ -375,6 +464,7 @@ class funcionalidad_accion extends AbstractEntidad {
 	 * Alternativa a pedir_todo() para las parejas si el back no deja pedir las paginas siguientes: se piden las parejas de cada
 	 * funcionalidad mostrada (el criterio id_funcionalidad si lo respeta el back) y se juntan.
 	 *
+	 * @async
 	 * @param {Array} funcionalidades funcionalidades que se muestran en la matriz
 	 * @returns {Promise<Array>} parejas de esas funcionalidades
 	 */
@@ -388,7 +478,7 @@ class funcionalidad_accion extends AbstractEntidad {
 	}
 
 	/**
-	 * devuelve las filas de una respuesta del back, o un array vacio si no hay datos
+	 * Devuelve las filas de una respuesta del back, o un array vacio si no hay datos
 	 *
 	 * @param {Object} respuesta respuesta del back a un SEARCH
 	 * @returns {Array} filas
@@ -470,17 +560,13 @@ class funcionalidad_accion extends AbstractEntidad {
 
 	/**
 	 * Se ejecuta al marcar o desmarcar una casilla de la matriz: marcar crea la pareja (ADD) y desmarcar la borra (DELETE).
-	 * La casilla queda deshabilitada mientras llega la respuesta del back. El back permite parejas repetidas, por lo que antes de crear una
-	 * pareja se comprueba que no exista ya. Si el back responde error, la casilla vuelve al estado que
-	 * tenia y se muestra el modal de error (el usuario confirma que lo ha recibido y la matriz sigue como antes de la peticion).
-	 * Si responde ok, antes de dar el cambio por bueno se vuelve a consultar al back (ver existe_pareja()): la casilla debe mostrar lo que
-	 * hay guardado, asi que si el back dice ok pero la pareja no queda guardada (o sigue existiendo tras borrarla) la casilla vuelve a su
-	 * estado anterior y se muestra el modal de error con el codigo pareja_no_guardada_ko / pareja_no_borrada_ko.
-	 * Con todo correcto no se repinta la matriz: la casilla ya muestra el nuevo estado y asi se conservan los filtros de SEARCH.
+	 * La casilla queda deshabilitada mientras llega la respuesta del back. El back permite parejas repetidas, por lo que antes de crear una pareja se comprueba que no exista ya (ver {@link funcionalidad_accion#existe_pareja}). Si el back responde error, la casilla vuelve al estado que tenía y se muestra el modal de error (el usuario confirma que lo ha recibido y la matriz sigue como antes de la petición). Si responde ok, la casilla se queda con el nuevo estado. No se repinta la matriz: así se conservan los filtros de SEARCH.
 	 *
+	 * @async
 	 * @param {HTMLInputElement} casilla casilla que ha cambiado
 	 * @param {*} idfuncionalidad id de la funcionalidad (fila) de la casilla
-	 * @param {*} idaccion id de la accion (columna) de la casilla
+	 * @param {*} idaccion id de la acción (columna) de la casilla
+	 * @returns {Promise<void>}
 	 */
 	async cambiar_pareja(casilla, idfuncionalidad, idaccion){
 
@@ -496,12 +582,6 @@ class funcionalidad_accion extends AbstractEntidad {
 		var respuesta = await this.access_functions.peticionBackGeneral('', this.nombreentidad, marcada ? 'ADD' : 'DELETE',
 			{id_funcionalidad: idfuncionalidad, id_accion: idaccion});
 
-		/* el back dice que ok: se comprueba que la pareja haya quedado como pide la casilla (existe si se marco, no existe si se desmarco)
-		if (respuesta['ok'] && (await this.existe_pareja(idfuncionalidad, idaccion)) !== marcada){
-			respuesta = {ok: false, code: marcada ? 'pareja_no_guardada_ko' : 'pareja_no_borrada_ko'};
-		}
-		*/
-
 		if (!respuesta['ok']){
 			casilla.checked = !marcada;
 			this.dom.abrirModalError(respuesta['code']);
@@ -515,6 +595,7 @@ class funcionalidad_accion extends AbstractEntidad {
 	 * y esa accion y se comprueban las claves de las filas devueltas (el back puede devolver cada clave como objeto o como valor simple),
 	 * por si el back no aplicara el filtro.
 	 *
+	 * @async
 	 * @param {*} idfuncionalidad id de la funcionalidad
 	 * @param {*} idaccion id de la accion
 	 * @returns {Promise<boolean>} true si la pareja existe en el back
@@ -569,13 +650,15 @@ class funcionalidad_accion extends AbstractEntidad {
 ****************************************************************************************************************************/
 
 	/**
-	 * pide al back el listado de una entidad y rellena con el un select del formulario actual
+	 * Pide al back el listado de una entidad y rellena con el un select del formulario actual
 	 * (value y texto = el id, campovalor). La primera opcion vacia viene de manual_form_creation().
 	 * Se envia un FormData vacio ('') para que los campos del formulario no lleguen a la otra entidad como filtro.
 	 *
+	 * @async
 	 * @param {string} idselect id del select a rellenar
 	 * @param {string} controlador entidad del back que se consulta
 	 * @param {string} campovalor columna del back que va en value y se muestra como texto (solo se muestran ids)
+	 * @returns {Promise<void>}
 	 */
 	async cargar_select(idselect, controlador, campovalor){
 
@@ -604,8 +687,11 @@ class funcionalidad_accion extends AbstractEntidad {
 	}
 
 	/**
-	 * rellena los dos select del formulario: funcionalidades y acciones. Las dos peticiones son independientes y se lanzan a la vez;
+	 * Rellena los dos select del formulario: funcionalidades y acciones. Las dos peticiones son independientes y se lanzan a la vez;
 	 * devuelve una promesa que se cumple cuando estan cargados los dos (SHOWCURRENT la espera para poder seleccionar los valores de la fila).
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async cargar_opciones(){
 

@@ -1,5 +1,29 @@
+/**
+ * @file Lógica de la interfaz de la entidad `funcionalidad`: formularios, validaciones y envío al back.
+ */
+
+/**
+ * Entidad `funcionalidad`: funcionalidades de la aplicación (`id_funcionalidad`, `nombre_funcionalidad` y `descrip_funcionalidad`).
+ *
+ * Contiene los formularios de cada acción (ADD, EDIT, DELETE, SEARCH y SHOWCURRENT), las validaciones `ADD_/EDIT_/SEARCH_<campo>_validation()` de cada atributo, los `*_submit_*()` que las agrupan y el formato especial de los atributos de `mostrarespecial`. Las operaciones contra el back las hereda de `AbstractEntidad`.
+ *
+ * @extends AbstractEntidad
+ * @property {string[]} columnasamostrar columnas que se muestran en la tabla de resultados
+ * @property {string[]} mostrarespecial atributos que se muestran con un formato especial en la tabla (ver `cambiarmostrarespecial()`)
+ * @property {string} nombreentidad nombre de la entidad: es el que identifica sus formularios, sus textos y sus peticiones al back
+ * @property {entity_dom_fields} dom acceso al DOM (formularios, mensajes de error, tabla)
+ * @property {entity_validations} validations validaciones de los campos del formulario
+ * @property {ExternalAccess} access_functions acceso al back
+ */
 class funcionalidad extends AbstractEntidad{
 
+	/**
+	 * Crea la entidad `funcionalidad` e inicializa las columnas que se muestran en la tabla, los atributos con formato especial, el nombre de la entidad y los objetos de apoyo (`dom`, `validations` y `access_functions`).
+	 *
+	 * En modo normal muestra la sección de la tabla y los botones, pone el título de la página, crea el formulario vacío con `manual_form_creation()` y lanza `SEARCH()` con el formulario vacío para cargar los datos del back. Con `esTest = 'test'` solo se inicializan los atributos y no se toca el DOM.
+	 *
+	 * @param {?string} [esTest=null] pasar `'test'` para crear la entidad sin tocar el DOM (modo pruebas); con `null` se inicializa la interfaz de la entidad
+	 */
 	constructor(esTest = null){
 		super();
 
@@ -30,8 +54,9 @@ class funcionalidad extends AbstractEntidad{
 	}	
 
 	/**
-	 * replace the content of section element with a particular entity menu
-	 * @returns 
+	 * Devuelve el HTML del formulario de la entidad.
+	 *
+	 * @returns {string} código HTML del formulario de la entidad
 	 */
 	manual_form_creation(){
 		var form_content = `
@@ -65,7 +90,18 @@ class funcionalidad extends AbstractEntidad{
 
 //Atributo id_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_funcionalidad_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_funcionalidad_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_funcionalidad_validation(){
 
 		if (!(this.validations.min_size('id_funcionalidad',1))){
@@ -88,7 +124,18 @@ class funcionalidad extends AbstractEntidad{
 
 //Atributo nombre_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `nombre_funcionalidad` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 5 caracteres → `nombre_funcionalidad_min_size_ko`
+	 * - tamaño máximo de 48 caracteres → `nombre_funcionalidad_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ]*$` → `nombre_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_nombre_funcionalidad_validation(){
 
 		if (!(this.validations.min_size('nombre_funcionalidad',5))){
@@ -111,7 +158,18 @@ class funcionalidad extends AbstractEntidad{
 
 //Atributo descrip_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `descrip_funcionalidad` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 5 caracteres → `descrip_funcionalidad_min_size_ko`
+	 * - tamaño máximo de 200 caracteres → `descrip_funcionalidad_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ .,;:¿?¡!()\[\]\-"\'…]*$` → `descrip_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_descrip_funcionalidad_validation(){
 
 		if (!(this.validations.min_size('descrip_funcionalidad',5))){
@@ -137,9 +195,13 @@ class funcionalidad extends AbstractEntidad{
 												SUMMIT ADD formulario validaciones
 	****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de ADD de `funcionalidad`: `nombre_funcionalidad`, `descrip_funcionalidad`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	ADD_submit_funcionalidad(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -160,19 +222,33 @@ class funcionalidad extends AbstractEntidad{
 												Campos de validacion para EDIT
 	****************************************************************************************************************************/
 
-	//id_funcionalidad no se edita (es autoincremental): no hay tests de EDIT para este campo y EDIT_submit_funcionalidad() no lo valida.
-	//EDIT_id_funcionalidad_validation() se conserva solo por coherencia con colocarvalidaciones('form_iu','EDIT'), que asigna una
-	//validacion a cada campo del formulario, aunque el campo va oculto y nunca llega a validarse.
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link funcionalidad#ADD_id_funcionalidad_validation}.
+	 *
+	 * Nota: id_funcionalidad no se edita (es autoincremental): no hay tests de EDIT para este campo y EDIT_submit_funcionalidad() no lo valida. EDIT_id_funcionalidad_validation() se conserva solo por coherencia con colocarvalidaciones('form_iu','EDIT'), que asigna una validacion a cada campo del formulario, aunque el campo va oculto y nunca llega a validarse.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link funcionalidad#ADD_id_funcionalidad_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_funcionalidad_validation(){
 
 		return this.ADD_id_funcionalidad_validation();
 	}
 
+	/**
+	 * Valida el atributo `nombre_funcionalidad` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link funcionalidad#ADD_nombre_funcionalidad_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link funcionalidad#ADD_nombre_funcionalidad_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_nombre_funcionalidad_validation(){
 
 		return this.ADD_nombre_funcionalidad_validation();
 	}
 
+	/**
+	 * Valida el atributo `descrip_funcionalidad` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link funcionalidad#ADD_descrip_funcionalidad_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link funcionalidad#ADD_descrip_funcionalidad_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_descrip_funcionalidad_validation(){
 
 		return this.ADD_descrip_funcionalidad_validation();
@@ -183,9 +259,13 @@ class funcionalidad extends AbstractEntidad{
 												SUMMIT EDIT formulario validaciones
 	****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de EDIT de `funcionalidad`: `nombre_funcionalidad`, `descrip_funcionalidad`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	EDIT_submit_funcionalidad(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -212,7 +292,17 @@ class funcionalidad extends AbstractEntidad{
 
 //Atributo id_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_funcionalidad_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_funcionalidad_validation(){
 
 		if (!(this.validations.max_size('id_funcionalidad',11))){
@@ -229,7 +319,17 @@ class funcionalidad extends AbstractEntidad{
 
 //Atributo nombre_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `nombre_funcionalidad` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 48 caracteres → `nombre_funcionalidad_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ]*$` → `nombre_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_nombre_funcionalidad_validation(){
 
 		if (!(this.validations.max_size('nombre_funcionalidad',48))){
@@ -246,7 +346,17 @@ class funcionalidad extends AbstractEntidad{
 
 //Atributo descrip_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `descrip_funcionalidad` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 200 caracteres → `descrip_funcionalidad_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ .,;:¿?¡!()\[\]\-"\'…]*$` → `descrip_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_descrip_funcionalidad_validation(){
 
 		if (!(this.validations.max_size('descrip_funcionalidad',200))){
@@ -265,9 +375,13 @@ class funcionalidad extends AbstractEntidad{
 												SUMMIT SEARCH formulario validaciones
 	****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de SEARCH de `funcionalidad`: `id_funcionalidad`, `nombre_funcionalidad`, `descrip_funcionalidad`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	SEARCH_submit_funcionalidad(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -295,7 +409,6 @@ class funcionalidad extends AbstractEntidad{
 	 * - Si el back responde ok, AbstractEntidad.ADD() oculta el formulario y actualiza la tabla; si responde error, se muestra
 	 *   el modal de error y el formulario sigue como antes del envio.
 	 */
-
 	createForm_ADD(){
 		// poner titulo al formulario
 		this.dom.assign_property_value('class_contenido_titulo_form','class','text_contenido_titulo_form_funcionalidad_ADD');
@@ -320,8 +433,6 @@ class funcionalidad extends AbstractEntidad{
 		setLang();
 	}
 
-	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
-
 	/**
 	 * id_funcionalidad es autoincremental: el usuario no lo introduce ni lo modifica, asi que no se muestra en ADD, EDIT ni DELETE
 	 * (se oculta el bloque completo: label, campo y mensaje de error). En SEARCH si se muestra, como criterio de busqueda.
@@ -337,8 +448,6 @@ class funcionalidad extends AbstractEntidad{
 		document.getElementById('id_funcionalidad').disabled = deshabilitar;
 	}
 
-	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
-
 	/**
 	 * Construye el formulario de EDIT de funcionalidad, relleno con los datos de la fila, y lo muestra en el div modal (Div_IU_form).
 	 * - Opciones del modal: realizar la accion (boton submit con el icono EDIT) o cancelarla (icono BACK de index.html).
@@ -348,7 +457,6 @@ class funcionalidad extends AbstractEntidad{
 	 *
 	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono EDIT
 	 */
-	
 	createForm_EDIT(fila){
 
 		// poner titulo al formulario
@@ -382,8 +490,6 @@ class funcionalidad extends AbstractEntidad{
 		setLang();
 	}
 
-	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
-
 	/**
 	 * Construye el formulario de SEARCH de funcionalidad y lo muestra en el div modal (Div_IU_form).
 	 * - Opciones del modal: realizar la busqueda (boton submit con el icono SEARCH) o cancelarla (icono BACK de index.html).
@@ -414,18 +520,16 @@ class funcionalidad extends AbstractEntidad{
 		setLang();
 	}
 
-	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
-
 	/**
 	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
 	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 *
+	 * @returns {boolean} siempre `true`
 	 */
 	DELETE_submit_funcionalidad(){
 
 		return true;
 	}
-
-	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
 
 	/**
 	 * Construye el formulario de DELETE de funcionalidad: los datos de la fila en solo lectura, en el div modal (Div_IU_form).
@@ -470,8 +574,6 @@ class funcionalidad extends AbstractEntidad{
 
 		setLang();
 	}
-
-	//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//-----------//
 
 	/**
 	 * Construye el formulario de SHOWCURRENT de funcionalidad: los datos de la fila en solo lectura, en el div modal (Div_IU_form).

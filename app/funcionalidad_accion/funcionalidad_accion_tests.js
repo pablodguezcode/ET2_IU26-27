@@ -1,23 +1,24 @@
-/*
-----------------------------------------------
-PARA LA ENTIDAD funcionalidad_accion:
- - id_funcionalidad
- - id_accion
- ----------------------------------------------
- ----------------------------------------------
+/**
+ * @file Tests y pruebas de la entidad `funcionalidad_accion`.
+ *
+ * PARA LA ENTIDAD funcionalidad_accion:
+ *  - id_funcionalidad
+ *  - id_accion
+ *
+ * DECISIONES DE DISEÑO PARA LA ENTIDAD FUNCIONALIDAD_ACCION: Se han definido, para cada atributo y acción, solo los tests atómicos que tienen sentido según su formato.
+ * Los dos atributos (id_funcionalidad e id_accion) forman la clave primaria compuesta y son claves foráneas, y se introducen mediante elementos select
+ *
+ *  Se interpreta "numérico min 1 max 11" como número de dígitos (int(11)). Para ambos se definen ADD, EDIT y SEARCH (esta entidad especial no tiene formulario de EDIT en el front y se muestra como una matriz funcionalidades x acciones, ver funcionalidad_accion_Class.js, pero se mantienen sus tests de EDIT). En ADD y EDIT se incluyen min_size (equivale a la selección obligatoria
+ *     de un valor), max_size, format (solo dígitos enteros) y valid; max_size y format, aunque un select no debería generar esos errores, se mantienen para detectar valores manipulados.
+ *      En SEARCH se omite min_size porque el filtro es opcional y un valor vacío significa "sin filtro". No se incluyen tests sobre la unicidad del par (id_funcionalidad, id_accion) ni sobre la
+ *     existencia de los ids en sus tablas, al ser comprobaciones de servidor y no validaciones atómicas de formato del campo.
+ */
 
-DECISIONES DE DISEÑO PARA LA ENTIDAD FUNCIONALIDAD_ACCION: Se han definido, para cada atributo y acción, solo los tests atómicos que tienen sentido según su formato. 
-Los dos atributos (id_funcionalidad e id_accion) forman la clave primaria compuesta y son claves foráneas, y se introducen mediante elementos select
- --------------
- Se interpreta "numérico min 1 max 11" como número de dígitos (int(11)). Para ambos se definen ADD, EDIT y SEARCH (esta entidad especial no tiene formulario de EDIT en el front y se muestra como una matriz funcionalidades x acciones, ver funcionalidad_accion_Class.js, pero se mantienen sus tests de EDIT). En ADD y EDIT se incluyen min_size (equivale a la selección obligatoria 
-    de un valor), max_size, format (solo dígitos enteros) y valid; max_size y format, aunque un select no debería generar esos errores, se mantienen para detectar valores manipulados.
-     En SEARCH se omite min_size porque el filtro es opcional y un valor vacío significa "sin filtro". No se incluyen tests sobre la unicidad del par (id_funcionalidad, id_accion) ni sobre la
-    existencia de los ids en sus tablas, al ser comprobaciones de servidor y no validaciones atómicas de formato del campo.
-
- ----------------------------------------------
-
-*/
-// [entidad, campo, elemento, num_def, descripcion, validacion_atomica, accion, resultado_esperado, mensaje]
+/**
+ * Definición de los tests de la entidad `funcionalidad_accion`: cada fila es un test de un campo para una acción (ver {@link DefTest}).
+ *
+ * @type {DefTest[]}
+ */
 var funcionalidad_accion_def_tests = [
     // 1.1. ATRIBUTO: "id_funcionalidad" con acción: "ADD"
     [
@@ -115,7 +116,11 @@ var funcionalidad_accion_def_tests = [
     ]
 ];
  
-// [entidad, campo, num_def_test, num_prueba, accion, objeto_valores, resultado_esperado]
+/**
+ * Pruebas de la entidad `funcionalidad_accion`: cada fila da los valores de los campos para un test y el resultado esperado (ver {@link Prueba}).
+ *
+ * @type {Prueba[]}
+ */
 var funcionalidad_accion_pruebas = [
     // 1.1. ATRIBUTO: "id_funcionalidad" en ADD
     ["funcionalidad_accion", "id_funcionalidad", 1, 1, "ADD", { "id_funcionalidad": "" }, "id_funcionalidad_min_size_ko"],

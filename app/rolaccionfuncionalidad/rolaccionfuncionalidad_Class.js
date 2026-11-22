@@ -1,5 +1,31 @@
+/**
+ * @file Lógica de la interfaz de la entidad `rolaccionfuncionalidad`: formularios, validaciones y envío al back.
+ */
+
+/**
+ * Entidad `rolaccionfuncionalidad`: asignación de roles a las parejas funcionalidad-acción, con clave primaria compuesta por `id_funcionalidad`, `id_accion` e `id_rol`.
+ *
+ * No tiene formulario de ADD: se muestra como una matriz de casillas y marcar o desmarcar una casilla crea o borra la asignación en el back (ver {@link rolaccionfuncionalidad#cambiar_asignacion}).
+ *
+ * @extends AbstractEntidad
+ * @property {string[]} columnasamostrar columnas que se muestran en la tabla de resultados
+ * @property {string[]} mostrarespecial atributos que se muestran con un formato especial en la tabla (ver `cambiarmostrarespecial()`)
+ * @property {string} nombreentidad nombre de la entidad: es el que identifica sus formularios, sus textos y sus peticiones al back
+ * @property {entity_dom_fields} dom acceso al DOM (formularios, mensajes de error, tabla)
+ * @property {entity_validations} validations validaciones de los campos del formulario
+ * @property {ExternalAccess} access_functions acceso al back
+ */
 class rolaccionfuncionalidad extends AbstractEntidad{
 
+	/**
+	 * Crea la entidad `rolaccionfuncionalidad` e inicializa las columnas que se muestran en la tabla, los atributos con formato especial, el nombre de la entidad y los objetos de apoyo (`dom`, `validations` y `access_functions`).
+	 *
+	 * En modo normal muestra la sección de la tabla y los botones, pone el título de la página, crea el formulario vacío con `manual_form_creation()` y lanza `SEARCH()` con el formulario vacío para cargar los datos del back. Con `esTest = 'test'` solo se inicializan los atributos y no se toca el DOM.
+	 *
+	 * Al ser una matriz, oculta el selector de columnas visibles y el icono ADD de index.html (`dom.sin_boton_add`): los únicos iconos son SEARCH y TEST.
+	 *
+	 * @param {?string} [esTest=null] pasar `'test'` para crear la entidad sin tocar el DOM (modo pruebas); con `null` se inicializa la interfaz de la entidad
+	 */
 	constructor(esTest = null){
 		super();
 
@@ -41,8 +67,9 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	}
 
 	/**
-	 * devuelve el html del formulario de la entidad (el de SEARCH: los filtros de la matriz)
-	 * @returns {string}
+	 * Devuelve el html del formulario de la entidad (el de SEARCH: los filtros de la matriz)
+	 *
+	 * @returns {string} código HTML del formulario de la entidad
 	 */
 	manual_form_creation(){
 		var form_content = `
@@ -89,8 +116,20 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 
 //Atributo id_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//min_size falla si se deja la opcion vacia
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_funcionalidad_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_funcionalidad_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * Nota: min_size falla si se deja la opcion vacia
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_funcionalidad_validation(){
 
 		if (!(this.validations.min_size('id_funcionalidad',1))){
@@ -112,8 +151,20 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 
 //Atributo id_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//min_size falla si se deja la opcion vacia
+	/**
+	 * Valida el atributo `id_accion` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_accion_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_accion_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * Nota: min_size falla si se deja la opcion vacia
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_accion_validation(){
 
 		if (!(this.validations.min_size('id_accion',1))){
@@ -135,8 +186,20 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 
 //Atributo id_rol
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//min_size falla si se deja la opcion vacia
+	/**
+	 * Valida el atributo `id_rol` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_rol_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_rol_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_rol_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * Nota: min_size falla si se deja la opcion vacia
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_rol_validation(){
 
 		if (!(this.validations.min_size('id_rol',1))){
@@ -164,14 +227,29 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 //definen EDIT para sus tres atributos (ver rolaccionfuncionalidad_tests.js) y Data_Test invoca EDIT_<campo>_validation(). Las restricciones de
 //EDIT son las mismas que las de ADD, por lo que se reutilizan.
 
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link rolaccionfuncionalidad#ADD_id_funcionalidad_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link rolaccionfuncionalidad#ADD_id_funcionalidad_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_funcionalidad_validation(){
 		return this.ADD_id_funcionalidad_validation();
 	}
 
+	/**
+	 * Valida el atributo `id_accion` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link rolaccionfuncionalidad#ADD_id_accion_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link rolaccionfuncionalidad#ADD_id_accion_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_accion_validation(){
 		return this.ADD_id_accion_validation();
 	}
 
+	/**
+	 * Valida el atributo `id_rol` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link rolaccionfuncionalidad#ADD_id_rol_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link rolaccionfuncionalidad#ADD_id_rol_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_rol_validation(){
 		return this.ADD_id_rol_validation();
 	}
@@ -185,7 +263,17 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 
 //Atributo id_funcionalidad
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_funcionalidad` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_funcionalidad_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_funcionalidad_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_funcionalidad_validation(){
 
 		if (!(this.validations.max_size('id_funcionalidad',11))){
@@ -202,7 +290,17 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 
 //Atributo id_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_accion` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_accion_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_accion_validation(){
 
 		if (!(this.validations.max_size('id_accion',11))){
@@ -219,7 +317,17 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 
 //Atributo id_rol
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_rol` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_rol_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_rol_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_rol_validation(){
 
 		if (!(this.validations.max_size('id_rol',11))){
@@ -238,9 +346,13 @@ class rolaccionfuncionalidad extends AbstractEntidad{
                                  			SUMMIT SEARCH formulario validaciones
 	****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de SEARCH de `rolaccionfuncionalidad`: `id_funcionalidad`, `id_accion`, `id_rol`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	SEARCH_submit_rolaccionfuncionalidad(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -331,6 +443,9 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	 * Refactoriza AbstractEntidad.SEARCH() (misma definicion): los filtros del formulario de busqueda (vacio = sin filtro)
 	 * limitan las filas y columnas que se muestran: funcionalidad (solo su bloque), accion (solo esa accion, y solo las funcionalidades
 	 * que la tienen) y rol (solo su columna).
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async SEARCH(){
 
@@ -432,9 +547,10 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	 * Si el back no respeta empieza (devuelve otra vez desde el principio) o deja de devolver filas se para para no repetirlas, y se indica
 	 * en completo = false que faltan filas.
 	 *
+	 * @async
 	 * @param {string} formulario id del formulario cuyos campos se envian como criterios de busqueda ('' = sin criterios)
 	 * @param {string} controlador entidad del back que se consulta
-	 * @param {Object} extra criterios de busqueda adicionales ({} = ninguno)
+	 * @param {Object} [extra={}] criterios de busqueda adicionales ({} = ninguno)
 	 * @returns {Promise<{filas: Array, completo: boolean}>} las filas de todas las paginas y si estan todas
 	 */
 	async pedir_todo(formulario, controlador, extra = {}){
@@ -462,6 +578,7 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	 * Alternativa a pedir_todo() si el back no deja pedir las paginas siguientes: se piden las filas de cada funcionalidad
 	 * mostrada (el criterio id_funcionalidad si lo respeta el back) y se juntan.
 	 *
+	 * @async
 	 * @param {string} controlador entidad del back que se consulta
 	 * @param {Array} funcionalidades funcionalidades que se muestran en la matriz
 	 * @returns {Promise<Array>} filas de esas funcionalidades
@@ -475,7 +592,7 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	}
 
 	/**
-	 * devuelve las filas de una respuesta del back, o un array vacio si no hay datos
+	 * Devuelve las filas de una respuesta del back, o un array vacio si no hay datos
 	 *
 	 * @param {Object} respuesta respuesta del back a un SEARCH
 	 * @returns {Array} filas
@@ -486,7 +603,12 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	}
 
 	/**
-	 * clave de una asignacion (tripleta funcionalidad-accion-rol)
+	 * Clave de una asignación (tripleta funcionalidad-acción-rol), con el formato `idfuncionalidad_idaccion_idrol`.
+	 *
+	 * @param {*} idfuncionalidad id de la funcionalidad
+	 * @param {*} idaccion id de la acción
+	 * @param {*} idrol id del rol
+	 * @returns {string} clave de la asignación
 	 */
 	clave_asignacion(idfuncionalidad, idaccion, idrol){
 
@@ -619,6 +741,7 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	 * comprueban las claves de las filas devueltas (el back puede devolver cada clave como objeto o como valor simple), por si el back no
 	 * aplicara el filtro.
 	 *
+	 * @async
 	 * @param {*} idfuncionalidad id de la funcionalidad
 	 * @param {*} idaccion id de la accion
 	 * @param {*} idrol id del rol
@@ -641,10 +764,12 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	 * (el usuario confirma que lo ha recibido y la matriz sigue como antes de la peticion). Si responde ok, la casilla se queda con el nuevo
 	 * estado. No se repinta la matriz: asi se conservan los filtros de SEARCH.
 	 *
+	 * @async
 	 * @param {HTMLInputElement} casilla casilla que ha cambiado
 	 * @param {*} idfuncionalidad id de la funcionalidad (bloque de filas) de la casilla
 	 * @param {*} idaccion id de la accion (fila) de la casilla
 	 * @param {*} idrol id del rol (columna) de la casilla
+	 * @returns {Promise<void>}
 	 */
 	async cambiar_asignacion(casilla, idfuncionalidad, idaccion, idrol){
 
@@ -707,14 +832,16 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	****************************************************************************************************************************/
 
 	/**
-	 * pide al back el listado de una entidad y rellena con el un select del formulario actual
+	 * Pide al back el listado de una entidad y rellena con el un select del formulario actual
 	 * (value = el id, campovalor; texto = "id - nombre", campotexto). La primera opcion vacia viene de manual_form_creation().
 	 * Se envia un FormData vacio ('') para que los campos del formulario no lleguen a la otra entidad como filtro.
 	 *
+	 * @async
 	 * @param {string} idselect id del select a rellenar
 	 * @param {string} controlador entidad del back que se consulta
 	 * @param {string} campovalor columna del back que va en value
 	 * @param {string} campotexto columna del back con el nombre que se muestra junto al id
+	 * @returns {Promise<void>}
 	 */
 	async cargar_select(idselect, controlador, campovalor, campotexto){
 
@@ -743,8 +870,11 @@ class rolaccionfuncionalidad extends AbstractEntidad{
 	}
 
 	/**
-	 * rellena los tres select del formulario: funcionalidades, acciones y roles. Las peticiones son independientes y se lanzan a la vez;
+	 * Rellena los tres select del formulario: funcionalidades, acciones y roles. Las peticiones son independientes y se lanzan a la vez;
 	 * devuelve una promesa que se cumple cuando estan cargados los tres.
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async cargar_opciones(){
 

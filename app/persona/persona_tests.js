@@ -1,17 +1,24 @@
-/* fecha de hoy (+ n dias) en formato d/m/aaaa, para las pruebas de "no posterior a hoy" */
+/**
+ * @file Tests y pruebas de la entidad `persona`.
+ */
+
+/**
+ * Fecha de hoy (más `dias` días) en formato d/m/aaaa, para las pruebas de «no posterior a hoy».
+ *
+ * @param {number} dias días a sumar a la fecha de hoy (negativo para restar)
+ * @returns {string} fecha en formato d/m/aaaa
+ */
 function fecha_hoy_mas(dias){
     var d = new Date();
     d.setDate(d.getDate() + dias);
     return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
 }
 
-/*ESTRUCTURA:
-
-    ["entidad", "campo", "tipo", "nº test", "descripción_Test", "metodo", "acción",  
-        "Resultado Esperado", "mensaje"],
-
-*/
-
+/**
+ * Definición de los tests de la entidad `persona`: cada fila es un test de un campo para una acción (ver {@link DefTest}).
+ *
+ * @type {DefTest[]}
+ */
 var persona_def_tests = [
 
     //Campo: dni
@@ -357,13 +364,11 @@ var persona_def_tests = [
 
 ];
 
-/*ESTRUCTURA:
-
-    ["entidad", "campo", "nº test", "nº prueba", "acción", {"atributo" : "valor"},
-         "Resultado Esperado"],
-
-*/
-
+/**
+ * Pruebas de la entidad `persona`: cada fila da los valores de los campos para un test y el resultado esperado (ver {@link Prueba}).
+ *
+ * @type {Prueba[]}
+ */
 var persona_pruebas = [
 
     //Campo: dni

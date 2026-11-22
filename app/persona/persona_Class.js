@@ -1,5 +1,29 @@
+/**
+ * @file Lógica de la interfaz de la entidad `persona`: formularios, validaciones y envío al back.
+ */
+
+/**
+ * Entidad `persona`: personas con DNI, nombre, apellidos, fecha de nacimiento, dirección, teléfono, correo y foto.
+ *
+ * Contiene los formularios de cada acción (ADD, EDIT, DELETE, SEARCH y SHOWCURRENT), las validaciones `ADD_/EDIT_/SEARCH_<campo>_validation()` de cada atributo, los `*_submit_*()` que las agrupan y el formato especial de los atributos de `mostrarespecial`. Las operaciones contra el back las hereda de `AbstractEntidad`.
+ *
+ * @extends AbstractEntidad
+ * @property {string[]} columnasamostrar columnas que se muestran en la tabla de resultados
+ * @property {string[]} mostrarespecial atributos que se muestran con un formato especial en la tabla (ver `cambiarmostrarespecial()`)
+ * @property {string} nombreentidad nombre de la entidad: es el que identifica sus formularios, sus textos y sus peticiones al back
+ * @property {entity_dom_fields} dom acceso al DOM (formularios, mensajes de error, tabla)
+ * @property {entity_validations} validations validaciones de los campos del formulario
+ * @property {ExternalAccess} access_functions acceso al back
+ */
 class persona extends AbstractEntidad {
 
+	/**
+	 * Crea la entidad `persona` e inicializa las columnas que se muestran en la tabla, los atributos con formato especial, el nombre de la entidad y los objetos de apoyo (`dom`, `validations` y `access_functions`).
+	 *
+	 * En modo normal muestra la sección de la tabla y los botones, pone el título de la página, crea el formulario vacío con `manual_form_creation()` y lanza `SEARCH()` con el formulario vacío para cargar los datos del back. Con `esTest = 'test'` solo se inicializan los atributos y no se toca el DOM.
+	 *
+	 * @param {?string} [esTest=null] pasar `'test'` para crear la entidad sin tocar el DOM (modo pruebas); con `null` se inicializa la interfaz de la entidad
+	 */
 	constructor(esTest=null){
 
 		super();
@@ -30,8 +54,9 @@ class persona extends AbstractEntidad {
 	}
 
 	/**
-	 * devuelve el html del formulario de la entidad
-	 * @returns {string}
+	 * Devuelve el html del formulario de la entidad
+	 *
+	 * @returns {string} código HTML del formulario de la entidad
 	 */
 	manual_form_creation(){
 		var form_content = `
@@ -99,7 +124,19 @@ class persona extends AbstractEntidad {
 
 //Atributo dni
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `dni` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 9 caracteres → `dni_min_size_ko`
+	 * - tamaño máximo de 9 caracteres → `dni_max_size_ko`
+	 * - formato `^[0-9]{8}[A-Z]$` → `dni_format_ko`
+	 * - validación personalizada `personalize_dni()` → `dni_personalized_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_dni_validation(){
 
 		if (!(this.validations.min_size('dni',9))){
@@ -123,7 +160,12 @@ class persona extends AbstractEntidad {
 
 	}
 
-	//Retorna true si el campo es valido, si no devuelve false
+	/**
+	 * Validación personalizada del DNI en ADD y EDIT: la letra de control es la que corresponde al número del DNI (número módulo 23).
+	 *
+	 * @param {string} dni El parámetro no se usa: el valor se vuelve a leer del campo del DOM.
+	 * @returns {boolean} `true` si la letra del DNI coincide con la calculada; `false` si no
+	 */
 	personalize_dni(dni){
 
 		dni = document.getElementById('dni').value;
@@ -135,7 +177,18 @@ class persona extends AbstractEntidad {
 
 //Atributo nombre_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `nombre_persona` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 2 caracteres → `nombre_persona_min_size_ko`
+	 * - tamaño máximo de 45 caracteres → `nombre_persona_max_size_ko`
+	 * - formato `^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ.\- ]*$` → `nombre_persona_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_nombre_persona_validation(){
 
 		if (!(this.validations.min_size('nombre_persona',2))){
@@ -157,7 +210,18 @@ class persona extends AbstractEntidad {
 
 //Atributo apellidos_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `apellidos_persona` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 3 caracteres → `apellidos_persona_min_size_ko`
+	 * - tamaño máximo de 100 caracteres → `apellidos_persona_max_size_ko`
+	 * - formato `^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ.\- ]*$` → `apellidos_persona_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_apellidos_persona_validation(){
 
 		if (!(this.validations.min_size('apellidos_persona',3))){
@@ -222,7 +286,19 @@ class persona extends AbstractEntidad {
 		}
 	}
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `fechaNacimiento_persona` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 8 caracteres → `fechaNacimiento_persona_min_size_ko`
+	 * - tamaño máximo de 10 caracteres → `fechaNacimiento_persona_max_size_ko`
+	 * - formato `^(0?[1-9]|[12][0-9]|3[01])([/-])(0?[1-9]|1[012])\2[0-9]{4}$` → `fechaNacimiento_persona_format_ko`
+	 * - validación personalizada `personalize_fechaNacimiento_persona()` → `fechaNacimiento_persona_personalized_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_fechaNacimiento_persona_validation(){
 
 		// La fecha se reordena (si viene en formato anglosajon) y se autocompleta a dd/mm/aaaa al salir del campo y tambien al enviar
@@ -252,7 +328,12 @@ class persona extends AbstractEntidad {
 		return true;
 	}
 
-	//Retorna true si el campo es valido, si no devuelve false
+	/**
+	 * Validación personalizada de la fecha de nacimiento en ADD y EDIT: la fecha (`dd/mm/aaaa` o `dd-mm-aaaa`) debe existir (el 31/02 no es válido) y no ser posterior a hoy.
+	 *
+	 * @param {string} fecha El parámetro no se usa: el valor se vuelve a leer del campo del DOM.
+	 * @returns {boolean} `true` si la fecha existe y no es futura; `false` si no
+	 */
 	personalize_fechaNacimiento_persona(fecha) {
 
 		fecha = document.getElementById('fechaNacimiento_persona').value;
@@ -275,7 +356,18 @@ class persona extends AbstractEntidad {
 
 //Atributo direccion_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `direccion_persona` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 10 caracteres → `direccion_persona_min_size_ko`
+	 * - tamaño máximo de 200 caracteres → `direccion_persona_max_size_ko`
+	 * - formato `^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ0-9 .\-;/]*$` → `direccion_persona_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_direccion_persona_validation(){
 
 		if (!(this.validations.min_size('direccion_persona',10))){
@@ -297,7 +389,19 @@ class persona extends AbstractEntidad {
 
 //Atributo telefono_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `telefono_persona` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 9 caracteres → `telefono_persona_min_size_ko`
+	 * - tamaño máximo de 9 caracteres → `telefono_persona_max_size_ko`
+	 * - formato `^[0-9]{9}$` → `telefono_persona_format_ko`
+	 * - validación personalizada `personalize_telefono_persona()` → `telefono_persona_personalized_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_telefono_persona_validation(){
 
 		if (!(this.validations.min_size('telefono_persona',9))){
@@ -322,7 +426,12 @@ class persona extends AbstractEntidad {
 		return true;
 	}
 
-	//Retorna true si el campo es valido, si no devuelve false
+	/**
+	 * Validación personalizada del teléfono en ADD y EDIT: el primer dígito debe ser 6, 7, 8 o 9.
+	 *
+	 * @param {string} telefono El parámetro no se usa: el valor se vuelve a leer del campo del DOM.
+	 * @returns {boolean} `true` si el primer dígito es válido; `false` si no
+	 */
 	personalize_telefono_persona(telefono) {
 
 		telefono = document.getElementById('telefono_persona').value;
@@ -332,7 +441,18 @@ class persona extends AbstractEntidad {
 
 //Atributo email_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `email_persona` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 6 caracteres → `email_persona_min_size_ko`
+	 * - tamaño máximo de 45 caracteres → `email_persona_max_size_ko`
+	 * - formato `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$` → `email_persona_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_email_persona_validation(){
 
 		if (!(this.validations.min_size('email_persona',6))){
@@ -359,7 +479,19 @@ class persona extends AbstractEntidad {
 
 //Atributo nuevo_foto_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `nuevo_foto_persona` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - `exist_file` → `nuevo_foto_persona_exist_file_ko`
+	 * - `max_size_file` → `nuevo_foto_persona_max_size_file_ko`
+	 * - `type_file` → `nuevo_foto_persona_type_file_ko`
+	 * - `format_name_file` → `nuevo_foto_persona_format_name_file_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_nuevo_foto_persona_validation(){
 
 		if (!(this.validations.exist_file('nuevo_foto_persona'))){
@@ -388,9 +520,13 @@ class persona extends AbstractEntidad {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de ADD de `persona`: `dni`, `nombre_persona`, `apellidos_persona`, `fechaNacimiento_persona`, `direccion_persona`, `telefono_persona`, `email_persona`, `nuevo_foto_persona`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	ADD_submit_persona(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -423,36 +559,78 @@ class persona extends AbstractEntidad {
 	// dni (clave primaria) y foto_persona (nombre del fichero) van en solo lectura en EDIT: no se pueden modificar y no se validan.
 	// La foto se cambia con el input file nuevo_foto_persona, que es opcional.
 
+	/**
+	 * Valida el atributo `nombre_persona` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link persona#ADD_nombre_persona_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link persona#ADD_nombre_persona_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_nombre_persona_validation(){
 
 		return this.ADD_nombre_persona_validation();
 	}
 
+	/**
+	 * Valida el atributo `apellidos_persona` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link persona#ADD_apellidos_persona_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link persona#ADD_apellidos_persona_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_apellidos_persona_validation(){
 
 		return this.ADD_apellidos_persona_validation();
 	}
 
+	/**
+	 * Valida el atributo `fechaNacimiento_persona` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link persona#ADD_fechaNacimiento_persona_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link persona#ADD_fechaNacimiento_persona_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_fechaNacimiento_persona_validation(){
 
 		return this.ADD_fechaNacimiento_persona_validation();
 	}
 
+	/**
+	 * Valida el atributo `direccion_persona` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link persona#ADD_direccion_persona_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link persona#ADD_direccion_persona_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_direccion_persona_validation(){
 
 		return this.ADD_direccion_persona_validation();
 	}
 
+	/**
+	 * Valida el atributo `telefono_persona` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link persona#ADD_telefono_persona_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link persona#ADD_telefono_persona_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_telefono_persona_validation(){
 
 		return this.ADD_telefono_persona_validation();
 	}
 
+	/**
+	 * Valida el atributo `email_persona` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link persona#ADD_email_persona_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link persona#ADD_email_persona_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_email_persona_validation(){
 
 		return this.ADD_email_persona_validation();
 	}
 
+	/**
+	 * Valida el atributo `nuevo_foto_persona` en la acción EDIT.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - `max_size_file` → `nuevo_foto_persona_max_size_file_ko`
+	 * - `type_file` → `nuevo_foto_persona_type_file_ko`
+	 * - `format_name_file` → `nuevo_foto_persona_format_name_file_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	EDIT_nuevo_foto_persona_validation(){
 
 		if (!(this.validations.exist_file('nuevo_foto_persona'))){
@@ -480,9 +658,13 @@ class persona extends AbstractEntidad {
                                  			SUMMIT EDIT formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de EDIT de `persona`: `nombre_persona`, `apellidos_persona`, `fechaNacimiento_persona`, `direccion_persona`, `telefono_persona`, `email_persona`, `nuevo_foto_persona`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	EDIT_submit_persona(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -529,7 +711,17 @@ class persona extends AbstractEntidad {
 		}
 	}
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `dni` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 9 caracteres → `dni_max_size_ko`
+	 * - formato `^[0-9]*[A-Za-z]?$` → `dni_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_dni_validation(){
 
 		// La letra del DNI solo puede ir al final: una busqueda escrita como letra y numeros (Z1234) se corrige a numeros y letra (1234Z)
@@ -551,7 +743,16 @@ class persona extends AbstractEntidad {
 
 //Atributo nombre_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `nombre_persona` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 45 caracteres → `nombre_persona_max_size_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_nombre_persona_validation(){
 
 	if (!(this.validations.max_size('nombre_persona',45))){
@@ -568,7 +769,16 @@ class persona extends AbstractEntidad {
 
 //Atributo apellidos_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `apellidos_persona` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 100 caracteres → `apellidos_persona_max_size_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_apellidos_persona_validation(){
 
 	if (!(this.validations.max_size('apellidos_persona',100))){
@@ -586,7 +796,18 @@ class persona extends AbstractEntidad {
 
 //Atributo fechaNacimiento_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `fechaNacimiento_persona` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 10 caracteres → `fechaNacimiento_persona_max_size_ko`
+	 * - formato `^([0-9]{1,4}|[0-9]{1,2}/([0-9]{1,2}(/[0-9]{0,4})?|[0-9]{4})?)?$` → `fechaNacimiento_persona_format_ko`
+	 * - validación personalizada `personalize_fechaNacimiento_persona_search()` → `fechaNacimiento_persona_personalized_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_fechaNacimiento_persona_validation(){
 
 		// En la busqueda NO se reordena lo que escribe el usuario (se puede buscar por trozos y un trozo como 03/04 es ambiguo: la busqueda
@@ -615,7 +836,12 @@ class persona extends AbstractEntidad {
 		return true;
 	}
 
-	//Retorna true si el campo es valido, si no devuelve false
+	/**
+	 * Validación personalizada de la fecha de nacimiento en SEARCH. La búsqueda es parcial, así que solo se comprueba que la fecha exista y no sea posterior a hoy cuando está completa (`d/m/aaaa`); una fecha incompleta se da por válida.
+	 *
+	 * @param {string} fecha El parámetro no se usa: el valor se vuelve a leer del campo del DOM.
+	 * @returns {boolean} `true` si la fecha está incompleta o es una fecha existente no futura; `false` si no
+	 */
 	personalize_fechaNacimiento_persona_search(fecha){
 
 		fecha = document.getElementById('fechaNacimiento_persona').value.trim();
@@ -640,7 +866,17 @@ class persona extends AbstractEntidad {
 
 //Atributo direccion_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `direccion_persona` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 200 caracteres → `direccion_persona_max_size_ko`
+	 * - formato `^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ0-9 .\-;/]*$` → `direccion_persona_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_direccion_persona_validation(){
 
 		if (!(this.validations.max_size('direccion_persona',200))){
@@ -658,7 +894,18 @@ class persona extends AbstractEntidad {
 
 //Atributo telefono_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `telefono_persona` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 9 caracteres → `telefono_persona_max_size_ko`
+	 * - formato `^[0-9]{0,9}$` → `telefono_persona_format_ko`
+	 * - validación personalizada `personalize_telefono_persona_search()` → `telefono_persona_personalized_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_telefono_persona_validation(){
 
 		if (!(this.validations.max_size('telefono_persona',9))){
@@ -678,7 +925,12 @@ class persona extends AbstractEntidad {
 		return true;
 	}
 
-	//Retorna true si el campo es valido, si no devuelve false
+	/**
+	 * Validación personalizada del teléfono en SEARCH. Vacío significa «sin filtro»; si hay algo escrito, el primer dígito debe ser 6, 7, 8 o 9.
+	 *
+	 * @param {string} telefono El parámetro no se usa: el valor se vuelve a leer del campo del DOM.
+	 * @returns {boolean} `true` si el campo está vacío o su primer dígito es válido; `false` si no
+	 */
 	personalize_telefono_persona_search(telefono){
 
 		telefono = document.getElementById('telefono_persona').value.trim();
@@ -691,7 +943,17 @@ class persona extends AbstractEntidad {
 
 //Atributo email_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `email_persona` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 45 caracteres → `email_persona_max_size_ko`
+	 * - formato `^[a-zA-Z0-9._%+@-]*$` → `email_persona_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_email_persona_validation(){
 
 		if (!(this.validations.max_size('email_persona',45))){
@@ -709,7 +971,17 @@ class persona extends AbstractEntidad {
 
 //Atributo foto_persona
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `foto_persona` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 15 caracteres → `foto_persona_max_size_ko`
+	 * - formato `^[a-zA-Z.]*$` → `foto_persona_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_foto_persona_validation(){
 
 		if (!(this.validations.max_size('foto_persona',15))){
@@ -735,9 +1007,13 @@ class persona extends AbstractEntidad {
                                  			SUMMIT SEARCH formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de SEARCH de `persona`: `dni`, `nombre_persona`, `apellidos_persona`, `fechaNacimiento_persona`, `direccion_persona`, `telefono_persona`, `email_persona`, `foto_persona`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	SEARCH_submit_persona(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -813,11 +1089,14 @@ class persona extends AbstractEntidad {
 	}
 
 	/**
-	 * pide al back el listado de usuarios y el de personas y rellena el select dni del formulario actual
+	 * Pide al back el listado de usuarios y el de personas y rellena el select dni del formulario actual
 	 * (value y texto = dni) con los DNI de usuario que todavia no tienen persona.
 	 * La primera opcion vacia viene de manual_form_creation().
 	 * Se envia un FormData vacio ('') para que los campos del formulario de persona no lleguen al back como filtro.
 	 * dni es PK de usuario: solo se pueden dar de alta personas cuyo DNI ya exista en usuario y que no este ya en persona.
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async cargar_dni_usuarios(){
 
@@ -948,6 +1227,8 @@ class persona extends AbstractEntidad {
 	/**
 	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
 	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 *
+	 * @returns {boolean} siempre `true`
 	 */
 	DELETE_submit_persona(){
 
@@ -959,6 +1240,9 @@ class persona extends AbstractEntidad {
 	 * cambiar, pero un campo deshabilitado no se envia y el back necesita el dni para saber que tupla modificar: se habilita solo mientras
 	 * se envia la peticion. Si el back responde ok el formulario se vacia y se oculta; si responde error el formulario continua y
 	 * el dni vuelve a quedar deshabilitado.
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async EDIT(){
 
@@ -970,6 +1254,9 @@ class persona extends AbstractEntidad {
 	/**
 	 * Refactoriza AbstractEntidad.DELETE() (misma definicion). Igual que EDIT(): el dni va deshabilitado y solo se habilita mientras se
 	 * envia la peticion al back, que lo necesita para saber que tupla borrar.
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async DELETE(){
 

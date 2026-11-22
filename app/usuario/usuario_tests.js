@@ -1,39 +1,41 @@
-/*
-----------------------------------------------
-PARA LA ENTIDAD USUARIO:
- - dni
- - usuario
- - contrasena
- - id_rol
- ----------------------------------------------
+/**
+ * @file Tests y pruebas de la entidad `usuario`.
+ *
+ * PARA LA ENTIDAD USUARIO:
+ *  - dni
+ *  - usuario
+ *  - contrasena
+ *  - id_rol
+ *
+ * DECISIONES DE DISEÑO PARA LA ENTIDAD USUARIO: Se han definido, para cada atributo y acción, solo los tests atómicos que tienen sentido según su formato.
+ *
+ *  DNI: ADD y SEARCH. Es clave primaria (y FK de persona). En EDIT el campo va en solo lectura porque identifica la tupla en el back y no se puede modificar, por lo que no se valida ni tiene tests en EDIT.
+ *       En ADD se incluyen min_size, max_size, format (8 dígitos + letra mayúscula), personalized y valid. personalized comprende la letra de control (algoritmo módulo 23) y que no exista ya
+ *       un usuario con ese DNI (el back permite DNI repetidos, por lo que lo comprueba el front con la lista de usuarios del back; sin ella, como en estas pruebas, no hay repetidos). Los dos casos comparten el código
+ *       dni_personalized_ko y las pruebas de este test se centran en la letra de control.
+ *       En SEARCH se omiten min_size y personalized: el filtro es opcional (vacío = sin filtro) y puede ser parcial (hasta 8 dígitos y una letra mayúscula al final), por lo que max_size limita a 9 caracteres y format
+ *       comprueba ese patrón: dos letras, o una letra entre números, dan error. Una letra seguida de números (Z1234) se corrige en el campo a números y letra (1234Z) antes de validar, y la prueba es válida.
+ *       No se recalcula la letra porque el objetivo es localizar un registro, no darlo de alta ni modificarlo.
+ *       Se considera DNI estándar válido el formado por 8 dígitos y una letra mayúscula de control; las letras minúsculas se rechazan en el test de formato (el formulario pasa la letra a mayúscula antes de validar,
+ *       pero la validación en sí no la modifica). Adicionalmente, se rechaza el NIE al ser de 7 dígitos y 2 letras.
+ *       Los mensajes de dni_format_ko y dni_personalized_ko los comparte la entidad persona (donde dni es clave foránea): el texto es el mismo en los tests de las dos entidades.
+ *
+ *  - USUARIO: se validan ADD, EDIT y SEARCH con min_size (5), max_size (45) y format (alfabético sin ñ ni acentos); en SEARCH se omite min_size porque el filtro puede
+ *             ser parcial u omitirse. En ADD y EDIT hay además una validación personalized (usuario_personalized_ko): el usuario es UNIQUE y el back no lo impide, por lo que el front comprueba que
+ *             no lo tenga ya otra tupla con la lista de usuarios del back (en EDIT no cuenta la propia tupla). Al depender del back, no se puede probar en estas pruebas y no tiene test.
+ *
+ *  - CONTRASENA: solo ADD y EDIT con min_size (8), max_size (45) y format alfabético sin ñ ni acentos; no se define SEARCH porque la contraseña es
+ *                un dato sensible que nunca se utiliza como criterio de búsqueda.
+ *
+ *  - ID_ROL: es un select y clave foránea (se muestra como "id_rol - rol_name", pero se valida y se envía el id_rol); se interpreta "numérico min 1 max 11" como número de dígitos (int(11)). En ADD y EDIT min_size equivale a seleccionar un rol obligatoriamente, y max_size y
+ *          format protegen frente a valores manipulados; en SEARCH se omite min_size porque el filtro es opcional. En todos los casos hay un test "valid" que confirma el caso correcto y su mensaje.
+ */
 
-DECISIONES DE DISEÑO PARA LA ENTIDAD USUARIO: Se han definido, para cada atributo y acción, solo los tests atómicos que tienen sentido según su formato. 
- --------------
- DNI: ADD y SEARCH. Es clave primaria (y FK de persona). En EDIT el campo va en solo lectura porque identifica la tupla en el back y no se puede modificar, por lo que no se valida ni tiene tests en EDIT.
-      En ADD se incluyen min_size, max_size, format (8 dígitos + letra mayúscula), personalized y valid. personalized comprende la letra de control (algoritmo módulo 23) y que no exista ya
-      un usuario con ese DNI (el back permite DNI repetidos, por lo que lo comprueba el front con la lista de usuarios del back; sin ella, como en estas pruebas, no hay repetidos). Los dos casos comparten el código
-      dni_personalized_ko y las pruebas de este test se centran en la letra de control.
-      En SEARCH se omiten min_size y personalized: el filtro es opcional (vacío = sin filtro) y puede ser parcial (hasta 8 dígitos y una letra mayúscula al final), por lo que max_size limita a 9 caracteres y format
-      comprueba ese patrón: dos letras, o una letra entre números, dan error. Una letra seguida de números (Z1234) se corrige en el campo a números y letra (1234Z) antes de validar, y la prueba es válida.
-      No se recalcula la letra porque el objetivo es localizar un registro, no darlo de alta ni modificarlo.
-      Se considera DNI estándar válido el formado por 8 dígitos y una letra mayúscula de control; las letras minúsculas se rechazan en el test de formato (el formulario pasa la letra a mayúscula antes de validar,
-      pero la validación en sí no la modifica). Adicionalmente, se rechaza el NIE al ser de 7 dígitos y 2 letras.
-      Los mensajes de dni_format_ko y dni_personalized_ko los comparte la entidad persona (donde dni es clave foránea): el texto es el mismo en los tests de las dos entidades.
- --------------
- - USUARIO: se validan ADD, EDIT y SEARCH con min_size (5), max_size (45) y format (alfabético sin ñ ni acentos); en SEARCH se omite min_size porque el filtro puede
-            ser parcial u omitirse. En ADD y EDIT hay además una validación personalized (usuario_personalized_ko): el usuario es UNIQUE y el back no lo impide, por lo que el front comprueba que
-            no lo tenga ya otra tupla con la lista de usuarios del back (en EDIT no cuenta la propia tupla). Al depender del back, no se puede probar en estas pruebas y no tiene test.
- --------------
- - CONTRASENA: solo ADD y EDIT con min_size (8), max_size (45) y format alfabético sin ñ ni acentos; no se define SEARCH porque la contraseña es
-               un dato sensible que nunca se utiliza como criterio de búsqueda. 
- --------------
- - ID_ROL: es un select y clave foránea (se muestra como "id_rol - rol_name", pero se valida y se envía el id_rol); se interpreta "numérico min 1 max 11" como número de dígitos (int(11)). En ADD y EDIT min_size equivale a seleccionar un rol obligatoriamente, y max_size y 
-         format protegen frente a valores manipulados; en SEARCH se omite min_size porque el filtro es opcional. En todos los casos hay un test "valid" que confirma el caso correcto y su mensaje.
-
- ----------------------------------------------
-*/
- 
-// [entidad, campo, elemento, num_def, descripcion, validacion_atomica, accion, resultado_esperado, mensaje]
+/**
+ * Definición de los tests de la entidad `usuario`: cada fila es un test de un campo para una acción (ver {@link DefTest}).
+ *
+ * @type {DefTest[]}
+ */
 var usuario_def_tests = [
     // 1.1. ATRIBUTO: "dni" con acción: "ADD"
     [ 
@@ -201,7 +203,11 @@ var usuario_def_tests = [
     ]
 ];
  
-// [entidad, campo, num_def_test, num_prueba, accion, objeto_valores, resultado_esperado]
+/**
+ * Pruebas de la entidad `usuario`: cada fila da los valores de los campos para un test y el resultado esperado (ver {@link Prueba}).
+ *
+ * @type {Prueba[]}
+ */
 var usuario_pruebas = [
     // 1.1. ATRIBUTO: "dni" con acción: "ADD"
     ["usuario", "dni", 1, 1, "ADD", { "dni": "1234567" }, "dni_min_size_ko"],

@@ -1,9 +1,31 @@
-/* -----------------------------------------------------------------------------
-   Entidad: rol
-   Campos : id_rol (input, PK autoincremental: oculto en ADD, EDIT y DELETE; visible en SEARCH y SHOWCURRENT), rol_name (input), rol_description (textarea)
------------------------------------------------------------------------------ */
+/**
+ * @file Lógica de la interfaz de la entidad `rol`: formularios, validaciones y envío al back.
+ */
+
+/**
+ * Entidad `rol`.
+ *
+ * Campos: id_rol (input, PK autoincremental: oculto en ADD, EDIT y DELETE; visible en SEARCH y SHOWCURRENT), rol_name (input), rol_description (textarea)
+ *
+ * Contiene los formularios de cada acción (ADD, EDIT, DELETE, SEARCH y SHOWCURRENT), las validaciones `ADD_/EDIT_/SEARCH_<campo>_validation()` de cada atributo, los `*_submit_*()` que las agrupan y el formato especial de los atributos de `mostrarespecial`. Las operaciones contra el back las hereda de `AbstractEntidad`.
+ *
+ * @extends AbstractEntidad
+ * @property {string[]} columnasamostrar columnas que se muestran en la tabla de resultados
+ * @property {string[]} mostrarespecial atributos que se muestran con un formato especial en la tabla (ver `cambiarmostrarespecial()`)
+ * @property {string} nombreentidad nombre de la entidad: es el que identifica sus formularios, sus textos y sus peticiones al back
+ * @property {entity_dom_fields} dom acceso al DOM (formularios, mensajes de error, tabla)
+ * @property {entity_validations} validations validaciones de los campos del formulario
+ * @property {ExternalAccess} access_functions acceso al back
+ */
 class rol extends AbstractEntidad {
 
+	/**
+	 * Crea la entidad `rol` e inicializa las columnas que se muestran en la tabla, los atributos con formato especial, el nombre de la entidad y los objetos de apoyo (`dom`, `validations` y `access_functions`).
+	 *
+	 * En modo normal muestra la sección de la tabla y los botones, pone el título de la página, crea el formulario vacío con `manual_form_creation()` y lanza `SEARCH()` con el formulario vacío para cargar los datos del back. Con `esTest = 'test'` solo se inicializan los atributos y no se toca el DOM.
+	 *
+	 * @param {?string} [esTest=null] pasar `'test'` para crear la entidad sin tocar el DOM (modo pruebas); con `null` se inicializa la interfaz de la entidad
+	 */
 	constructor(esTest=null){
 
 		super();
@@ -33,11 +55,12 @@ class rol extends AbstractEntidad {
 	}
 
 	/**
-	 * devuelve el html del formulario de la entidad
+	 * Devuelve el html del formulario de la entidad
 	 * id_rol va como type='text' (no 'number'): el navegador vacia el value de un
 	 * input number con "1a" y Validations.min_size lo daria por vacio.
 	 * id_rol es autoincremental: su bloque (div_id_rol) se oculta en ADD, EDIT y DELETE (ver ocultar_id_rol()); en SEARCH y SHOWCURRENT se muestra.
-	 * @returns {string}
+	 *
+	 * @returns {string} código HTML del formulario de la entidad
 	 */
 	manual_form_creation(){
 		var form_content = `
@@ -79,7 +102,18 @@ class rol extends AbstractEntidad {
 //no se edita; EDIT_id_rol_validation() se conserva solo por coherencia con colocarvalidaciones('form_iu','EDIT'), que asigna una
 //validacion a cada campo del formulario, aunque el campo va oculto y nunca llega a validarse.
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_rol` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_rol_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_rol_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_rol_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_rol_validation(){
 
 		if (!(this.validations.min_size('id_rol',1))){
@@ -102,7 +136,18 @@ class rol extends AbstractEntidad {
 
 //Atributo rol_name
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `rol_name` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 5 caracteres → `rol_name_min_size_ko`
+	 * - tamaño máximo de 48 caracteres → `rol_name_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ]*$` → `rol_name_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_rol_name_validation(){
 
 		if (!(this.validations.min_size('rol_name',5))){
@@ -126,7 +171,18 @@ class rol extends AbstractEntidad {
 
 //Atributo rol_description
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `rol_description` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 5 caracteres → `rol_description_min_size_ko`
+	 * - tamaño máximo de 200 caracteres → `rol_description_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ .,;:¿?¡!()\[\]\-"\'…]*$` → `rol_description_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_rol_description_validation(){
 
 		if (!(this.validations.min_size('rol_description',5))){
@@ -155,9 +211,13 @@ class rol extends AbstractEntidad {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de ADD de `rol`: `rol_name`, `rol_description`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	ADD_submit_rol(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -181,16 +241,31 @@ class rol extends AbstractEntidad {
 ****************************************************************************************************************************/
 
 
+	/**
+	 * Valida el atributo `id_rol` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link rol#ADD_id_rol_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link rol#ADD_id_rol_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_rol_validation(){
 
 		return this.ADD_id_rol_validation();
 	}
 
+	/**
+	 * Valida el atributo `rol_name` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link rol#ADD_rol_name_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link rol#ADD_rol_name_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_rol_name_validation(){
 
 		return this.ADD_rol_name_validation();
 	}
 
+	/**
+	 * Valida el atributo `rol_description` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link rol#ADD_rol_description_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link rol#ADD_rol_description_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_rol_description_validation(){
 
 		return this.ADD_rol_description_validation();
@@ -201,9 +276,13 @@ class rol extends AbstractEntidad {
                                  			SUMMIT EDIT formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de EDIT de `rol`: `rol_name`, `rol_description`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	EDIT_submit_rol(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -232,7 +311,17 @@ class rol extends AbstractEntidad {
 
 //Atributo id_rol
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_rol` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_rol_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_rol_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_rol_validation(){
 
 		if (!(this.validations.max_size('id_rol',11))){
@@ -249,7 +338,17 @@ class rol extends AbstractEntidad {
 
 //Atributo rol_name
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `rol_name` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 48 caracteres → `rol_name_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ]*$` → `rol_name_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_rol_name_validation(){
 
 		if (!(this.validations.max_size('rol_name',48))){
@@ -266,7 +365,17 @@ class rol extends AbstractEntidad {
 
 //Atributo rol_description
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `rol_description` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 200 caracteres → `rol_description_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ .,;:¿?¡!()\[\]\-"\'…]*$` → `rol_description_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_rol_description_validation(){
 
 		if (!(this.validations.max_size('rol_description',200))){
@@ -287,9 +396,13 @@ class rol extends AbstractEntidad {
                                  			SUMMIT SEARCH formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de SEARCH de `rol`: `id_rol`, `rol_name`, `rol_description`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	SEARCH_submit_rol(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -404,6 +517,8 @@ class rol extends AbstractEntidad {
 	/**
 	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
 	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 *
+	 * @returns {boolean} siempre `true`
 	 */
 	DELETE_submit_rol(){
 

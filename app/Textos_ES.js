@@ -1,3 +1,12 @@
+/**
+ * @file Textos de la interfaz en español (clave → texto). Para cada clave hay otra igual en Textos_EN.js.
+ */
+
+/**
+ * Textos de la interfaz en español.
+ *
+ * @type {Object<string, string>}
+ */
 var textos_ES = {
 
 	// ============================================================================

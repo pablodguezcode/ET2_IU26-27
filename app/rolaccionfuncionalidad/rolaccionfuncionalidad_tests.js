@@ -1,32 +1,29 @@
-/* //-----------------//-----------------//-----------------//-----------------//
-    ESTRUCTURA:
+/**
+ * @file Tests y pruebas de la entidad `rolaccionfuncionalidad`.
+ *
+ * PARA LA ENTIDAD rolaccionfuncionalidad:
+ *  - id_funcionalidad
+ *  - id_accion
+ *  - id_rol
+ *
+ * DECISIONES DE DISEÑO PARA LA ENTIDAD ROLACCIONFUNCIONALIDAD:
+ *  1. Los tres atributos forman la clave primaria compuesta, son claves foráneas y se introducen mediante elementos select.
+ *     Se interpreta "numérico min 1 max 11" como número de dígitos (int(11)).
+ *  2. Se definen ADD, EDIT y SEARCH para los tres atributos, tal y como se entregó en la ET1. En el front esta entidad es una matriz
+ *     funcionalidad x rol que se edita marcando y desmarcando casillas (no tiene formularios de ADD ni de EDIT), pero se conservan las
+ *     validaciones y los tests porque son los que ejecuta el botón TEST.
+ *  3. En SEARCH se omite min_size: el filtro es opcional y un valor vacío significa "sin filtro".
+ *  4. max_size y format, aunque un select no debería generar esos errores, se mantienen para detectar valores manipulados.
+ *  5. No se incluyen tests sobre la unicidad de la tripleta ni sobre la existencia de los ids en sus tablas, al ser comprobaciones
+ *     de servidor y no validaciones atómicas de formato del campo.
+ *  6. Los mensajes de los tests son los textos de Textos_ES.js de cada código de error (Textos_EN.js en inglés).
+ */
 
-    ["entidad", "clase", "tipo", "nº test", "descripción_Test", "metodo", "acción",  
-        "Resultado Esperado", "mensaje" ]
-
-*/ //-----------------//-----------------//-----------------//-----------------//
-
-/*
-----------------------------------------------
-PARA LA ENTIDAD rolaccionfuncionalidad:
- - id_funcionalidad
- - id_accion
- - id_rol
-----------------------------------------------
-
-DECISIONES DE DISEÑO PARA LA ENTIDAD ROLACCIONFUNCIONALIDAD:
- 1. Los tres atributos forman la clave primaria compuesta, son claves foráneas y se introducen mediante elementos select.
-    Se interpreta "numérico min 1 max 11" como número de dígitos (int(11)).
- 2. Se definen ADD, EDIT y SEARCH para los tres atributos, tal y como se entregó en la ET1. En el front esta entidad es una matriz
-    funcionalidad x rol que se edita marcando y desmarcando casillas (no tiene formularios de ADD ni de EDIT), pero se conservan las
-    validaciones y los tests porque son los que ejecuta el botón TEST.
- 3. En SEARCH se omite min_size: el filtro es opcional y un valor vacío significa "sin filtro".
- 4. max_size y format, aunque un select no debería generar esos errores, se mantienen para detectar valores manipulados.
- 5. No se incluyen tests sobre la unicidad de la tripleta ni sobre la existencia de los ids en sus tablas, al ser comprobaciones
-    de servidor y no validaciones atómicas de formato del campo.
- 6. Los mensajes de los tests son los textos de Textos_ES.js de cada código de error (Textos_EN.js en inglés).
-----------------------------------------------
-*/
+/**
+ * Definición de los tests de la entidad `rolaccionfuncionalidad`: cada fila es un test de un campo para una acción (ver {@link DefTest}).
+ *
+ * @type {DefTest[]}
+ */
 var rolaccionfuncionalidad_def_tests = [
 
     //Acción: ADD
@@ -178,14 +175,11 @@ var rolaccionfuncionalidad_def_tests = [
 
 ];
 
-/* //-----------------//-----------------//-----------------//-----------------//
-   ESTRUCTURA:
- 
-   ["entidad", "clase", "nº test", "nº prueba", "acción", {"atributo": "valor"},
-        "Resultado Esperado"]
-
-*/ //-----------------//-----------------//-----------------//-----------------//
-
+/**
+ * Pruebas de la entidad `rolaccionfuncionalidad`: cada fila da los valores de los campos para un test y el resultado esperado (ver {@link Prueba}).
+ *
+ * @type {Prueba[]}
+ */
 var rolaccionfuncionalidad_pruebas = [
 
     //Acción: ADD

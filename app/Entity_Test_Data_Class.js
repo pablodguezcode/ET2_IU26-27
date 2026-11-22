@@ -1,11 +1,50 @@
 /**
+ * @file Refactorización de `Data_Test`: ejecución de las pruebas de una entidad y presentación del resultado.
+ */
+
+/**
+ * Test de una entidad, tal y como se define en las tablas `<entidad>_def_tests`. Es un array con una posición por cada dato:
+ * 0. entidad: nombre de la entidad
+ * 1. campo: atributo que se prueba
+ * 2. tipo: tipo de elemento del formulario del campo (`input`, `textarea`, `select` o `file`)
+ * 3. nº test: número del test
+ * 4. descripción_Test: texto que describe el test
+ * 5. metodo: comprobación que se prueba (`min_size`, `max_size`, `format`, `personalized`, `exist_file`, `max_size_file`, `type_file`, `format_name_file`) o `valid` para un valor correcto
+ * 6. acción: acción del formulario en la que se prueba (`ADD`, `EDIT` o `SEARCH`)
+ * 7. Resultado Esperado: código de error esperado, o `true` si el valor debe ser válido
+ * 8. mensaje: texto que se muestra para el resultado
+ *
+ * @typedef {Array<(string|number|boolean)>} DefTest
+ */
+
+/**
+ * Prueba de un test, tal y como se define en las tablas `<entidad>_pruebas`. Es un array con una posición por cada dato:
+ * 0. entidad: nombre de la entidad
+ * 1. campo: atributo que se prueba
+ * 2. nº test: número del test (ver {@link DefTest}) al que corresponde
+ * 3. nº prueba: número de la prueba
+ * 4. acción: acción del formulario en la que se prueba (`ADD`, `EDIT` o `SEARCH`)
+ * 5. objeto con el valor que se pone en cada atributo (`{"atributo": "valor"}`)
+ * 6. Resultado Esperado: código de error esperado, o `true` si el valor debe ser válido
+ *
+ * @typedef {Array<(string|number|boolean|Object<string, string>)>} Prueba
+ */
+
+/**
  * clase para poder refactorizar los metodos que se considere adecuados manteniendo la definicion de los mismos y para inclusion de nuevos metodos
  *
  * Se invoca desde el icono TEST: new entity_Test_Data(eval(entidad.nombreentidad))
  * El resultado de las pruebas se presenta en una ventana nueva (no en el div IU_Test_result_nofile de index.html).
+ *
+ * @extends Data_Test
  */
 class entity_Test_Data extends Data_Test{
 
+    /**
+     * Vacía el contenedor del formulario antes de construir la clase base. Las pruebas crean sus propios campos con los mismos ids que el formulario de la entidad (`dni`, `nombre_persona`...), así que el formulario real no debe estar en el DOM mientras se ejecutan.
+     *
+     * @param {Object} entidad entidad (instancia creada en modo test) cuyas pruebas se ejecutan
+     */
     constructor(entidad){
         // Las pruebas crean sus propios campos con los mismos ids que el formulario de la entidad (dni, nombre_persona...).
         // Se vacia el contenedor del formulario antes de ejecutarlas para que el formulario real no interfiera con los campos de prueba.
@@ -14,10 +53,11 @@ class entity_Test_Data extends Data_Test{
     }
 
     /**
-     * Refactorizacion de data_test_class(): ejecuta las pruebas y presenta el resultado en una ventana nueva.
+     * Refactorización de data_test_class(): ejecuta las pruebas y presenta el resultado en una ventana nueva.
      * Al terminar se restaura el formulario vacio de la entidad en el que se apoyan las peticiones al back (SEARCH...).
      *
-     * @returns {bool}
+     * @override
+     * @returns {boolean}
      */
     data_test_class(){
 

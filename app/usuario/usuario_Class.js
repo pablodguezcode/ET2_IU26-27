@@ -1,5 +1,33 @@
+/**
+ * @file Lógica de la interfaz de la entidad `usuario`: formularios, validaciones y envío al back.
+ */
+
+/**
+ * Entidad `usuario`: usuarios con DNI, nombre de usuario, contraseña y rol (`id_rol`, un select cargado con los roles del back).
+ *
+ * Contiene los formularios de cada acción (ADD, EDIT, DELETE, SEARCH y SHOWCURRENT), las validaciones `ADD_/EDIT_/SEARCH_<campo>_validation()` de cada atributo, los `*_submit_*()` que las agrupan y el formato especial de los atributos de `mostrarespecial`. Las operaciones contra el back las hereda de `AbstractEntidad`.
+ *
+ * @extends AbstractEntidad
+ * @property {string[]} columnasamostrar columnas que se muestran en la tabla de resultados
+ * @property {string[]} mostrarespecial atributos que se muestran con un formato especial en la tabla (ver `cambiarmostrarespecial()`)
+ * @property {string} nombreentidad nombre de la entidad: es el que identifica sus formularios, sus textos y sus peticiones al back
+ * @property {entity_dom_fields} dom acceso al DOM (formularios, mensajes de error, tabla)
+ * @property {entity_validations} validations validaciones de los campos del formulario
+ * @property {ExternalAccess} access_functions acceso al back
+ * @property {Array<{dni: string, usuario: string}>} usuarios_existentes DNI y nombre de usuario de los usuarios del back (ver `cargar_usuarios_existentes()`); vacía en modo test
+ * @property {?string} dni_en_edicion DNI de la tupla que se está editando (`null` en ADD)
+ */
 class usuario extends AbstractEntidad {
 
+	/**
+	 * Crea la entidad `usuario` e inicializa las columnas que se muestran en la tabla, los atributos con formato especial, el nombre de la entidad y los objetos de apoyo (`dom`, `validations` y `access_functions`).
+	 *
+	 * En modo normal muestra la sección de la tabla y los botones, pone el título de la página, crea el formulario vacío con `manual_form_creation()` y lanza `SEARCH()` con el formulario vacío para cargar los datos del back. Con `esTest = 'test'` solo se inicializan los atributos y no se toca el DOM.
+	 *
+	 * Además guarda los usuarios del back en `usuarios_existentes`, porque el back permite DNI y usuario repetidos y la unicidad se comprueba aquí (validaciones `personalized` de `dni` y `usuario`). Se carga al abrir ADD y EDIT y se vuelve a pedir justo antes de enviar; vacía (modo test) no encuentra repetidos, de modo que las validaciones siguen siendo síncronas y no usan el back.
+	 *
+	 * @param {?string} [esTest=null] pasar `'test'` para crear la entidad sin tocar el DOM (modo pruebas); con `null` se inicializa la interfaz de la entidad
+	 */
 	constructor(esTest=null){
 
 		super();
@@ -39,8 +67,9 @@ class usuario extends AbstractEntidad {
 	}
 
 	/**
-	 * devuelve el html del formulario de la entidad
-	 * @returns {string}
+	 * Devuelve el html del formulario de la entidad
+	 *
+	 * @returns {string} código HTML del formulario de la entidad
 	 */
 	manual_form_creation(){
 		var form_content = `
@@ -83,10 +112,9 @@ class usuario extends AbstractEntidad {
 
 //Atributo dni
 
-	//El usuario puede escribir la letra del DNI en minuscula o mayuscula, pero al back siempre se le envia en mayuscula: el valor del
-	//campo se pasa a mayuscula antes de validarlo, en el onblur del campo y en el onsubmit del formulario (ver createForm_ADD y
-	//createForm_SEARCH). Las validaciones NO modifican el campo, asi que una letra en minuscula que llegue a ellas (como en las
-	//pruebas de usuario_tests.js) se rechaza por formato (dni_format_ko).
+	/**
+	 * Pasa a mayúscula el valor del campo `dni`. El usuario puede escribir la letra del DNI en minúscula o mayúscula, pero al back siempre se le envía en mayúscula: el campo se pasa a mayúscula antes de validarlo, en el `onblur` del campo y en el `onsubmit` del formulario (ver `createForm_ADD` y `createForm_SEARCH`). Las validaciones no modifican el campo, así que una letra en minúscula que llegue a ellas (como en las pruebas de usuario_tests.js) se rechaza por formato (`dni_format_ko`).
+	 */
 	dni_a_mayusculas(){
 
 		var campo = document.getElementById('dni');
@@ -94,8 +122,21 @@ class usuario extends AbstractEntidad {
 		campo.value = campo.value.toUpperCase();
 	}
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//En ADD el dni ademas debe ser unico (personalized). En EDIT el dni va en solo lectura (es la clave que identifica la tupla), por lo que no se valida.
+	/**
+	 * Valida el atributo `dni` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 9 caracteres → `dni_min_size_ko`
+	 * - tamaño máximo de 9 caracteres → `dni_max_size_ko`
+	 * - formato `^[0-9]{8}[A-Z]$` → `dni_format_ko`
+	 * - validación personalizada `personalize_dni()` → `dni_personalized_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * Nota: En ADD el dni ademas debe ser unico (personalized). En EDIT el dni va en solo lectura (es la clave que identifica la tupla), por lo que no se valida.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_dni_validation(){
 
 		if (!(this.validations.min_size('dni',9))){
@@ -120,8 +161,12 @@ class usuario extends AbstractEntidad {
 		return true;
 	}
 
-	//Retorna true si la letra de control (numero mod 23) coincide con la del DNI y no existe ya un usuario con ese DNI.
-	//Si no, devuelve false. Recibe el valor por parametro (no lee del DOM). Se llama despues de comprobar el formato (8 digitos + letra).
+	/**
+	 * Validación personalizada del DNI en ADD. Se llama después de comprobar el formato (8 dígitos y una letra). Recibe el valor por parámetro y no lee del DOM.
+	 *
+	 * @param {string} dni valor del campo `dni`
+	 * @returns {boolean} `true` si la letra de control (número módulo 23) coincide con la del DNI y no existe ya un usuario con ese DNI; `false` si no
+	 */
 	personalize_dni(dni){
 
 		var dni_letters = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -136,15 +181,30 @@ class usuario extends AbstractEntidad {
 
 //Atributo usuario
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//En ADD el usuario ademas debe ser unico (personalized)
+	/**
+	 * Valida el atributo `usuario` en la acción ADD. Delega en {@link usuario#validar_usuario} sin ningún DNI excluido, porque en ADD no hay tupla que se edite.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link usuario#validar_usuario}: `true` si el valor es válido o el código de error en caso contrario
+	 */
 	ADD_usuario_validation(){
 
 		return this.validar_usuario(null);
 	}
 
-	//Validacion del usuario compartida por ADD y EDIT.
-	//dni_excluido: dni de la tupla que se edita (null en ADD), para que su propio usuario no cuente como repetido
+	/**
+	 * Validación del atributo `usuario` compartida por ADD y EDIT.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 5 caracteres → `usuario_min_size_ko`
+	 * - tamaño máximo de 45 caracteres → `usuario_max_size_ko`
+	 * - formato: solo letras A-Z y a-z, sin ñ ni acentos → `usuario_format_ko`
+	 * - unicidad (el usuario es UNIQUE y el back no lo impide), con {@link usuario#personalize_usuario} → `usuario_personalized_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @param {?string} dni_excluido DNI de la tupla que se edita (`null` en ADD), para que su propio usuario no cuente como repetido
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla
+	 */
 	validar_usuario(dni_excluido){
 
 		if (!(this.validations.min_size('usuario',5))){
@@ -169,9 +229,13 @@ class usuario extends AbstractEntidad {
 		return true;
 	}
 
-	//Retorna true si no existe otro usuario con ese nombre de usuario, si no devuelve false.
-	//Recibe el valor por parametro (no lee del DOM). Se compara exactamente (el back es utf8_bin: distingue mayusculas).
-	//dni_excluido: dni de la tupla que se edita; esa tupla no cuenta como repetida (null en ADD).
+	/**
+	 * Comprueba que no existe otro usuario con ese nombre de usuario. Recibe el valor por parámetro y no lee del DOM. La comparación es exacta: el back es `utf8_bin` y distingue mayúsculas.
+	 *
+	 * @param {string} usuario nombre de usuario a comprobar
+	 * @param {?string} [dni_excluido=null] DNI de la tupla que se edita; esa tupla no cuenta como repetida (`null` en ADD)
+	 * @returns {boolean} `true` si no existe otro usuario con ese nombre; `false` si no
+	 */
 	personalize_usuario(usuario, dni_excluido=null){
 
 		return !this.usuarios_existentes.some(existente => existente.usuario == usuario && existente.dni != dni_excluido);
@@ -179,7 +243,18 @@ class usuario extends AbstractEntidad {
 
 //Atributo contrasena
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `contrasena` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 8 caracteres → `contrasena_min_size_ko`
+	 * - tamaño máximo de 45 caracteres → `contrasena_max_size_ko`
+	 * - formato `^[A-Za-z]*$` → `contrasena_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_contrasena_validation(){
 
 		if (!(this.validations.min_size('contrasena',8))){
@@ -201,8 +276,20 @@ class usuario extends AbstractEntidad {
 
 //Atributo id_rol
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//id_rol es un select: min_size falla si se deja la opcion vacia
+	/**
+	 * Valida el atributo `id_rol` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_rol_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_rol_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_rol_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * Nota: id_rol es un select: min_size falla si se deja la opcion vacia
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_rol_validation(){
 
 		if (!(this.validations.min_size('id_rol',1))){
@@ -227,9 +314,13 @@ class usuario extends AbstractEntidad {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de ADD de `usuario`: `dni`, `usuario`, `contrasena`, `id_rol`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	ADD_submit_usuario(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -257,16 +348,31 @@ class usuario extends AbstractEntidad {
 //El dni va en solo lectura en EDIT (identifica la tupla en el back): no se puede modificar, por lo que no tiene validacion ni test en EDIT.
 //Lo unico que cambia respecto a ADD es la unicidad del usuario: la propia tupla no cuenta como repetida y se compara solo con el resto de tuplas.
 
+	/**
+	 * Valida el atributo `usuario` en la acción EDIT. Delega en {@link usuario#validar_usuario} excluyendo el DNI de la tupla que se edita (`dni_en_edicion`), para que su propio usuario no cuente como repetido.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link usuario#validar_usuario}: `true` si el valor es válido o el código de error en caso contrario
+	 */
 	EDIT_usuario_validation(){
 
 		return this.validar_usuario(this.dni_en_edicion);
 	}
 
+	/**
+	 * Valida el atributo `contrasena` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link usuario#ADD_contrasena_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link usuario#ADD_contrasena_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_contrasena_validation(){
 
 		return this.ADD_contrasena_validation();
 	}
 
+	/**
+	 * Valida el atributo `id_rol` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link usuario#ADD_id_rol_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link usuario#ADD_id_rol_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_rol_validation(){
 
 		return this.ADD_id_rol_validation();
@@ -277,9 +383,13 @@ class usuario extends AbstractEntidad {
                                  			SUMMIT EDIT formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de EDIT de `usuario`: `usuario`, `contrasena`, `id_rol`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	EDIT_submit_usuario(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -306,9 +416,9 @@ class usuario extends AbstractEntidad {
 
 //Atributo dni
 
-	//Si el dni empieza por una letra seguida de numeros (Z1234) se pasa la letra al final (1234Z): la letra de un DNI va siempre al final,
-	//asi que en una busqueda parcial se corrige en el propio campo. Dos letras o una letra entre numeros no se corrigen y dan error de formato.
-	//La letra llega en mayuscula (el formulario la pasa a mayuscula antes de validar, ver dni_a_mayusculas).
+	/**
+	 * Si el DNI empieza por una letra seguida de números (`Z1234`) pasa la letra al final (`1234Z`): la letra de un DNI va siempre al final, así que en una búsqueda parcial se corrige en el propio campo. Dos letras o una letra entre números no se corrigen y dan error de formato. La letra llega en mayúscula (el formulario la pasa a mayúscula antes de validar, ver {@link usuario#dni_a_mayusculas}).
+	 */
 	corregir_letra_dni_search(){
 
 		var campo = document.getElementById('dni');
@@ -319,7 +429,17 @@ class usuario extends AbstractEntidad {
 		}
 	}
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `dni` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 9 caracteres → `dni_max_size_ko`
+	 * - formato `^[0-9]{0,8}[A-Z]?$` → `dni_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_dni_validation(){
 
 		this.corregir_letra_dni_search();
@@ -339,7 +459,17 @@ class usuario extends AbstractEntidad {
 
 //Atributo usuario
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `usuario` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 45 caracteres → `usuario_max_size_ko`
+	 * - formato `^[A-Za-z]*$` → `usuario_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_usuario_validation(){
 
 		if (!(this.validations.max_size('usuario',45))){
@@ -356,9 +486,11 @@ class usuario extends AbstractEntidad {
 
 //Atributo contrasena
 
-	//La contraseña es un dato sensible y nunca se usa como criterio de busqueda: no hay tests de SEARCH
-	//ni campo contrasena en el formulario de busqueda. El metodo existe para que haya un SEARCH_<campo>_validation()
-	//por cada atributo. No toca el DOM y siempre devuelve true.
+	/**
+	 * Valida el atributo `contrasena` en la acción SEARCH. La contraseña es un dato sensible y nunca se usa como criterio de búsqueda: no hay tests de SEARCH ni campo `contrasena` en el formulario de búsqueda. El método existe para que haya un `SEARCH_<campo>_validation()` por cada atributo. No toca el DOM y siempre devuelve `true`.
+	 *
+	 * @returns {boolean} siempre `true`
+	 */
 	SEARCH_contrasena_validation(){
 
 		return true;
@@ -366,8 +498,19 @@ class usuario extends AbstractEntidad {
 
 //Atributo id_rol
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
-	//El select tiene la primera opcion vacia ("sin filtro")
+	/**
+	 * Valida el atributo `id_rol` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_rol_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_rol_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * Nota: El select tiene la primera opcion vacia ("sin filtro")
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_rol_validation(){
 
 		if (!(this.validations.max_size('id_rol',11))){
@@ -388,9 +531,13 @@ class usuario extends AbstractEntidad {
                                  			SUMMIT SEARCH formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de SEARCH de `usuario`: `dni`, `usuario`, `id_rol`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	SEARCH_submit_usuario(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -412,6 +559,9 @@ class usuario extends AbstractEntidad {
 	 * identificador, pero el back busca los campos por trozos (con el rol 1 devolveria tambien los usuarios de los roles 10, 11, 21...).
 	 * Por eso, si se ha elegido un rol, aqui se descartan las tuplas cuyo id_rol no sea exactamente el elegido. Sin rol elegido (opcion
 	 * vacia) funciona igual que la de AbstractEntidad.
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async SEARCH(){
 
@@ -500,7 +650,9 @@ class usuario extends AbstractEntidad {
 	 * - Si el back responde ok, AbstractEntidad.EDIT() oculta el formulario y actualiza la tabla; si responde error, se muestra
 	 *   el modal de error y el formulario sigue como antes del envio.
 	 *
+	 * @async
 	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono EDIT
+	 * @returns {Promise<void>}
 	 */
 	async createForm_EDIT(fila){
 
@@ -596,7 +748,9 @@ class usuario extends AbstractEntidad {
 	 * - id_rol es un select: se cargan primero los roles del back y despues se selecciona el de la fila.
 	 * - contrasena es un dato sensible y no se muestra: se oculta con su label.
 	 *
+	 * @async
 	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono SHOWCURRENT
+	 * @returns {Promise<void>}
 	 */
 	async createForm_SHOWCURRENT(fila){
 
@@ -642,6 +796,8 @@ class usuario extends AbstractEntidad {
 	/**
 	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
 	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 *
+	 * @returns {boolean} siempre `true`
 	 */
 	DELETE_submit_usuario(){
 
@@ -658,7 +814,9 @@ class usuario extends AbstractEntidad {
 	 *   (readonly no afecta a un select y un select deshabilitado no se envia al back).
 	 * - contrasena no se muestra ni se envia: se oculta con su label y se deshabilita.
 	 *
+	 * @async
 	 * @param {Object} fila datos de la tupla sobre la que se pulso el icono DELETE
+	 * @returns {Promise<void>}
 	 */
 	async createForm_DELETE(fila){
 
@@ -733,6 +891,9 @@ class usuario extends AbstractEntidad {
 	 * personalize_usuario). Las validaciones de campo usan la lista cargada al abrir el formulario; justo antes de enviar se vuelve a
 	 * pedir al back por si otro usuario dio de alta uno mientras tanto y se validan de nuevo todos los campos. Si alguno falla no se
 	 * envia nada y quedan marcados los errores; si todo es correcto el alta sigue como siempre (AbstractEntidad.ADD()).
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async ADD(){
 
@@ -744,6 +905,9 @@ class usuario extends AbstractEntidad {
 	/**
 	 * Refactoriza AbstractEntidad.EDIT() (misma definicion): igual que ADD(), comprueba antes de enviar que el usuario modificado
 	 * no lo tenga ya otra tupla (el usuario es UNIQUE y el back no lo impide).
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async EDIT(){
 
@@ -755,6 +919,9 @@ class usuario extends AbstractEntidad {
 	/**
 	 * Pide al back todos los usuarios y guarda en usuarios_existentes su dni y su usuario, que son los que se comprueban en
 	 * personalize_dni() y personalize_usuario(). Se envia un FormData vacio ('') para que los campos del formulario no filtren la busqueda.
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async cargar_usuarios_existentes(){
 
@@ -806,10 +973,13 @@ class usuario extends AbstractEntidad {
 ****************************************************************************************************************************/
 
 	/**
-	 * pide al back el listado de la entidad rol y rellena el select id_rol del formulario actual
+	 * Pide al back el listado de la entidad rol y rellena el select id_rol del formulario actual
 	 * (value = id_rol, texto = "id_rol - rol_name": el usuario elige el rol por su nombre pero se valida y se envia al back el id_rol).
 	 * La primera opcion vacia viene de manual_form_creation().
 	 * Se envia un FormData vacio ('') para que los campos del formulario de usuario no lleguen a rol como filtro.
+	 *
+	 * @async
+	 * @returns {Promise<void>}
 	 */
 	async cargar_roles(){
 

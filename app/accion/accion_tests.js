@@ -1,41 +1,39 @@
-/* -----------------------------------------------------------------------------
-   ENTIDAD: accion
-   -----------------------------------------------------------------------------
-   ESTRUCTURA:
- 
-   ["entidad", "campo", "tipo", "nº test", "descripción_Test", "metodo", "acción",
-       "Resultado Esperado", "mensaje"]
------------------------------------------------------------------------------ */
- 
-/* -----------------------------------------------------------------------------
-   DECISIONES DE DISEÑO Y ACLARACIONES (entidad accion)
-   -----------------------------------------------------------------------------
-   Requisitos del enunciado: id_accion numérico (min 1, max 11); nombre_accion
-   alfabético con ñ (min 5, max 48); descrip_accion alfabético con ñ, espacio y
-   signos de puntuación (min 5, max 200).
- 
-   Criterios comunes (decisiones propias, el enunciado no los especifica):
-   1. ñ y acentos: se admiten en todos los campos de texto de esta entidad,
-      salvo que el enunciado diga expresamente "sin" (aquí no lo dice en ninguno).
-      Motivo: comodidad del usuario (Interfaces de Usuario); nombres y
-      descripciones se escriben en español natural.
-   2. Conjunto de caracteres "alfabético" que aceptados en caso de no indicarse lo
-      contrario: A-Z a-z, ñ Ñ, áéíóúÁÉÍÓÚ y üÜ.
-   3. Espacios: NO se admiten en los nombres (el enunciado solo los lista en las
-      descripciones). Dígitos: no se admiten en ningún campo de texto.
-   4. Puntuación admitida en las descripciones (puntuación española):
-      . , ; : ¿ ? ¡ ! ( ) [ ] - " ' …
-      No se admiten otros símbolos (% & # @ $ < >): las pruebas format_ko de las
-      descripciones los usan.
-   5. Cada prueba format_ko incumple UN solo criterio (un dígito, un símbolo o un
-      espacio), para que el resultado esperado no tenga dos causas posibles.
-   6. Tests y pruebas de id_* en ADD: se mantienen aunque el id sea autoincremental
-      porque la entrega los exige.
-   7. id_accion no se edita (es autoincremental): no hay tests ni pruebas de EDIT para
-      id_accion. En SEARCH sí es criterio de búsqueda y tiene sus tests.
-   8. Los valores "a".repeat(n) comprueban los límites exactos de tamaño.
------------------------------------------------------------------------------ */
- 
+/**
+ * @file Tests y pruebas de la entidad `accion`.
+ *
+ * DECISIONES DE DISEÑO Y ACLARACIONES (entidad accion)
+ *
+ * Requisitos del enunciado: id_accion numérico (min 1, max 11); nombre_accion
+ * alfabético con ñ (min 5, max 48); descrip_accion alfabético con ñ, espacio y
+ * signos de puntuación (min 5, max 200).
+ *
+ * Criterios comunes (decisiones propias, el enunciado no los especifica):
+ * 1. ñ y acentos: se admiten en todos los campos de texto de esta entidad,
+ *    salvo que el enunciado diga expresamente "sin" (aquí no lo dice en ninguno).
+ *    Motivo: comodidad del usuario (Interfaces de Usuario); nombres y
+ *    descripciones se escriben en español natural.
+ * 2. Conjunto de caracteres "alfabético" que aceptados en caso de no indicarse lo
+ *    contrario: A-Z a-z, ñ Ñ, áéíóúÁÉÍÓÚ y üÜ.
+ * 3. Espacios: NO se admiten en los nombres (el enunciado solo los lista en las
+ *    descripciones). Dígitos: no se admiten en ningún campo de texto.
+ * 4. Puntuación admitida en las descripciones (puntuación española):
+ *    . , ; : ¿ ? ¡ ! ( ) [ ] - " ' …
+ *    No se admiten otros símbolos (% & # @ $ < >): las pruebas format_ko de las
+ *    descripciones los usan.
+ * 5. Cada prueba format_ko incumple UN solo criterio (un dígito, un símbolo o un
+ *    espacio), para que el resultado esperado no tenga dos causas posibles.
+ * 6. Tests y pruebas de id_* en ADD: se mantienen aunque el id sea autoincremental
+ *    porque la entrega los exige.
+ * 7. id_accion no se edita (es autoincremental): no hay tests ni pruebas de EDIT para
+ *    id_accion. En SEARCH sí es criterio de búsqueda y tiene sus tests.
+ * 8. Los valores "a".repeat(n) comprueban los límites exactos de tamaño.
+ */
+
+/**
+ * Definición de los tests de la entidad `accion`: cada fila es un test de un campo para una acción (ver {@link DefTest}).
+ *
+ * @type {DefTest[]}
+ */
 var accion_def_tests = [
  
 //Acción: ADD
@@ -110,13 +108,11 @@ var accion_def_tests = [
 ];
  
  
-/* -----------------------------------------------------------------------------
-   ESTRUCTURA:
- 
-   ["entidad", "campo", "nº test", "nº prueba", "acción", {"atributo": "valor"},
-        "Resultado Esperado"]
------------------------------------------------------------------------------ */
- 
+/**
+ * Pruebas de la entidad `accion`: cada fila da los valores de los campos para un test y el resultado esperado (ver {@link Prueba}).
+ *
+ * @type {Prueba[]}
+ */
 var accion_pruebas = [
  
 //Acción: ADD

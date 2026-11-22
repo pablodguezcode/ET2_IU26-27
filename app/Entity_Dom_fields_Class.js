@@ -1,7 +1,17 @@
 /**
+ * @file Refactorización de los métodos de `dom_fields` que se consideran necesarios y métodos nuevos de acceso al DOM.
+ */
+
+/**
  * clase para refactorizar los metodos de dom_fields que se consideren necesarios sin modificar su definicion y para inclusion de nuevos metodos
+ *
+ * @extends dom_fields
+ * @property {boolean} sin_boton_add `true` en las entidades sin icono ADD (las matrices): hace que `actualizar_boton_add()` lo oculte
  */
 class entity_dom_fields extends dom_fields{
+    /**
+     * Crea el objeto y deja `sin_boton_add` a `false`, de modo que el icono ADD de index.html se muestra salvo que una entidad indique lo contrario.
+     */
     constructor(){
         super();
         // true en las entidades que no tienen ADD (funcionalidad_accion): su icono ADD de index.html debe quedar oculto
@@ -9,10 +19,11 @@ class entity_dom_fields extends dom_fields{
     }
 
     /**
-     * Refactorizacion de hide_element(): mantiene la definicion. Cuando se oculta el div del formulario (fin de un SEARCH, cancelar con BACK...)
+     * Refactorización de hide_element(): mantiene la definicion. Cuando se oculta el div del formulario (fin de un SEARCH, cancelar con BACK...)
      * deja el icono ADD de index.html como corresponde a la entidad: oculto en las que no tienen ADD (sin_boton_add) y visible en las demas.
      * Asi el icono ADD que oculta funcionalidad_accion se vuelve a mostrar al cambiar a otra entidad, sin tocar el codigo de cada entidad.
      *
+     * @override
      * @param {string} id id del elemento a ocultar
      */
     hide_element(id){
@@ -33,14 +44,15 @@ class entity_dom_fields extends dom_fields{
     }
 
     /**
-     * Refactorizacion de crearElementoHtml(): mantiene la definicion y el comportamiento de dom_fields y anade la creacion de los
+     * Refactorización de crearElementoHtml(): mantiene la definicion y el comportamiento de dom_fields y anade la creacion de los
      * elementos de prueba de tipo select y textarea, que usan los campos de las entidades que no son input (id_rol, descrip_accion...).
      *
+     * @override
      * @param {string} contenedor id del componente donde se coloca el elemento
      * @param {string} tag html a crear
      * @param {string} nombrecampo name e id del tag html a crear
-     * @param {object} valores objeto con los valores a colocar en el tag
-     * @param {object} extra objeto opcional
+     * @param {Object} valores objeto con los valores a colocar en el tag
+     * @param {Object} [extra=null] objeto opcional
      */
     crearElementoHtml(contenedor, tag, nombrecampo, valores, extra=null){
 
@@ -78,11 +90,12 @@ class entity_dom_fields extends dom_fields{
     }
 
     /**
-     * Refactorizacion de mostrar_error_campo(): mantiene la definicion. La definicion original solo AÑADE el codigo de error como class
+     * Refactorización de mostrar_error_campo(): mantiene la definicion. La definicion original solo AÑADE el codigo de error como class
      * del mensaje y nunca quita el anterior, y setLang() traduce todas las clases que encuentra (gana la ultima en el orden de Textos),
      * de modo que si un campo cambiaba de un error a otro (p.e. de dni_min_size_ko a dni_format_ko) seguia mostrando el primer mensaje.
      * Antes de mostrar el nuevo error se quitan los codigos de error anteriores del mensaje.
      *
+     * @override
      * @param {string} id id del campo del formulario al que se muestra el error
      * @param {string} codigoerror codigo del error a mostrar para ese campo
      */
@@ -95,11 +108,12 @@ class entity_dom_fields extends dom_fields{
     }
 
     /**
-     * Refactorizacion de abrirModalError(): mantiene la definicion. Coloca el codigo de error como class del mensaje
+     * Refactorización de abrirModalError(): mantiene la definicion. Coloca el codigo de error como class del mensaje
      * para que setLang() lo sustituya por su texto traducido. Si el codigo no tiene traduccion en el idioma activo no se
      * muestra solo el codigo en crudo: se muestra un texto generico traducido (text_error_back_generico) seguido del codigo
      * entre parentesis, para que el usuario entienda que ha fallado y se pueda identificar el error.
      *
+     * @override
      * @param {string} errorMsg codigo de error devuelto por el back
      */
     abrirModalError(errorMsg){
@@ -127,14 +141,15 @@ class entity_dom_fields extends dom_fields{
         setLang();
     }
     /**
-     * Refactorizacion de showData(): mantiene la definicion y el comportamiento de dom_table y antes de dibujar la tabla quita del
+     * Refactorización de showData(): mantiene la definicion y el comportamiento de dom_table y antes de dibujar la tabla quita del
      * contenedor la clase RECORDSET_VACIO. AbstractEntidad.SEARCH() la pone cuando una busqueda no devuelve datos y nunca la quita:
      * en la siguiente busqueda con resultados, setLang() (que sustituye el contenido de todo elemento cuya clase sea una clave de
      * traduccion) borraba la tabla recien dibujada y mostrarocultarcolumnas() fallaba al no encontrar sus columnas.
      *
+     * @override
      * @param {string} idcomponente id del componente donde se coloca la tabla
-     * @param {object} test_result objeto iterable con los datos de cada fila
-     * @param {object} marked objeto opcional con la informacion para cambiar el aspecto de una columna
+     * @param {Object} test_result objeto iterable con los datos de cada fila
+     * @param {Object} [marked=null] objeto opcional con la informacion para cambiar el aspecto de una columna
      */
     showData(idcomponente, test_result, marked=null){
         document.getElementById(idcomponente).classList.remove('RECORDSET_VACIO');
@@ -156,7 +171,7 @@ class entity_dom_fields extends dom_fields{
      * icono, es decir, la inmensa mayoria, queda byte a byte como lo genero AbstractEntidad, asi que ninguna entidad cambia su
      * comportamiento salvo en las filas que antes dejaban de responder.
      *
-     * @param {object} fila datos de una fila de la tabla, con las columnas EDIT, DELETE y SHOWCURRENT ya incluidas
+     * @param {Object} fila datos de una fila de la tabla, con las columnas EDIT, DELETE y SHOWCURRENT ya incluidas
      */
     sanear_iconos_accion(fila){
         if (fila === null || typeof fila !== 'object'){ return; }
@@ -179,6 +194,13 @@ class entity_dom_fields extends dom_fields{
         });
     }
 
+    /**
+     * Refactorización de `crearSeleccionablecolumnas()`: vuelve a mostrar la etiqueta y el selector de columnas visibles (las entidades de tipo matriz los ocultan en su constructor) y después delega en la definición original.
+     *
+     * @override
+     * @param {string[]} columnasamostrar columnas que se muestran en la tabla
+     * @param {string[]} atributos nombres de los atributos de los datos recibidos del back
+     */
     crearSeleccionablecolumnas(columnasamostrar, atributos){
         document.getElementById('label_seleccioncolumnas').style.display = '';
         document.getElementById('seleccioncolumnas').style.display = '';

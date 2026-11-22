@@ -1,9 +1,31 @@
-/* -----------------------------------------------------------------------------
-   Entidad: accion
-   Campos : id_accion (input, PK autoincremental: oculto en los formularios), nombre_accion (input), descrip_accion (textarea)
------------------------------------------------------------------------------ */
+/**
+ * @file Lógica de la interfaz de la entidad `accion`: formularios, validaciones y envío al back.
+ */
+
+/**
+ * Entidad `accion`.
+ *
+ * Campos: id_accion (input, PK autoincremental: oculto en los formularios), nombre_accion (input), descrip_accion (textarea)
+ *
+ * Contiene los formularios de cada acción (ADD, EDIT, DELETE, SEARCH y SHOWCURRENT), las validaciones `ADD_/EDIT_/SEARCH_<campo>_validation()` de cada atributo, los `*_submit_*()` que las agrupan y el formato especial de los atributos de `mostrarespecial`. Las operaciones contra el back las hereda de `AbstractEntidad`.
+ *
+ * @extends AbstractEntidad
+ * @property {string[]} columnasamostrar columnas que se muestran en la tabla de resultados
+ * @property {string[]} mostrarespecial atributos que se muestran con un formato especial en la tabla (ver `cambiarmostrarespecial()`)
+ * @property {string} nombreentidad nombre de la entidad: es el que identifica sus formularios, sus textos y sus peticiones al back
+ * @property {entity_dom_fields} dom acceso al DOM (formularios, mensajes de error, tabla)
+ * @property {entity_validations} validations validaciones de los campos del formulario
+ * @property {ExternalAccess} access_functions acceso al back
+ */
 class accion extends AbstractEntidad {
 
+	/**
+	 * Crea la entidad `accion` e inicializa las columnas que se muestran en la tabla, los atributos con formato especial, el nombre de la entidad y los objetos de apoyo (`dom`, `validations` y `access_functions`).
+	 *
+	 * En modo normal muestra la sección de la tabla y los botones, pone el título de la página, crea el formulario vacío con `manual_form_creation()` y lanza `SEARCH()` con el formulario vacío para cargar los datos del back. Con `esTest = 'test'` solo se inicializan los atributos y no se toca el DOM.
+	 *
+	 * @param {?string} [esTest=null] pasar `'test'` para crear la entidad sin tocar el DOM (modo pruebas); con `null` se inicializa la interfaz de la entidad
+	 */
 	constructor(esTest=null){
 
 		super();
@@ -33,11 +55,12 @@ class accion extends AbstractEntidad {
 	}
 
 	/**
-	 * devuelve el html del formulario de la entidad
+	 * Devuelve el html del formulario de la entidad
 	 * id_accion va como type='text' (no 'number'): el navegador vacia el value de un
 	 * input number con "1a" y Validations.min_size lo daria por vacio.
 	 * id_accion es autoincremental: su bloque (div_id_accion) se oculta en ADD, EDIT y DELETE (ver ocultar_id_accion()); en SEARCH y SHOWCURRENT se muestra.
-	 * @returns {string}
+	 *
+	 * @returns {string} código HTML del formulario de la entidad
 	 */
 	manual_form_creation(){
 		var form_content = `
@@ -79,7 +102,18 @@ class accion extends AbstractEntidad {
 //no se edita; EDIT_id_accion_validation() se conserva solo por coherencia con colocarvalidaciones('form_iu','EDIT'), que asigna una
 //validacion a cada campo del formulario, aunque el campo va oculto y nunca llega a validarse.
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_accion` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 1 caracteres → `id_accion_min_size_ko`
+	 * - tamaño máximo de 11 caracteres → `id_accion_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_id_accion_validation(){
 
 		if (!(this.validations.min_size('id_accion',1))){
@@ -102,7 +136,18 @@ class accion extends AbstractEntidad {
 
 //Atributo nombre_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `nombre_accion` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 5 caracteres → `nombre_accion_min_size_ko`
+	 * - tamaño máximo de 48 caracteres → `nombre_accion_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ]*$` → `nombre_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_nombre_accion_validation(){
 
 		if (!(this.validations.min_size('nombre_accion',5))){
@@ -126,7 +171,18 @@ class accion extends AbstractEntidad {
 
 //Atributo descrip_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `descrip_accion` en la acción ADD.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño mínimo de 5 caracteres → `descrip_accion_min_size_ko`
+	 * - tamaño máximo de 200 caracteres → `descrip_accion_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ .,;:¿?¡!()\[\]\-"\'…]*$` → `descrip_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	ADD_descrip_accion_validation(){
 
 		if (!(this.validations.min_size('descrip_accion',5))){
@@ -155,9 +211,13 @@ class accion extends AbstractEntidad {
                                  			SUMMIT ADD formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de ADD de `accion`: `nombre_accion`, `descrip_accion`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	ADD_submit_accion(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -181,16 +241,31 @@ class accion extends AbstractEntidad {
 ****************************************************************************************************************************/
 
 
+	/**
+	 * Valida el atributo `id_accion` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link accion#ADD_id_accion_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link accion#ADD_id_accion_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_id_accion_validation(){
 
 		return this.ADD_id_accion_validation();
 	}
 
+	/**
+	 * Valida el atributo `nombre_accion` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link accion#ADD_nombre_accion_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link accion#ADD_nombre_accion_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_nombre_accion_validation(){
 
 		return this.ADD_nombre_accion_validation();
 	}
 
+	/**
+	 * Valida el atributo `descrip_accion` en la acción EDIT. Las restricciones son las mismas que en ADD, por lo que delega en {@link accion#ADD_descrip_accion_validation}.
+	 *
+	 * @returns {(boolean|string)} Resultado de {@link accion#ADD_descrip_accion_validation}: `true` si el valor es válido o el código de error en caso contrario.
+	 */
 	EDIT_descrip_accion_validation(){
 
 		return this.ADD_descrip_accion_validation();
@@ -201,9 +276,13 @@ class accion extends AbstractEntidad {
                                  			SUMMIT EDIT formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de EDIT de `accion`: `nombre_accion`, `descrip_accion`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	EDIT_submit_accion(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -232,7 +311,17 @@ class accion extends AbstractEntidad {
 
 //Atributo id_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `id_accion` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 11 caracteres → `id_accion_max_size_ko`
+	 * - formato `^[0-9]*$` → `id_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_id_accion_validation(){
 
 		if (!(this.validations.max_size('id_accion',11))){
@@ -249,7 +338,17 @@ class accion extends AbstractEntidad {
 
 //Atributo nombre_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `nombre_accion` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 48 caracteres → `nombre_accion_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ]*$` → `nombre_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_nombre_accion_validation(){
 
 		if (!(this.validations.max_size('nombre_accion',48))){
@@ -266,7 +365,17 @@ class accion extends AbstractEntidad {
 
 //Atributo descrip_accion
 
-	//Retorna true si el campo es valido, si no devuelve un string con el error de validacion
+	/**
+	 * Valida el atributo `descrip_accion` en la acción SEARCH.
+	 *
+	 * Comprobaciones, en este orden (se devuelve el primer error y se muestra con `dom.mostrar_error_campo`):
+	 * - tamaño máximo de 200 caracteres → `descrip_accion_max_size_ko`
+	 * - formato `^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ .,;:¿?¡!()\[\]\-"\'…]*$` → `descrip_accion_format_ko`
+	 *
+	 * Si todas se cumplen, el campo se marca como correcto con `dom.mostrar_exito_campo`.
+	 *
+	 * @returns {(boolean|string)} `true` si el valor es válido; si no, el código de error de la primera comprobación que falla.
+	 */
 	SEARCH_descrip_accion_validation(){
 
 		if (!(this.validations.max_size('descrip_accion',200))){
@@ -287,9 +396,13 @@ class accion extends AbstractEntidad {
                                  			SUMMIT SEARCH formulario validaciones
 ****************************************************************************************************************************/
 
-	//Retorna true si todos los campos son validos. Si alguno no lo es devuelve un objeto con el id de cada campo y su resultado
-	//(true o el codigo de error). Se ejecutan TODAS las validaciones para que se muestren todos los errores a la vez.
-	//Se invoca desde el onsubmit del formulario a traves de dom.validarsubmit().
+	/**
+	 * Valida todos los campos del formulario de SEARCH de `accion`: `id_accion`, `nombre_accion`, `descrip_accion`.
+	 *
+	 * Se ejecutan todas las validaciones (no se detiene en el primer error) para que se muestren todos los errores a la vez. Se invoca desde el `onsubmit` del formulario a través de `dom.validarsubmit()`.
+	 *
+	 * @returns {(boolean|Object<string, (boolean|string)>)} `true` si todos los campos son válidos; si no, un objeto que asocia el id de cada campo con `true` o con su código de error.
+	 */
 	SEARCH_submit_accion(){
 
 		// objeto donde se almacena el resultado de la validacion de cada campo (id del campo -> true o codigo de error)
@@ -404,6 +517,8 @@ class accion extends AbstractEntidad {
 	/**
 	 * Retorna true. En DELETE todos los campos van en solo lectura con los datos de la fila, asi que no hay nada que validar.
 	 * Se mantiene para que el onsubmit tenga la misma forma que el de las demas acciones (ver createForm_DELETE()).
+	 *
+	 * @returns {boolean} siempre `true`
 	 */
 	DELETE_submit_accion(){
 

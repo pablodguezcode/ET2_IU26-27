@@ -1,18 +1,17 @@
-/* //-----------------//-----------------//-----------------//-----------------//
-    ESTRUCTURA:
+/**
+ * @file Tests y pruebas de la entidad `funcionalidad`.
+ *
+ * ACLARACIONES (entidad funcionalidad):
+ * 1. id_funcionalidad es autoincremental: no se pide en ADD ni se edita en EDIT. Sus tests y pruebas de ADD se mantienen (los exige la entrega),
+ *    pero no hay tests ni pruebas de EDIT para id_funcionalidad. En SEARCH si es criterio de busqueda y tiene sus tests.
+ * 2. El mensaje de cada test de error es el texto que la aplicacion muestra para su codigo de error (Textos_ES.js).
+ */
 
-    ["entidad", "clase", "tipo", "nº test", "descripción_Test", "metodo", "acción",  
-        "Resultado Esperado", "mensaje" ]
-
-*/ //-----------------//-----------------//-----------------//-----------------//
-
-/*
-    ACLARACIONES (entidad funcionalidad):
-    1. id_funcionalidad es autoincremental: no se pide en ADD ni se edita en EDIT. Sus tests y pruebas de ADD se mantienen (los exige la entrega),
-       pero no hay tests ni pruebas de EDIT para id_funcionalidad. En SEARCH si es criterio de busqueda y tiene sus tests.
-    2. El mensaje de cada test de error es el texto que la aplicacion muestra para su codigo de error (Textos_ES.js).
-*/
-
+/**
+ * Definición de los tests de la entidad `funcionalidad`: cada fila es un test de un campo para una acción (ver {@link DefTest}).
+ *
+ * @type {DefTest[]}
+ */
 var funcionalidad_def_tests = [
     
     //Acción: ADD
@@ -147,14 +146,11 @@ var funcionalidad_def_tests = [
         "SEARCH", true, "Caso de Éxito"]
 ];
 
-/* //-----------------//-----------------//-----------------//-----------------//
-   ESTRUCTURA:
- 
-   ["entidad", "clase", "nº test", "nº prueba", "acción", {"atributo": "valor"},
-        "Resultado Esperado"]
-
-*/ //-----------------//-----------------//-----------------//-----------------//
-
+/**
+ * Pruebas de la entidad `funcionalidad`: cada fila da los valores de los campos para un test y el resultado esperado (ver {@link Prueba}).
+ *
+ * @type {Prueba[]}
+ */
 var funcionalidad_pruebas = [
     //Acción: ADD
 

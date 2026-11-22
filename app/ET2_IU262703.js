@@ -1,19 +1,28 @@
+/**
+ * @file Datos generales del proyecto.
+ */
+
+/**
+ * Datos generales del proyecto (autoría y grupo).
+ *
+ * @type {Object<string, Array>}
+ */
 datosgenerales =
 {
     Lider:
-        ["MiQueso",
+        ["",
         2,
         26],
     Participante1:
-        ["PaParmesano",
+        ["",
         2,
-        "lim x-> infinito (1 + 1/x)^x = eeeeh pos no se"],
+        24],
     Participante2:
-        ["RaAzul",
+        ["",
         2,
-        24],
+        26],
     Participante3:
-        ["FeManchego",
+        ["",
         2,
-        24],
+        23],
 }
